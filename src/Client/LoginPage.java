@@ -1,4 +1,3 @@
-package Client;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -7,9 +6,23 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LoginPage {
-
+	/**
+	 * manque a retrieve les 
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public static boolean authenticate(String username, String password) {
+        // hardcoded username and password
+        if (username.equals("bob") && password.equals("secret")) {
+            return true;
+        }
+        return false;
+    }
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Login IFT585  projet chat");
 		frame.setSize(426, 386);
@@ -53,6 +66,30 @@ public class LoginPage {
 		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		loginButton.setBounds(142, 149, 134, 46);
 		panel.add(loginButton);
+		loginButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (LoginPage.authenticate(userText.getText(), passwordText.getText())) {
+                   System.out.println("success");
+//                   display Home
+                } else {
+                    System.out.println("Fail");
+                }
+			}
+
+			private String getPassword() {
+				// TODO Auto-generated method stub
+				return passwordText.getText();
+			}
+
+			private String getUsername() {
+				// TODO Auto-generated method stub
+				return userText.getText();
+			}
+		});
+
 		
 		JButton registerButton = new JButton("Inscription");
 		registerButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
