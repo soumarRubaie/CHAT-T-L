@@ -1,5 +1,7 @@
 package Client;
+
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,10 +25,11 @@ public class LoginPage {
         }
         return false;
     }
+	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Login IFT585  projet chat");
 		frame.setSize(426, 386);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		closeFrame(frame);
 
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel);
@@ -38,6 +41,10 @@ public class LoginPage {
 		panel.add(lblVousNavezPas);
 
 		frame.setVisible(true);
+	}
+
+	private static void closeFrame(JFrame frame) {
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	private static void placeComponents(JPanel panel) {
@@ -95,5 +102,19 @@ public class LoginPage {
 		registerButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		registerButton.setBounds(142, 277, 134, 51);
 		panel.add(registerButton);
+		registerButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				//change view to inscription
+				System.out.println("test redirect inscription");
+				 Inscription test = new Inscription();
+				 test.setVisible(true);
+				 
+			}
+
+		});
 	}
 }
