@@ -55,8 +55,6 @@ public class Home implements ActionListener  {
 			placeComponents(panel_2);
 
 			frame.setVisible(true);
-			
-			
 		}
 
 		public static  void placeComponents(JPanel panel) {
@@ -86,7 +84,6 @@ public class Home implements ActionListener  {
 			panel_4.add(btnConsulterProfil);
 //			btnConsulterProfil.addActionListener();
 
-			
 			
 			JButton btnDeconnexion = new JButton("Deconnexion");
 			btnDeconnexion.setForeground(Color.RED);
