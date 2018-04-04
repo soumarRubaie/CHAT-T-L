@@ -18,61 +18,93 @@ import Structures.Salle;
 import Structures.User;
 
 public class Serveur {
-	//Subject.java:
-	//Pour la gestion des salles actives et la redirection des messages reçus sur le port UDP vers la bonne URI
+	// Subject.java:
+	// Pour la gestion des salles actives et la redirection des messages reçus sur
+	// le port UDP vers la bonne URI
 	// Gestion des usagers similairement
-    private List<Salle> salles = new ArrayList<>();
-    private List<User> usagers = new ArrayList<>();
-    
-    //Gestion des suscribers - chaque salle dispose d'une list suscriberSalle et y ajoute les usagers 
-    private List<User> suscribersSalle = new ArrayList<>();
+	public static String lineReturn = System.lineSeparator();
 
-    public void attachSalle(Salle s) {
-    	System.out.println("Salle attachée: " + s.toString());
-    	System.out.println("Nombre de salles: " + salles.size());
+	private static final Serveur serveur = new Serveur();
+	private List<Salle> salles = new ArrayList<>();
+	private List<User> usagers = new ArrayList<>();
 
-    	salles.add(s);
-    }
-    
-    public void attachUsager(User u) {
-    	System.out.println("Usager attachée: " + u.toString());
-    	System.out.println("Nombre usagers: " + usagers.size());
+	// Récupération du singleton
+	public static Serveur getInstance() {
+		return serveur;
+	}
 
-    	usagers.add(u);
-    }
-    
-    public void attachSuscriber(User u) {
-    	System.out.println("Sucriber attachée: " + u.toString());
-    	System.out.println("Nombre suscriber: " + suscribersSalle.size());
-    	suscribersSalle.add(u);
-    }
-    
-    public int getSalleCount() {
+	public void attachSalle(Salle s) {
+		System.out.println("Salle créée: " + s.toString());
+		System.out.println("Nombre de salles: " + salles.size());
+
+		salles.add(s);
+	}
+
+	// Ajoute un usager au serveur
+	public void newUsager(User u) {
+		System.out.println("Usager créé: " + u.toString());
+		System.out.println("Nombre usagers: " + usagers.size());
+		usagers.add(u);
+	}
+
+	public boolean attachUser(int idSalle, int idUser) {
+		User currentUser = getUserFromId(idUser);
+		Salle currentSalle = getSalleFromId(idSalle);
+
+		if (currentUser != null && currentSalle != null) {
+			System.out.println("gna");
+			currentSalle.addSubscriber(currentUser);
+			System.out.println("gna1");
+			return true;
+		}
+
+		return false;
+	}
+
+	public User getUserFromId(int userId) {
+		for (int i = 0; i < usagers.size(); i++) {
+			if (usagers.get(i).getId() == userId) {
+				return usagers.get(i);
+			}
+		}
+		System.out.println("ID d'usager n°" + userId + "introuvable.");
+		return null;
+	}
+
+	public Salle getSalleFromId(int idSalle) {
+		for (int i = 0; i < salles.size(); i++) {
+			if (salles.get(i).getId() == idSalle) {
+				return salles.get(i);
+			}
+		}
+		System.out.println("ID salle n°" + idSalle + " introuvable.");
+		return null;
+	}
+
+	public int getSalleCount() {
 		return salles.size();
 	}
-    
-    public int getUserCount() {
+
+	public int getUserCount() {
 		return usagers.size();
 	}
-    
-    public List<Salle> getSalles() {
+
+	public List<Salle> getSalles() {
 		return salles;
 	}
-    
-    public List<User> getUsers() {
+
+	public List<User> getUsagers() {
 		return usagers;
-	}
-    public List<User> getSuscriberSalle() {
-		return suscribersSalle;
 	}
 
 	// Based on code submitted as accepted on stack overflow question #11640025,
 	// regarding httpHandler structure
-	private static final Serveur serveur = new Serveur();
-
 	// ####################### endpoint et paramètres associés à chacun ##########
+	private static int inetSocketPort = 8000;
+
 	private static String creationSalleURI = "/creationSalle";
 	private static String salleNomParam = "salleNom";
+	private static String salleDescParam = "salleDescription";
 
 	private static String creationUsagerURI = "/creationUsager";
 	private static String usagerNomParam = "username";
@@ -81,30 +113,21 @@ public class Serveur {
 	private static String suscribeUsagerURI = "/suscribeUsagerSalle";
 	private static String usagerIdParam = "userId";
 	private static String salleIdParam = "salleId";
+
 	// ####################### FIND endpoint et param ###########
 
-	private static int inetSocketPort = 8000;
-
-	public static Serveur getInstance() {
-		return serveur;
-	}
-
 	public static void main(String[] args) throws Exception {
-		/* So this is our main - starts the serveur to listen on port inetSocketPort */
+		// Démarre le serveur qui écoute sur le port "inetSocketPort" et sans backlog
+		// (0).
 		HttpServer serveur = HttpServer.create(new InetSocketAddress(inetSocketPort), 0);
 
-		// ################ CONTEXT CREATION
-		// createContext. Must be a subdomain /mySubDom. Then every request to that
-		// subdomain will be redirect to the designated handler
-		// D'autres mots - ce sont les endpoints du REST api
+		// Création des contextes. On associe les URL aux fonctions.
 		serveur.createContext(creationSalleURI, new CreationSalleHandler());
 		serveur.createContext(creationUsagerURI, new CreationUsagerHandler());
 		serveur.createContext(suscribeUsagerURI, new SuscribeUsagerHandler());
-		//
-		// ################ CONTEXT CREATION
 
-		serveur.setExecutor(null); // creates a default executor
-		serveur.start();
+		serveur.setExecutor(null); // Associe un thread par défaut au Serveur
+		serveur.start(); // Démarre le serveur
 
 		System.out.println("Serveur online @ " + serveur.getAddress());
 		System.out.println("Context " + creationSalleURI + " actif");
@@ -112,92 +135,91 @@ public class Serveur {
 	}
 
 	static class CreationSalleHandler implements HttpHandler {
+		// TODO Passer la description de la salle en parametre
 		// localhost:inetSocketPort/creationSalle?salleNom=testNom
 		@Override
 		public void handle(HttpExchange t) throws IOException {
 
+			// Récupération des variables de la requête
+			// (salleNom)
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 
 			// Creer la nouvelle salle & attacher au observeur pattern
-			serveur.attachSalle(new Salle(params.get(salleNomParam), serveur.getSalleCount(),""));
+			serveur.attachSalle(
+					new Salle(params.get(salleNomParam), serveur.getSalleCount(), "Description de la salle"));
 
-			// #######################BEGIN DEBUG PRINT
-			String lineREturn = System.lineSeparator();
-			String response = "Creation d'une nouvelle salle" + lineREturn + salleNomParam + ": "
-					+ params.get(salleNomParam) + " nmb total salles: " + serveur.getSalleCount();
+			// ### REPONSE ###
+			String response = "Creation d'une nouvelle salle" + lineReturn + salleNomParam + ": "
+					+ params.get(salleNomParam) + lineReturn + "Nombre total de salles: " + serveur.getSalleCount();
 			response += serveurStateResponse();
 			t.sendResponseHeaders(200, response.length());
 
 			OutputStream os = t.getResponseBody();
 			os.write(response.getBytes());
 			os.close();
-			// ################### END DEBUG PRINT
+			// ### FIN REPONSE ###
 		}
 	}
 
+	// Création d'un nouvel usager:
+	// localhost:8000/creationUsager?username=billybob&password=secrepass
 	static class CreationUsagerHandler implements HttpHandler {
-
-		/* Gérer la création d'une nouvel usager */
 		@Override
 		public void handle(HttpExchange t) throws IOException {
-			// localhost:inetSocketPort/creationUsager?username=billybob&password=secrepass
 
+			// Récupération des variables de la requête
+			// (username et password)
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 
-			// Creer nouvel usager & attacher au observeur pattern
-			serveur.attachUsager(
+			// Création d'un usager
+			// TODO Test sur la présence d'un Usager avec le même nom d'utilisateur dans la
+			// BDD
+
+			serveur.newUsager(
 					new User(params.get(usagerNomParam), params.get(usagerPasswordParam), serveur.getUserCount()));
 
-			// #######################BEGIN DEBUG PRINT
-			String lineREturn = System.lineSeparator();
-			String response = "Creation d'une nouvel usager" + lineREturn + usagerNomParam + ": "
-					+ params.get(usagerNomParam) + " pass: " + params.get(usagerPasswordParam) + " nmb total usagers: "
-					+ serveur.getUserCount() + lineREturn;
+			// ### REPONSE ###
+			String response = "Creation d'un nouvel usager: " + lineReturn + "Nom d'utilisateur: "
+					+ params.get(usagerNomParam) + lineReturn + "Mot de passe: " + params.get(usagerPasswordParam)
+					+ lineReturn + " Nombre total d'usagers: " + serveur.getUserCount() + lineReturn;
+
 			String resp = response + serveurStateResponse();
 			t.sendResponseHeaders(200, resp.length());
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
 			os.close();
-			// ################### END DEBUG PRINT
+			// ### FIN REPONSE ###
 
 		}
 	}
 
 	static class SuscribeUsagerHandler implements HttpHandler {
-		// localhost:inetSocketPort/suscribeUsagerSalle?userId=1&salleId=01
+		// localhost:8000/suscribeUsagerSalle?userId=1&salleId=01
 		public void handle(HttpExchange t) throws IOException {
 
+			// Récupération des paramètres:
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
-			// Suscriber revient à enregistrer l'Utilisateur comme observateur de la salle
-			// la salle devient subject, et l'utilisateur observeur
-			// serveur.attachUsager(new User(params.get(usagerNomParam),
-			// params.get(usagerPasswordParam), serveur.getUserCount()));
+			String resp = "";
 
-			// 1 - Trouver la salle correspondante au salleId
-			Salle salle = null;
-			User user = null;
-			List<Object> l = findObjectsFromIds(params.get(salleIdParam), params.get(usagerIdParam));
-
-			if (l.size() == 2) {
-				salle = (Salle) l.get(1);
-				user = (User) l.get(0);
-
-				// 2 - Attacher l'usager spécifié à la salle
-				//salle.attachSuscriber(user);
+			// ### REPONSE ###
+			if (serveur.attachUser(idSalle, idUser)) {
+				String response = "Abonnement utilisateur: " + lineReturn + "Utilisateur " + idUser
+						+ " abonne a la salle " + idSalle;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(200, resp.length());
 			} else {
-				System.out.println("Impossible de trouver objets pour id spécifié - essayer d'autres id");
+				String response = "ERREUR!" + lineReturn + "Abonnement utilisateur impossible: " + lineReturn
+						+ "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(600, resp.length());
 			}
-
-			// #######################BEGIN DEBUG PRINT
-			String lineREturn = System.lineSeparator();
-			String response = "Attache user: " + user.toString() + " a salle: " + salle.toString();
-			String resp = response + serveurStateResponse();
-			t.sendResponseHeaders(200, resp.length());
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
 			os.close();
-			// ################### END DEBUG PRINT
+			// ### FIN REPONSE ###
 		}
 
 		private List<Object> findObjectsFromIds(String salleId, String userId) {
@@ -208,7 +230,7 @@ public class Serveur {
 			List<Object> obj = new ArrayList<>();
 			for (Salle s : serveur.getSalles()) {
 				if (Integer.toString(s.getId()).equals(salleId)) {
-					for (User u : serveur.getUsers()) {
+					for (User u : serveur.getUsagers()) {
 						if (Integer.toString(u.getId()).equals(userId)) {
 							obj.add(u);
 							obj.add(s);
@@ -229,7 +251,7 @@ public class Serveur {
 		 */
 
 		String response = System.lineSeparator() + "Users - sommaire de l'etat:" + System.lineSeparator();
-		for (User u : serveur.getUsers()) {
+		for (User u : serveur.getUsagers()) {
 			response += u.toString();
 			response += System.lineSeparator();
 		}

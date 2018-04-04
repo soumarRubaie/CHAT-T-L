@@ -9,8 +9,8 @@ public class Salle {
 	String salleNom;
 	int id;
 	String Description;
-	ArrayList<User> suscribersList;
-	ArrayList<Message> messagesList;
+	ArrayList<User> suscribersList = new ArrayList<User>();
+	ArrayList<Message> messagesList = new ArrayList<Message>();;
 
 	// Création d'une salle
 	public Salle(String salleNom, int id, String description) {
@@ -33,6 +33,12 @@ public class Salle {
 		Description = description;
 		this.suscribersList = suscribersList;
 		this.messagesList = messagesList;
+	}
+	
+	public void addSubscriber(User u) {
+		//TODO Vérifier si l'usager est déjà abonné à la salle
+		suscribersList.add(u);
+		System.out.println("Ajout de l'utilisateur " + u.getUsername() + " à la salle n°" + id);
 	}
 
 	// Getters et setters
