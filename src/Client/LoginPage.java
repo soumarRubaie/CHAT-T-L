@@ -33,7 +33,7 @@ public class LoginPage {
 
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel);
-		placeComponents(panel);
+		placeComponents(panel,frame);
 		
 		JLabel lblVousNavezPas = new JLabel("Vous n'avez pas de compte?");
 		lblVousNavezPas.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -47,7 +47,7 @@ public class LoginPage {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	private static void placeComponents(JPanel panel) {
+	private static void placeComponents(JPanel panel,JFrame frame ) {
 
 		panel.setLayout(null);
 
@@ -69,22 +69,29 @@ public class LoginPage {
 		passwordText.setBounds(128, 98, 160, 25);
 		panel.add(passwordText);
 
+			
 		JButton loginButton = new JButton("Connexion");
+
 		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		loginButton.setBounds(142, 149, 134, 46);
 		panel.add(loginButton);
+		
 		loginButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if (LoginPage.authenticate(userText.getText(), passwordText.getText())) {
-                   System.out.println("success");
-//                   display Home
-                } else {
-                    System.out.println("Fail");
-                }
-			}
+					if (LoginPage.authenticate(userText.getText(), passwordText.getText())) {
+	                   System.out.println("success");
+	//                   display Home
+	                   Home home = new Home();
+	                   home.setVisible(true);
+	                   frame.dispose();	                
+	                   } else {
+	                    System.out.println("Fail");
+	                }
+
+				}
 
 			private String getPassword() {
 				// TODO Auto-generated method stub

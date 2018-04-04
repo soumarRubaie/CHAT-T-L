@@ -1,135 +1,117 @@
 package Client;
 
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 
-import java.awt.Font;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.Color;
 import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.SpringLayout;
+import java.awt.List;
+import java.awt.Button;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
-import javax.swing.AbstractAction;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.Color;
 
-import javax.swing.Action;
+public class Home extends JFrame {
 
-public class Home implements ActionListener  {
-	private static JPanel panel_2;
-	static String label[] = { "Zero", "One", "Two", "Three", "Four", "Five", "Six",
-		      "Seven", "Eight", "Nine", "Ten", "Eleven" };
-	static String labelSalleDiscussion[] = { "Salle Zero", "Salle One", "Salle Two", "Salle Three", "Salle Four", "Salle Five", "Salle Six",
-		      "Salle Seven", "Salle Eight", "Salle Nine", "Salle Ten", "Salle Eleven" };
+	private JPanel contentPane;
+	
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		/**
-		 * Liste utilisateur connectés & non connectés 
-		 * Liste des salles de discussion
-		 * 	- rejoindre une salle
-		 * 	- quitter une salle
-		 * 	- supprimer une salle
-		 * Salle de discussion
-		 * 	- personne presente dans la salle
-		 * 	- Champs écriture d'un message
-		 * 	- supprimer message (boutton delete X)
-		 * 	- liste des messages (archive)
-		 * 	- Boutton envoyer
-		 * 
-		 * Deconnexion 
-		 * 
-		 */
-		
-
-		
-//		private static final Action action = new SwingAction();
-
-			JFrame frame = new JFrame("Home");
-			frame.setSize(1040, 761);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			panel_2 = new JPanel();
-			frame.getContentPane().add(panel_2);
-			placeComponents(panel_2);
-
-			frame.setVisible(true);
-		}
-
-		public static  void placeComponents(JPanel panel) {
-
-			panel.setLayout(null);
-			
-			JPanel panel_1 = new JPanel();
-			panel_1.setBounds(12, -14, 998, 690);
-			panel_2.add(panel_1);
-			panel_1.setLayout(null);
-			
-			JPanel panel_4 = new JPanel();
-			panel_4.setBorder(new TitledBorder(null, "Liste d'utilisateurs:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel_4.setBounds(0, 2, 249, 260);
-			panel_1.add(panel_4);
-			panel_4.setLayout(null);
-			
-			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setBounds(12, 26, 225, 185);
-			panel_4.add(scrollPane);
-			
-			JList list = new JList(label);
-			scrollPane.setViewportView(list);
-			
-			JButton btnConsulterProfil = new JButton("Consulter profil");
-			btnConsulterProfil.setBounds(36, 224, 169, 25);
-			panel_4.add(btnConsulterProfil);
-//			btnConsulterProfil.addActionListener();
-
-			
-			JButton btnDeconnexion = new JButton("Deconnexion");
-			btnDeconnexion.setForeground(Color.RED);
-			btnDeconnexion.setFont(new Font("Tahoma", Font.PLAIN, 17));
-			btnDeconnexion.setBounds(0, 639, 134, 51);
-			panel_1.add(btnDeconnexion);
-
-			
-			JPanel panel_3 = new JPanel();
-			panel_3.setBorder(new TitledBorder(null, "Salle de discussion:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel_3.setBounds(0, 264, 249, 250);
-			panel_1.add(panel_3);
-			panel_3.setLayout(null);
-			
-			JScrollPane scrollPane_1 = new JScrollPane();
-			scrollPane_1.setBounds(6, 34, 231, 170);
-			panel_3.add(scrollPane_1);
-			
-			JList list_1 = new JList(labelSalleDiscussion);
-			scrollPane_1.setViewportView(list_1);
-			
-			JButton btnNewButton = new JButton("Rejoindre discussion");
-			btnNewButton.setBounds(27, 212, 169, 25);
-			panel_3.add(btnNewButton);
-			
-			JButton btnModifierMonProfil = new JButton("Modifier mon profil");
-			btnModifierMonProfil.setForeground(Color.RED);
-			btnModifierMonProfil.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			btnModifierMonProfil.setBounds(0, 587, 134, 51);
-			panel_1.add(btnModifierMonProfil);
-			
-			
-			
-		}
-	private class SwingAction extends AbstractAction {
-		public SwingAction() {
-			putValue(NAME, "SwingAction");
-			putValue(SHORT_DESCRIPTION, "Some short description");
-		}
-		public void actionPerformed(ActionEvent e) {
-		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Home frame = new Home();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("TEST");
+
+	/**
+	 * Create the frame.
+	 */
+	public Home() {
+		String label[] = { "Zero", "One", "Two", "Three", "Four", "Five", "Six",
+			      "Seven", "Eight", "Nine", "Ten", "Eleven" };
 		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 831, 705);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		GridBagLayout gbl_contentPane = new GridBagLayout();
+		gbl_contentPane.columnWidths = new int[]{107, 0, 0};
+		gbl_contentPane.rowHeights = new int[]{261, 46, 0, 0, 43, 40, 0};
+		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		contentPane.setLayout(gbl_contentPane);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 0;
+		contentPane.add(scrollPane, gbc_scrollPane);
+		
+		JList list2 = new JList(label);
+		scrollPane.setViewportView(list2);
+		
+		Button button_1 = new Button("Consulter profile");
+		button_1.setFont(new Font("Dialog", Font.PLAIN, 16));
+		GridBagConstraints gbc_button_1 = new GridBagConstraints();
+		gbc_button_1.insets = new Insets(0, 0, 5, 5);
+		gbc_button_1.gridx = 0;
+		gbc_button_1.gridy = 1;
+		contentPane.add(button_1, gbc_button_1);
+		
+		JList list = new JList(label);
+		GridBagConstraints gbc_list = new GridBagConstraints();
+		gbc_list.anchor = GridBagConstraints.SOUTH;
+		gbc_list.fill = GridBagConstraints.HORIZONTAL;
+		gbc_list.insets = new Insets(0, 0, 5, 5);
+		gbc_list.gridx = 0;
+		gbc_list.gridy = 2;
+		contentPane.add(list, gbc_list);
+		
+		Button button = new Button("Rejoindre salle");
+		button.setFont(new Font("Dialog", Font.PLAIN, 16));
+		GridBagConstraints gbc_button = new GridBagConstraints();
+		gbc_button.fill = GridBagConstraints.BOTH;
+		gbc_button.insets = new Insets(0, 0, 5, 5);
+		gbc_button.gridx = 0;
+		gbc_button.gridy = 3;
+		contentPane.add(button, gbc_button);
+		
+		Button button_2 = new Button("Modifier mon profil");
+		button_2.setForeground(Color.RED);
+		button_2.setFont(new Font("Dialog", Font.PLAIN, 16));
+		GridBagConstraints gbc_button_2 = new GridBagConstraints();
+		gbc_button_2.fill = GridBagConstraints.BOTH;
+		gbc_button_2.insets = new Insets(0, 0, 5, 5);
+		gbc_button_2.gridx = 0;
+		gbc_button_2.gridy = 4;
+		contentPane.add(button_2, gbc_button_2);
+		
+		Button button_3 = new Button("Deconnexion");
+		button_3.setForeground(Color.RED);
+		button_3.setFont(new Font("Dialog", Font.PLAIN, 16));
+		GridBagConstraints gbc_button_3 = new GridBagConstraints();
+		gbc_button_3.fill = GridBagConstraints.BOTH;
+		gbc_button_3.insets = new Insets(0, 0, 0, 5);
+		gbc_button_3.gridx = 0;
+		gbc_button_3.gridy = 5;
+		contentPane.add(button_3, gbc_button_3);
 	}
 }
