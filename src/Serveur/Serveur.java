@@ -52,9 +52,7 @@ public class Serveur {
 		Salle currentSalle = getSalleFromId(idSalle);
 
 		if (currentUser != null && currentSalle != null) {
-			System.out.println("gna");
 			currentSalle.addSubscriber(currentUser);
-			System.out.println("gna1");
 			return true;
 		}
 
@@ -221,27 +219,6 @@ public class Serveur {
 			os.close();
 			// ### FIN REPONSE ###
 		}
-
-		private List<Object> findObjectsFromIds(String salleId, String userId) {
-			/*
-			 * Matches the id provided (strings) to corresponding obj. Not check for
-			 * existence
-			 */
-			List<Object> obj = new ArrayList<>();
-			for (Salle s : serveur.getSalles()) {
-				if (Integer.toString(s.getId()).equals(salleId)) {
-					for (User u : serveur.getUsagers()) {
-						if (Integer.toString(u.getId()).equals(userId)) {
-							obj.add(u);
-							obj.add(s);
-						}
-					}
-				}
-			}
-			return obj;
-
-		}
-
 	}
 
 	public static String serveurStateResponse() {

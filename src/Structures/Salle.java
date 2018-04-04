@@ -36,9 +36,14 @@ public class Salle {
 	}
 	
 	public void addSubscriber(User u) {
-		//TODO Vérifier si l'usager est déjà abonné à la salle
+		for(int i = 0; i<suscribersList.size(); i++) {
+			if (suscribersList.get(i).getId() == u.getId()) {
+				System.out.println("Utilisateur " + u.getId() + " déjà abonné à la salle n°" + id);
+				return;
+			}
+		}
 		suscribersList.add(u);
-		System.out.println("Ajout de l'utilisateur " + u.getUsername() + " à la salle n°" + id);
+		System.out.println("Ajout de l'utilisateur " + u.getId() + " à la salle n°" + id);
 	}
 
 	// Getters et setters
