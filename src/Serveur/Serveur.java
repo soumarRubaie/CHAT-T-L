@@ -14,6 +14,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import Structures.Message;
 import Structures.Salle;
 import Structures.User;
 
@@ -34,17 +35,16 @@ public class Serveur {
 	}
 
 	public void attachSalle(Salle s) {
+		salles.add(s);
 		System.out.println("Salle créée: " + s.toString());
 		System.out.println("Nombre de salles: " + salles.size());
-
-		salles.add(s);
 	}
 
 	// Ajoute un usager au serveur
 	public void newUsager(User u) {
+		usagers.add(u);
 		System.out.println("Usager créé: " + u.toString());
 		System.out.println("Nombre usagers: " + usagers.size());
-		usagers.add(u);
 	}
 
 	public boolean attachUser(int idSalle, int idUser) {
@@ -59,6 +59,12 @@ public class Serveur {
 		return false;
 	}
 
+	public boolean detachUser(int idSalle, int idUser) {
+		// TODO DetachUser
+		return true;
+	}
+
+	
 	public User getUserFromId(int userId) {
 		for (int i = 0; i < usagers.size(); i++) {
 			if (usagers.get(i).getId() == userId) {
@@ -111,10 +117,18 @@ public class Serveur {
 	private static String suscribeUsagerURI = "/suscribeUsagerSalle";
 	private static String usagerIdParam = "userId";
 	private static String salleIdParam = "salleId";
+	
+	private static String deleteMessageURI = "/deleteMessage";
+	private static String msgIdParam = "messageId";
+	
+	private static String getArchiveURI = "/getArchive";
+	
+	private static String getConnectedUsersURI = "/getConnectedUsers";
+	private static String unsubscribeUsagerURI = "/unsubscribeUsager";
 
 	// ####################### FIND endpoint et param ###########
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {		
 		// Démarre le serveur qui écoute sur le port "inetSocketPort" et sans backlog
 		// (0).
 		HttpServer serveur = HttpServer.create(new InetSocketAddress(inetSocketPort), 0);
@@ -123,7 +137,12 @@ public class Serveur {
 		serveur.createContext(creationSalleURI, new CreationSalleHandler());
 		serveur.createContext(creationUsagerURI, new CreationUsagerHandler());
 		serveur.createContext(suscribeUsagerURI, new SuscribeUsagerHandler());
-
+		serveur.createContext(deleteMessageURI, new DeleteMessageHandler());
+		serveur.createContext(getArchiveURI, new GetArchiveHandler());
+		serveur.createContext(getConnectedUsersURI, new GetConnectedUsersHandler());
+		serveur.createContext(unsubscribeUsagerURI, new UnsuscribeUsagerHandler());
+		
+		
 		serveur.setExecutor(null); // Associe un thread par défaut au Serveur
 		serveur.start(); // Démarre le serveur
 
@@ -209,7 +228,7 @@ public class Serveur {
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
 			} else {
-				String response = "ERREUR!" + lineReturn + "Abonnement utilisateur impossible: " + lineReturn
+				String response = "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants" + lineReturn
 						+ "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(600, resp.length());
@@ -221,6 +240,100 @@ public class Serveur {
 		}
 	}
 
+	static class UnsuscribeUsagerHandler implements HttpHandler {
+		// localhost:8000/unsubscribeUsager?userId=1&salleId=1
+		public void handle(HttpExchange t) throws IOException {
+			
+			// Récupération des paramètres:
+			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			int idSalle = Integer.parseInt(params.get(salleIdParam));
+
+			String resp = "";
+
+			// ### REPONSE ###
+			if (serveur.detachUser(idSalle, idUser)) {
+				String response = "Desabonnement: " + lineReturn + "Utilisateur " + idUser
+						+ " se desabonne de la salle " + idSalle;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(200, resp.length());
+			} else {
+				String response = "ERREUR lors du desabonnement!" + lineReturn + "User ou salle non-existants"+ lineReturn
+						+ "Utilisateur " + idUser + " Salle " + idSalle + lineReturn;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(600, resp.length());
+			}
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+			// ### FIN REPONSE ###
+		}
+	}
+	
+	static class DeleteMessageHandler implements HttpHandler {
+		// localhost:8000/deleteMessage?userId=1&salleId=1&messageId=1
+		public void handle(HttpExchange t) throws IOException {
+			//TODO Delete Message
+			// Récupération des paramètres:
+			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			int idSalle = Integer.parseInt(params.get(salleIdParam));
+			int idMsg = Integer.parseInt(params.get(msgIdParam));
+
+			// ### REPONSE ###
+			String response = "A implementer (DeleteMessage)"+ lineReturn + "id user: " + idUser 
+					+ lineReturn + "id salle: " + idSalle
+					+ lineReturn + "id msg: " + idMsg;
+			String resp = response + serveurStateResponse();
+			t.sendResponseHeaders(200, resp.length());
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+			// ### FIN REPONSE ###
+		}
+	}
+	
+	static class GetArchiveHandler implements HttpHandler {
+		// localhost:8000/getArchive?userId=1&salleId=1
+		public void handle(HttpExchange t) throws IOException {
+			//TODO GetArchive
+			// Récupération des paramètres:
+			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			int idSalle = Integer.parseInt(params.get(salleIdParam));
+
+			// ### REPONSE ###
+			String response = "A implementer (GetArchive)"+ lineReturn + "id user: " + idUser 
+					+ lineReturn + "id salle: " + idSalle;
+			String resp = response + serveurStateResponse();
+			t.sendResponseHeaders(200, resp.length());
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+			// ### FIN REPONSE ###
+		}
+	}
+	
+	static class GetConnectedUsersHandler implements HttpHandler {
+		// localhost:8000/getConnectedUsers?userId=1
+		public void handle(HttpExchange t) throws IOException {
+			//TODO GetConnectedUsers
+			// Récupération des paramètres:
+			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+
+			// ### REPONSE ###
+			String response = "A implementer (GetConnectedUsers)"+ lineReturn + "id user: " + idUser;
+			String resp = response + serveurStateResponse();
+			t.sendResponseHeaders(200, resp.length());
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+			// ### FIN REPONSE ###
+		}
+	}
+	
+	
 	public static String serveurStateResponse() {
 		/*
 		 * Cette méthode format une réponse qui donne un apperçu complet de l'état du
