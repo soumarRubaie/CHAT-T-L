@@ -10,7 +10,7 @@ public class Salle {
 	int id;
 	String Description;
 	ArrayList<User> suscribersList = new ArrayList<User>();
-	ArrayList<Message> messagesList = new ArrayList<Message>();;
+	ArrayList<Message> messagesList = new ArrayList<Message>();
 
 	// Création d'une salle
 	public Salle(String salleNom, int id, String description) {
@@ -18,13 +18,6 @@ public class Salle {
 		this.id = id;
 		Description = description;
 	}
-	
-	//création d'une nouvelle salle
-	public Salle(String salleNom, int id) {
-		this.salleNom = salleNom;
-		this.id = id;
-
-}
 
 	@Override
 	public String toString() {
@@ -41,9 +34,6 @@ public class Salle {
 		this.suscribersList = suscribersList;
 		this.messagesList = messagesList;
 	}
-	public void addMsg(Message msg) {
-		messagesList.add(msg);
-	}
 	
 	public void addSubscriber(User u) {
 		for(int i = 0; i<suscribersList.size(); i++) {
@@ -54,6 +44,11 @@ public class Salle {
 		}
 		suscribersList.add(u);
 		System.out.println("Ajout de l'utilisateur " + u.getId() + " à la salle n°" + id);
+	}
+	
+	public void addMessage(Message msg) {
+		messagesList.add(msg);
+		System.out.println("Ajout du message " + msg.getIdMessage() + " à la salle n°" + id);
 	}
 
 	// Getters et setters
@@ -88,5 +83,4 @@ public class Salle {
 	public void setMessagesList(ArrayList<Message> messagesList) {
 		this.messagesList = messagesList;
 	}
-
 }

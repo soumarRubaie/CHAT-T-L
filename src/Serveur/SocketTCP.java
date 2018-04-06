@@ -21,20 +21,20 @@ import Structures.Salle;
 import Structures.User;
 
 public class SocketTCP extends Thread {
-	
-	//############## Gestion du singleton
+
+	// ############## Gestion du singleton
 	private static SocketTCP instance;
+
 	public static SocketTCP getInstance(String name, int portUDP, int portTCP) throws IOException {
-		//Probablement destiné à partir, mais pour démo ça va
-		if (instance==null) {
+		// Probablement destiné à partir, mais pour démo ça va
+		if (instance == null) {
 			instance = new SocketTCP(name, portTCP);
 			return instance;
 		}
 		return instance;
 	}
-	
 
-	// ####################### endpoint et params  ##########
+	// ####################### endpoint et params ##########
 
 	// Endpoint: creation salle
 	private static String creationSalleURI = "/creationSalle";
@@ -49,17 +49,17 @@ public class SocketTCP extends Thread {
 	private static String suscribeUsagerURI = "/suscribeUsagerSalle";
 	private static String usagerIdParam = "userId";
 	private static String salleIdParam = "salleId";
-	
-	// Endpoint: delete msg 
+
+	// Endpoint: delete msg
 	private static String deleteMessageURI = "/deleteMessage";
 	private static String msgIdParam = "messageId";
-	
-	//Endpoint: autres
+
+	// Endpoint: autres
 	private static String getArchiveURI = "/getArchive";
 	private static String getConnectedUsersURI = "/getConnectedUsers";
 	private static String unsubscribeUsagerURI = "/unsubscribeUsager";
 
-	//TODO: Ajouter nouveau Endpoints si nécessaire ICI
+	// TODO: Ajouter nouveau Endpoints si nécessaire ICI
 
 	// ####################### FIND endpoint et param ###########
 
@@ -73,7 +73,7 @@ public class SocketTCP extends Thread {
 	private List<Salle> salles = new ArrayList<>();
 	private List<User> usagers = new ArrayList<>();
 	// ####################### FIN Listes obj
-	
+
 	// ####################### Autres attributs
 	public static String lineReturn = System.lineSeparator();
 
@@ -83,10 +83,11 @@ public class SocketTCP extends Thread {
 		serveur = HttpServer.create(new InetSocketAddress(inetSocketPort), serverIP);
 		System.out.println("server:" + super.getName() + " on port:" + inetSocketPort);
 	}
-	
+
 	public void run() {
-		// CREATION des contextes - si de nouveaux endpoint sont ajouteré, créer les contextes ici
-		//et écrire le handler correspondant plus bas
+		// CREATION des contextes - si de nouveaux endpoint sont ajouteré, créer les
+		// contextes ici
+		// et écrire le handler correspondant plus bas
 		serveur.createContext(creationSalleURI, new CreationSalleHandler());
 		serveur.createContext(creationUsagerURI, new CreationUsagerHandler());
 		serveur.createContext(suscribeUsagerURI, new SuscribeUsagerHandler());
@@ -100,222 +101,196 @@ public class SocketTCP extends Thread {
 
 	}
 
-	//###################### HANDLERS pour endpoints ##################################
-	//Chaque handler a une section PRINT, surtout pour afficher à la console pour debug... voir si utile long terme ou non
-	//la logique de réponse au browser est probablement pertinente par contre
-	
+	// ###################### HANDLERS pour endpoints
+	// ##################################
+	// Chaque handler a une section PRINT, surtout pour afficher à la console pour
+	// debug... voir si utile long terme ou non
+	// la logique de réponse au browser est probablement pertinente par contre
+
 	class CreationSalleHandler implements HttpHandler {
-		/*
-		 * Création d'une salle
-		 */
+		// TODO Passer la description de la salle en parametre
+		// localhost:inetSocketPort/creationSalle?salleNom=testNom
 		@Override
 		public void handle(HttpExchange t) throws IOException {
 
+			// Récupération des variables de la requête
+			// (salleNom)
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 
-			// Creer la nouvelle salle 
-			//Le ID de la salle devient simplement le nombre de salle, getSalleCount()
-			//initSalle pour l'instant ne fait que l'ajouter à la liste des salle
-			initSalle(new Salle(params.get(salleNomParam), getSalleCount(), "DESCRIPTION A VENIR"));
+			// Creer la nouvelle salle & attacher au observeur pattern
+			initSalle(new Salle(params.get(salleNomParam), getSalleCount(),
+					"Description de la salle"));
 
-		
-			// #######################BEGIN DEBUG PRINT
-			String lineREturn = System.lineSeparator();
-			String response = "Creation d'une nouvelle salle" + lineREturn + salleNomParam + ": "
-					+ params.get(salleNomParam) + " nmb total salles: " + getSalleCount();
-			response += serverStateResponse();
+			// ### REPONSE ###
+			String response = "Creation d'une nouvelle salle" + lineReturn + salleNomParam + ": "
+					+ params.get(salleNomParam) + lineReturn + "Nombre total de salles: " + getSalleCount();
+			response += serveurStateResponse();
 			t.sendResponseHeaders(200, response.length());
+
 			OutputStream os = t.getResponseBody();
 			os.write(response.getBytes());
 			os.close();
-			// ################### END DEBUG PRINT
+			// ### FIN REPONSE ###
 		}
 	}
 
 	class CreationUsagerHandler implements HttpHandler {
-
-		/* Gérer la création d'une nouvel usager */
 		@Override
+		// localhost:8000/unsubscribeUsager?userId=1&salleId=1
 		public void handle(HttpExchange t) throws IOException {
-			
+
+			// Récupération des variables de la requête
+			// (username et password)
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 
-			// Creer nouvel usager & attacher au observer pattern
-			initUsager(new User(params.get(usagerNomParam), params.get(usagerPasswordParam), getUserCount()));
+			// Création d'un usager
+			// TODO Test sur la présence d'un Usager avec le même nom d'utilisateur dans la
+			// BDD
 
-			// #######################BEGIN DEBUG PRINT
-			String lineREturn = System.lineSeparator();
-			String response = "Creation d'une nouvel usager" + lineREturn + usagerNomParam + ": "
-					+ params.get(usagerNomParam) + " pass: " + params.get(usagerPasswordParam) + " nmb total usagers: "
-					+ getUserCount() + lineREturn;
-			String resp = response + serverStateResponse();
+			initUsager(
+					new User(params.get(usagerNomParam), params.get(usagerPasswordParam), getUserCount()));
+
+			// ### REPONSE ###
+			String response = "Creation d'un nouvel usager: " + lineReturn + "Nom d'utilisateur: "
+					+ params.get(usagerNomParam) + lineReturn + "Mot de passe: " + params.get(usagerPasswordParam)
+					+ lineReturn + " Nombre total d'usagers: " + getUserCount() + lineReturn;
+
+			String resp = response + serveurStateResponse();
 			t.sendResponseHeaders(200, resp.length());
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
 			os.close();
-			// ################### END DEBUG PRINT
+			// ### FIN REPONSE ###
 
 		}
 	}
-
+	
 	class SuscribeUsagerHandler implements HttpHandler {
+		// localhost:8000/suscribeUsagerSalle?userId=1&salleId=01
 		public void handle(HttpExchange t) throws IOException {
 
+			// Récupération des paramètres:
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
-			// Suscriber revient à enregistrer l'Utilisateur comme observateur de la salle
-			// la salle est subject, et l'utilisateur observer
+			String resp = "";
 
-			// 1 - Trouver la salle correspondante au salleId
-			Salle salle = null;
-			User user = null;
-			List<Object> l = findObjectsFromIds(params.get(salleIdParam), params.get(usagerIdParam));
-
-			if (l.size() == 2) {
-				// 2 - Attacher l'usager spécifié à la salle
-				salle = (Salle) l.get(1);
-				user = (User) l.get(0);
-				salle.addSubscriber(user);
+			// ### REPONSE ###
+			if (subscribeUser(idSalle, idUser)) {
+				String response = "Abonnement utilisateur: " + lineReturn + "Utilisateur " + idUser
+						+ " abonne a la salle " + idSalle;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(200, resp.length());
 			} else {
-				System.out.println("Impossible de trouver objets pour id spécifié - essayer d'autres id");
+				String response = "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants" + lineReturn
+						+ "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(600, resp.length());
 			}
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+			// ### FIN REPONSE ###
+		}
+	}
 
-			// #######################BEGIN DEBUG PRINT
-			String lineREturn = System.lineSeparator();
-			String response = "Attache user: " + user.toString() + " a salle: " + salle.toString();
-			String resp = response + serverStateResponse();
+	class UnsuscribeUsagerHandler implements HttpHandler {
+		// localhost:8000/unsubscribeUsager?userId=1&salleId=1
+		public void handle(HttpExchange t) throws IOException {
+
+			// Récupération des paramètres:
+			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			int idSalle = Integer.parseInt(params.get(salleIdParam));
+
+			String resp = "";
+
+			// ### REPONSE ###
+			if (unsubscribeUser(idSalle, idUser)) {
+				String response = "Desabonnement: " + lineReturn + "Utilisateur " + idUser
+						+ " se desabonne de la salle " + idSalle;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(200, resp.length());
+			} else {
+				String response = "ERREUR lors du desabonnement!" + lineReturn + "User ou salle non-existants"
+						+ lineReturn + "Utilisateur " + idUser + " Salle " + idSalle + lineReturn;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(600, resp.length());
+			}
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+			// ### FIN REPONSE ###
+		}
+	}
+
+	class DeleteMessageHandler implements HttpHandler {
+		// localhost:8000/deleteMessage?userId=1&salleId=1&messageId=1
+		public void handle(HttpExchange t) throws IOException {
+			// TODO Delete Message
+			// Récupération des paramètres:
+			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			int idSalle = Integer.parseInt(params.get(salleIdParam));
+			int idMsg = Integer.parseInt(params.get(msgIdParam));
+
+			// ### REPONSE ###
+			String response = "A implementer (DeleteMessage)" + lineReturn + "id user: " + idUser + lineReturn
+					+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
+			String resp = response + serveurStateResponse();
 			t.sendResponseHeaders(200, resp.length());
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
 			os.close();
-			// ################### END DEBUG PRINT
+			// ### FIN REPONSE ###
 		}
 	}
 
-		
-		class UnsuscribeUsagerHandler implements HttpHandler {
-			// localhost:8000/unsubscribeUsager?userId=1&salleId=1
-			public void handle(HttpExchange t) throws IOException {
-				
-				// Récupération des paramètres:
-				Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
-				int idUser = Integer.parseInt(params.get(usagerIdParam));
-				int idSalle = Integer.parseInt(params.get(salleIdParam));
+	class GetArchiveHandler implements HttpHandler {
+		// localhost:8000/getArchive?userId=1&salleId=1
+		public void handle(HttpExchange t) throws IOException {
+			// TODO GetArchive
+			// Récupération des paramètres:
+			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
-				String resp = "";
-
-				// ### REPONSE ###
-				if (detachUser(idSalle, idUser)) {
-					String response = "Desabonnement: " + lineReturn + "Utilisateur " + idUser
-							+ " se desabonne de la salle " + idSalle;
-					resp = response + serverStateResponse();
-					t.sendResponseHeaders(200, resp.length());
-				} else {
-					String response = "ERREUR lors du desabonnement!" + lineReturn + "User ou salle non-existants"+ lineReturn
-							+ "Utilisateur " + idUser + " Salle " + idSalle + lineReturn;
-					resp = response + serverStateResponse();
-					t.sendResponseHeaders(600, resp.length());
-				}
-				OutputStream os = t.getResponseBody();
-				os.write(resp.getBytes());
-				os.close();
-				// ### FIN REPONSE ###
-			}
+			// ### REPONSE ###
+			String response = "A implementer (GetArchive)" + lineReturn + "id user: " + idUser + lineReturn
+					+ "id salle: " + idSalle;
+			String resp = response + serveurStateResponse();
+			t.sendResponseHeaders(200, resp.length());
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+			// ### FIN REPONSE ###
 		}
-		
-		class DeleteMessageHandler implements HttpHandler {
-			// localhost:8000/deleteMessage?userId=1&salleId=1&messageId=1
-			public void handle(HttpExchange t) throws IOException {
-				//TODO Delete Message
-				// Récupération des paramètres:
-				Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
-				int idUser = Integer.parseInt(params.get(usagerIdParam));
-				int idSalle = Integer.parseInt(params.get(salleIdParam));
-				int idMsg = Integer.parseInt(params.get(msgIdParam));
+	}
 
-				// ### REPONSE ###
-				String response = "A implementer (DeleteMessage)"+ lineReturn + "id user: " + idUser 
-						+ lineReturn + "id salle: " + idSalle
-						+ lineReturn + "id msg: " + idMsg;
-				String resp = response + serverStateResponse();
-				t.sendResponseHeaders(200, resp.length());
-				OutputStream os = t.getResponseBody();
-				os.write(resp.getBytes());
-				os.close();
-				// ### FIN REPONSE ###
-			}
+	class GetConnectedUsersHandler implements HttpHandler {
+		// localhost:8000/getConnectedUsers?userId=1
+		public void handle(HttpExchange t) throws IOException {
+			// TODO GetConnectedUsers
+			// Récupération des paramètres:
+			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			int idUser = Integer.parseInt(params.get(usagerIdParam));
+
+			// ### REPONSE ###
+			String response = "A implementer (GetConnectedUsers)" + lineReturn + "id user: " + idUser;
+			String resp = response + serveurStateResponse();
+			t.sendResponseHeaders(200, resp.length());
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+			// ### FIN REPONSE ###
 		}
-		
-		class GetArchiveHandler implements HttpHandler {
-			// localhost:8000/getArchive?userId=1&salleId=1
-			public void handle(HttpExchange t) throws IOException {
-				//TODO GetArchive
-				// Récupération des paramètres:
-				Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
-				int idUser = Integer.parseInt(params.get(usagerIdParam));
-				int idSalle = Integer.parseInt(params.get(salleIdParam));
+	}
 
-				// ### REPONSE ###
-				String response = "A implementer (GetArchive)"+ lineReturn + "id user: " + idUser 
-						+ lineReturn + "id salle: " + idSalle;
-				String resp = response + serverStateResponse();
-				t.sendResponseHeaders(200, resp.length());
-				OutputStream os = t.getResponseBody();
-				os.write(resp.getBytes());
-				os.close();
-				// ### FIN REPONSE ###
-			}
-		}
-		
-		class GetConnectedUsersHandler implements HttpHandler {
-			// localhost:8000/getConnectedUsers?userId=1
-			public void handle(HttpExchange t) throws IOException {
-				//TODO GetConnectedUsers
-				// Récupération des paramètres:
-				Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
-				int idUser = Integer.parseInt(params.get(usagerIdParam));
+	// ###################### FIN HANDLERS pour endpoints
+	// ##################################
 
-				// ### REPONSE ###
-				String response = "A implementer (GetConnectedUsers)"+ lineReturn + "id user: " + idUser;
-				String resp = response + serverStateResponse();
-				t.sendResponseHeaders(200, resp.length());
-				OutputStream os = t.getResponseBody();
-				os.write(resp.getBytes());
-				os.close();
-				// ### FIN REPONSE ###
-			}
-		}
-		
-		//###################### FIN HANDLERS pour endpoints ##################################
-
-
-		private List<Object> findObjectsFromIds(String salleId, String userId) {
-			/*
-			 * Matches the id provided (strings) to corresponding obj. No check for
-			 * existence
-			 */
-			// TODO: checker pour non-existence d'un obj correspondant au ID et gérer ce cas?
-			List<Object> obj = new ArrayList<>();
-			for (Salle s : getSalles()) {
-				if (Integer.toString(s.getId()).equals(salleId)) {
-					for (User u : getUsers()) {
-						if (Integer.toString(u.getId()).equals(userId)) {
-							obj.add(u);
-							obj.add(s);
-						}
-					}
-				}
-			}
-			return obj;
-		}
-
-	
-	
-	
-	
-	
-	
-	public String serverStateResponse() {
+	public String serveurStateResponse() {
 		/*
 		 * Cette méthode format une réponse qui donne un apperçu complet de l'état du
 		 * serveur (salle usagers etc...) pour fin de debug surtout
@@ -366,26 +341,35 @@ public class SocketTCP extends Thread {
 		}
 		return result;
 	}
-	
+
 	public void addMsgSalle(Message msg) {
-		//Méthode initiale pour ajouter un message à une salle
+		// Méthode initiale pour ajouter un message à une salle
 		int idSalle = msg.getIdSalle();
-		for (Salle s: salles) {
+		for (Salle s : salles) {
 			if (s.getId() == idSalle) {
-				s.addMsg(msg);
+				s.addMessage(msg);
 			}
 		}
 	}
 
-
 	public void initSalle(Salle s) {
-		/*Ajouter une salle à sa liste, possiblement d'autres opérations pertinentes lors de la création*/
+		/*
+		 * Ajouter une salle à sa liste, possiblement d'autres opérations pertinentes
+		 * lors de la création
+		 */
 		salles.add(s);
+		System.out.println("Salle créée: " + s.toString());
+		System.out.println("Nombre de salles: " + salles.size());
 	}
 
 	public void initUsager(User u) {
-		/*Ajouter une usager à sa liste, possiblement d'autres opérations pertinentes lors de la création*/
+		/*
+		 * Ajouter une usager à sa liste, possiblement d'autres opérations pertinentes
+		 * lors de la création
+		 */
 		usagers.add(u);
+		System.out.println("Usager créé: " + u.toString());
+		System.out.println("Nombre usagers: " + usagers.size());
 	}
 
 	public int getSalleCount() {
@@ -403,11 +387,42 @@ public class SocketTCP extends Thread {
 	public List<User> getUsers() {
 		return usagers;
 	}
-	
-	public boolean detachUser(int idSalle, int idUser) {
+
+	public boolean subscribeUser(int idSalle, int idUser) {
+		User currentUser = getUserFromId(idUser);
+		Salle currentSalle = getSalleFromId(idSalle);
+
+		if (currentUser != null && currentSalle != null) {
+			currentSalle.addSubscriber(currentUser);
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean unsubscribeUser(int idSalle, int idUser) {
 		// TODO DetachUser
 		return true;
 	}
 
+	public User getUserFromId(int userId) {
+		for (int i = 0; i < usagers.size(); i++) {
+			if (usagers.get(i).getId() == userId) {
+				return usagers.get(i);
+			}
+		}
+		System.out.println("ID d'usager n°" + userId + "introuvable.");
+		return null;
+	}
+
+	public Salle getSalleFromId(int idSalle) {
+		for (int i = 0; i < salles.size(); i++) {
+			if (salles.get(i).getId() == idSalle) {
+				return salles.get(i);
+			}
+		}
+		System.out.println("ID salle n°" + idSalle + " introuvable.");
+		return null;
+	}
 
 }
