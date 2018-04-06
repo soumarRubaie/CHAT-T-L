@@ -1,6 +1,8 @@
 package Structures;
 
 import java.util.ArrayList;
+
+import Serveur.AuthentificationUser;
 import Structures.Salle;
 
 public class User {
@@ -9,12 +11,14 @@ public class User {
 	String username;
 	String password;
 	ArrayList<Salle> sallesSuscribed;
+	AuthentificationUser auth;
 
 	//Création d'un nouveau user
 	public User(String username, String password, int id) {
 		this.password = password;
 		this.username = username;
 		this.id = id;
+		auth = new AuthentificationUser(username, password);
 	}
 
 	//Récupération d'un user déjà créé

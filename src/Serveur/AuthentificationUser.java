@@ -4,21 +4,21 @@ package Serveur;
 import com.google.gson.JsonObject;
 
 
-public class AuthentificationUser extends Requests {
+public class AuthentificationUser {
 
 	private String username = null;
 	private String password = null;
-	
-	public AuthentificationUser(JsonObject json) {
-		super(RequestType.AUTHETIFIER_UTILISATEUR);
-		this.username = json.get("username").getAsString();
-		this.password = json.get("password").getAsString();
-	}
+
 	
 	public AuthentificationUser(String username, String password) {
-		super(RequestType.AUTHETIFIER_UTILISATEUR);
 		this.username = username;
 		this.password = password;
+	}
+	
+	public boolean checkAuth(String username, String password) {
+		/*Checks if provided auth matches this user*/
+		
+		return this.username.equals(username) && this.password.equals(password);
 	}
 	
 	public String getUsername() {
@@ -35,17 +35,6 @@ public class AuthentificationUser extends Requests {
 	
 	public void setPassword(String password) {
 		this.password= password;
-	}
-	
-	@Override
-	public String toJsonString() {
-		JsonObject json = new JsonObject();
-		json.addProperty("type", type.name());
-		json.addProperty("username", username);
-		json.addProperty("password", password);
-		return json.toString();
-	}
-	
-	
+	}	
 	
 }

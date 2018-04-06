@@ -8,10 +8,14 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import Serveur.AuthentificationUser;
+import Serveur.Requests;
+
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
 
 public class LoginPage extends JFrame {
 	/**
@@ -37,12 +41,9 @@ public class LoginPage extends JFrame {
 
 	}
 	
-	public static boolean authenticate(String username, String password) {
-        // hardcoded username and password
-        if (username.equals("bob") && password.equals("secret")) {
-            return true;
-        }
-        return false;
+	public static boolean authenticate(String username, String password) throws UnsupportedEncodingException {
+        /*Créer un obj Requests avec type AUTH et ensuite le Requests gère les détails*/
+        return Requests.athenticateUser(username, password);
     }
 	
 	public static void main(String[] args) {
@@ -102,15 +103,21 @@ public class LoginPage extends JFrame {
 		loginButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				try {
 					if (LoginPage.authenticate(userText.getText(), passwordText.getText())) {
-	                   System.out.println("success");
-	                   //display Home
-	                   Home home = new Home();
-	                   home.setVisible(true);
-	                   frame.dispose();	                
-	                   } else {
-	                    System.out.println("MdP ou username incorrect, essayer à nouveau");
-	                }
+		                   System.out.println("success");
+		                   //display Home
+		                   Home home = new Home();
+		                   home.setVisible(true);
+		                   frame.dispose();	                
+		                   } else {
+		                    System.out.println("MdP ou username incorrect, essayer à nouveau");
+		                }
+
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				}
 		});
 		
@@ -125,6 +132,8 @@ public class LoginPage extends JFrame {
 				System.out.println("test redirect inscription");
 				 Inscription test = new Inscription();
 				 test.setVisible(true);
+				 
+				 //TODO: appel au socketTCP
 				 
 			}
 
