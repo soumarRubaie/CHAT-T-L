@@ -38,48 +38,26 @@ public class Inscription extends JFrame {
 		});
 	}
 
+
 	/**
 	 * Create the frame.
 	 */
 	public Inscription() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//Define frame
 		setBounds(100, 100, 551, 589);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		SpringLayout sl_contentPane = new SpringLayout();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane.setLayout(sl_contentPane);
 		
-		JButton btnNewButton = new JButton("Inscription");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnNewButton, -88, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnNewButton, 202, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnNewButton, -37, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnNewButton, 316, SpringLayout.WEST, contentPane);
-		contentPane.add(btnNewButton);
-		
-		textField = new JTextField();
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, textField_1, 34, SpringLayout.SOUTH, textField);
-		sl_contentPane.putConstraint(SpringLayout.EAST, textField, 0, SpringLayout.EAST, textField_1);
-		sl_contentPane.putConstraint(SpringLayout.EAST, textField_1, -56, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, textField, 0, SpringLayout.WEST, textField_1);
-		textField_1.setColumns(10);
-		contentPane.add(textField_1);
-		
-		textField_2 = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, textField_1, -23, SpringLayout.NORTH, textField_2);
-		textField_2.setColumns(10);
-		contentPane.add(textField_2);
-		
-		textField_3 = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.WEST, textField_2, 0, SpringLayout.WEST, textField_3);
-		sl_contentPane.putConstraint(SpringLayout.EAST, textField_2, 0, SpringLayout.EAST, textField_3);
-		textField_3.setColumns(10);
-		contentPane.add(textField_3);
-		
+		//Details of layout performed there
+		placeComponents(sl_contentPane);
+	}
+
+	public void placeComponents(SpringLayout sl_contentPane) {
+		//######### Labels
 		JLabel lblNom = new JLabel("Nom");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, lblNom, 67, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, textField, 1, SpringLayout.NORTH, lblNom);
@@ -120,6 +98,29 @@ public class Inscription extends JFrame {
 		lblConfirmationMotDe.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		contentPane.add(lblConfirmationMotDe);
 		
+		//############# Text fields
+		textField = new JTextField();
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		textField_1 = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.NORTH, textField_1, 34, SpringLayout.SOUTH, textField);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textField, 0, SpringLayout.EAST, textField_1);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textField_1, -56, SpringLayout.EAST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, textField, 0, SpringLayout.WEST, textField_1);
+		textField_1.setColumns(10);
+		contentPane.add(textField_1);
+		
+		textField_2 = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, textField_1, -23, SpringLayout.NORTH, textField_2);
+		textField_2.setColumns(10);
+		contentPane.add(textField_2);
+		
+		textField_3 = new JTextField();
+		sl_contentPane.putConstraint(SpringLayout.WEST, textField_2, 0, SpringLayout.WEST, textField_3);
+		sl_contentPane.putConstraint(SpringLayout.EAST, textField_2, 0, SpringLayout.EAST, textField_3);
+		textField_3.setColumns(10);
+		contentPane.add(textField_3);
 		passwordField = new JPasswordField();
 		sl_contentPane.putConstraint(SpringLayout.WEST, textField_3, 0, SpringLayout.WEST, passwordField);
 		sl_contentPane.putConstraint(SpringLayout.EAST, textField_3, 213, SpringLayout.WEST, passwordField);
@@ -133,6 +134,25 @@ public class Inscription extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.EAST, passwordField_1, -56, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, passwordField, 0, SpringLayout.WEST, passwordField_1);
 		contentPane.add(passwordField_1);
+		//########### Buttons
+		JButton btnNewButton = new JButton("Inscription");
+		sl_contentPane.putConstraint(SpringLayout.NORTH, btnNewButton, -88, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.WEST, btnNewButton, 202, SpringLayout.WEST, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnNewButton, -37, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, btnNewButton, 316, SpringLayout.WEST, contentPane);
+		contentPane.add(btnNewButton);
+
+		//###############Button listeners
+
+				
+
+		
+
+		
+
+		
+
 	}
 
+	
 }

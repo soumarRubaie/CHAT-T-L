@@ -18,6 +18,13 @@ public class Salle {
 		this.id = id;
 		Description = description;
 	}
+	
+	//création d'une nouvelle salle
+	public Salle(String salleNom, int id) {
+		this.salleNom = salleNom;
+		this.id = id;
+
+}
 
 	@Override
 	public String toString() {
@@ -33,6 +40,9 @@ public class Salle {
 		Description = description;
 		this.suscribersList = suscribersList;
 		this.messagesList = messagesList;
+	}
+	public void addMsg(Message msg) {
+		messagesList.add(msg);
 	}
 	
 	public void addSubscriber(User u) {
@@ -78,4 +88,5 @@ public class Salle {
 	public void setMessagesList(ArrayList<Message> messagesList) {
 		this.messagesList = messagesList;
 	}
+
 }
