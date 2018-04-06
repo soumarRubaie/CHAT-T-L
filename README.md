@@ -3,7 +3,7 @@
 Le client (package Client) et le serveur (package Serverr) sont gérés comme une seul et même programme. Ils partagent les classes communes sous "Structures" (Message, Usager, etc.).
 
 ### Run arguments
-*Pour lancer le serveur, les run argments sont: `server tcpPort udpPort`
+*Pour lancer le serveur, les run argments sont: `serveur tcpPort udpPort`
 *Et pour le client: `client tcpPort udpPort`
 
 ### Exporter un exécutable (.jar) sous Éclipse
@@ -16,7 +16,7 @@ Le client (package Client) et le serveur (package Serverr) sont gérés comme un
 * Sous "Launch configuration", choisir la configuration correspondante, avec un "Export destination" au choix.
 * Pour "Library handling", peut importe dans notre cas. Laisser option par défaut fonctionne...
 
-Le jar exécuté contient en fait tout le programme (server + client), c'est le run argument initial ("server" ou "client") qui détermine quel thread sera démarré.
+Le jar exécuté contient en fait tout le programme (server + client), c'est le run argument initial ("serveur" ou "client") qui détermine quel thread sera démarré.
 
 ## Usage (général, en port UDP/envoie de messages simples)
 
@@ -24,7 +24,7 @@ Le jar exécuté contient en fait tout le programme (server + client), c'est le 
 Dans la fenêtre client, écrire un message à envoyer. Celui-ci sera envoyé au serveur (e.g. localhost:8001). Les détails sont affichés en console, e.g:
 
 ```
-anonymous@anonymous:~/Documents/TODELETE/testClientServer$ java -jar server.jar server 8000 8001
+anonymous@anonymous:~/Documents/TODELETE/testClientServer$ java -jar serveur.jar serveur 8000 8001
 Demarrage thread TCP...
 server:tcpHost on port:8000
 Demarrage thread UDP...
