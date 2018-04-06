@@ -1,6 +1,8 @@
 package Structures;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import Structures.Salle;
 
 public class User {
@@ -9,7 +11,8 @@ public class User {
 	String username;
 	String password;
 	ArrayList<Salle> sallesSuscribed;
-
+	boolean isConnected;  
+	
 	//Création d'un nouveau user
 	public User(String username, String password, int id) {
 		this.password = password;
@@ -17,6 +20,28 @@ public class User {
 		this.id = id;
 	}
 
+	public boolean isConnected() {
+		return isConnected;
+	}
+
+	public void setConnected(boolean isConnected) {
+		this.isConnected = isConnected;
+	}
+	
+	// Se desabonner d'une salle
+	public boolean seDesabonner(int idSalle){
+		Iterator itr= sallesSuscribed.iterator(); 
+		
+		while(itr.hasNext()){  
+			 Salle salle = (Salle)itr.next();
+			 if (salle.getId() == idSalle){
+				 itr.remove();		 
+				 return true; 
+			 }
+		}  
+		return false; 
+	}
+	
 	//Récupération d'un user déjà créé
 	public User(String username, String password, int id, ArrayList<Salle> sallesSuscribed) {
 		this.password = password;

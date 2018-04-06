@@ -205,7 +205,7 @@ public class SocketTCP extends Thread {
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
 			String resp = "";
-
+				
 			// ### REPONSE ###
 			if (unsubscribeUser(idSalle, idUser)) {
 				String response = "Desabonnement: " + lineReturn + "Utilisateur " + idUser
@@ -401,8 +401,8 @@ public class SocketTCP extends Thread {
 	}
 
 	public boolean unsubscribeUser(int idSalle, int idUser) {
-		// TODO DetachUser
-		return true;
+		User currentUser = getUserFromId(idUser);
+		return currentUser.seDesabonner(idSalle); 
 	}
 
 	public User getUserFromId(int userId) {

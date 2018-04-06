@@ -43,8 +43,6 @@ public class Home extends JFrame {
 	 */
 	public Home() {
 		
-		
-		
 		String label[] = { "Zero", "One", "Two", "Three", "Four", "Five", "Six",
 			      "Seven", "Eight", "Nine", "Ten", "Eleven" };
 		

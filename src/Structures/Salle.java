@@ -1,6 +1,7 @@
 package Structures;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import Structures.Message;
 import Structures.User;
@@ -11,14 +12,20 @@ public class Salle {
 	String Description;
 	ArrayList<User> suscribersList = new ArrayList<User>();
 	ArrayList<Message> messagesList = new ArrayList<Message>();
-
+	
+	
+	
 	// Création d'une salle
 	public Salle(String salleNom, int id, String description) {
 		this.salleNom = salleNom;
 		this.id = id;
 		Description = description;
 	}
-
+	
+	public boolean estVide(){
+		return suscribersList.isEmpty(); 
+	}
+	
 	@Override
 	public String toString() {
 		return "SalleNom: " + salleNom + ", id: " + id + ", Description: " + Description + ", suscribersList: "
@@ -35,6 +42,8 @@ public class Salle {
 		this.messagesList = messagesList;
 	}
 	
+	
+	
 	public void addSubscriber(User u) {
 		for(int i = 0; i<suscribersList.size(); i++) {
 			if (suscribersList.get(i).getId() == u.getId()) {
@@ -44,6 +53,7 @@ public class Salle {
 		}
 		suscribersList.add(u);
 		System.out.println("Ajout de l'utilisateur " + u.getId() + " à la salle n°" + id);
+		
 	}
 	
 	public void addMessage(Message msg) {
