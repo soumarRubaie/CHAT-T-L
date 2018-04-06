@@ -1,32 +1,30 @@
 # CHAT-T-L
 ## Usage (sous Eclipse)
-Le client (clientUDP) et le serveur (tp3) sont gérés comme 2 projets séparés. Ils partagent les classes communes sous "commons" (Message, Usager, etc.) Ils sont donc à lancer séparément et à compiler séparément.
+Le client (package Client) et le serveur (package Serverr) sont gérés comme une seul et même programme. Ils partagent les classes communes sous "Structures" (Message, Usager, etc.).
 
-Quelques notes:
-* Par défaut, le serveur TCP écoute sous le port 8000/[endpoints]
-* L'écoute pour UDP se fait sur le port 8001
-* Le serveur roule sur localhost
-* Le client UDP peut prendre 1 paramètres (optionel), le numéro de port UDP si celui-ci est différent de 8001
-* Le serveur peut prendre 1 ou 2 paramètres (optionel), le numéro de port UDP et le numéro de port TCP si on veut utiliser autre chose que 8001 et 8000, respectivement (voir commands de lancement ci-bas)
+### Run arguments
+*Pour lancer le serveur, les run argments sont: `server tcpPort udpPort`
+*Et pour le client: `client tcpPort udpPort`
 
 ### Exporter un exécutable (.jar) sous Éclipse
 
-** Le main doit avoir été lancé au moins une fois et/ou un "Run Configuration" doit exister pour pouvoir exporter.**
-* Si ce n'est pas déjà fait, rouler le main correspondant au moins une fois (Mainserver.java ou mainserverUDP.java pour le client).
-* Right-click sur l'exécutable à créer (clientUDP ou tp3 pour le serveur principal), ensuite "Export..."
+** Le main doit avoir été lancé au moins une fois et/ou un "Run Configuration" doit exister pour pouvoir exporter**
+**ASTUCE: Créer un run configuration sous Éclipse qui ne comporte aucun argument, et exportez celui-ci en JAR. Pour pourrez alors spécifier lorsque vous lancez le jar si vous voulez qu'il soit client ou serveur et quels ports utiliser.**
+
+* Right-click sur Main.java
 * Sous "Java", choisir "Executable jar file" et puis "Next"
-* Sous "Launch configuration", choisir la configuration correspondante (créée automatiquement lors du dernier lancement ou alors créée par vous-même manuellement), avec un "Export destination" au choix.
+* Sous "Launch configuration", choisir la configuration correspondante, avec un "Export destination" au choix.
 * Pour "Library handling", peut importe dans notre cas. Laisser option par défaut fonctionne...
-* Fonctionne de manière similaire pour les 2 (client et serveur).
+
+Le jar exécuté contient en fait tout le programme (server + client), c'est le run argument initial ("server" ou "client") qui détermine quel thread sera démarré.
 
 ## Usage (général, en port UDP/envoie de messages simples)
 
 ### Usage - client & serveur en .jar
 Dans la fenêtre client, écrire un message à envoyer. Celui-ci sera envoyé au serveur (e.g. localhost:8001). Les détails sont affichés en console, e.g:
 
-
 ```
-anonymous@anonymous:~/Documents/TODELETE/testClientServer$ java -jar server.java
+anonymous@anonymous:~/Documents/TODELETE/testClientServer$ java -jar server.jar server 8000 8001
 Demarrage thread TCP...
 server:tcpHost on port:8000
 Demarrage thread UDP...
@@ -39,19 +37,11 @@ et pour la console client:
 
 ```
 
-anonymous@anonymous:~/testClientServer$ java -jar client.java
+anonymous@anonymous:~/testClientServer$ java -jar client.jar client 8000 8001
 fasdfasdf
 Msg origine: ID:99 author:999 salleId:1 fasdfasdf
 From server:ID:99 author:999 salleId:1 fasdfasdf
 ```
-
-Les consoles print à l'écran ce qui se produit pour donner une idée des processus et vérifier si l'information voyage effectivement.
-
-#### Autre configurations de lancement
-Par défaut UDP == port 8001 et TCP == port 8000. Cependant, des arguments optionels peuvent être fournis lors du lancement (ligne de commande ou dans les run configuration de Eclipse):
-
-* Client: **java -jar client.java [port UDP]**
-* Serveur: **java -jar server.java [port UDP] [port TCP]**
 
 **Même port UDP nécessaire entre client-serveur!**
 
