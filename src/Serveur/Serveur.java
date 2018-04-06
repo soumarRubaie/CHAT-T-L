@@ -101,8 +101,6 @@ public class Serveur {
 		return usagers;
 	}
 
-	// Based on code submitted as accepted on stack overflow question #11640025,
-	// regarding httpHandler structure
 	// ####################### endpoint et paramètres associés à chacun ##########
 	private static int inetSocketPort = 8000;
 
