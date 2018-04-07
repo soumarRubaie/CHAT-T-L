@@ -21,6 +21,7 @@ public class Utils {
 		// ####################### endpoint et params ##########
 		public static String creationSalleURI = "/creationSalle";
 		public static String salleNomParam = "salleNom";
+		public static String salleDescriptionParam = "description";
 
 		// Endpoint: creation usager
 		public static String creationUsagerURI = "/creationUsager";

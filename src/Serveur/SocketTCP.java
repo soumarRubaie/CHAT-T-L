@@ -42,6 +42,7 @@ public class SocketTCP extends Thread {
 	// Endpoint: creation salle
 	private static String creationSalleURI = Utils.creationSalleURI;
 	private static String salleNomParam = Utils.salleNomParam;
+	private static String salleDescriptionParam = Utils.salleDescriptionParam;
 
 	// Endpoint: creation usager
 	private static String creationUsagerURI = Utils.creationUsagerURI;
@@ -106,7 +107,7 @@ public class SocketTCP extends Thread {
 		serveur.createContext(getConnectedUsersURI, new GetConnectedUsersHandler());
 		serveur.createContext(unsubscribeUsagerURI, new UnsuscribeUsagerHandler());
 		serveur.createContext(authUser, new authenticateUser());
-		
+
 		serveur.setExecutor(null); // Associe un thread par défaut au Serveur
 		serveur.start(); // Démarre le serveur
 
@@ -120,7 +121,7 @@ public class SocketTCP extends Thread {
 
 	class CreationSalleHandler implements HttpHandler {
 		// TODO Passer la description de la salle en parametre
-		// localhost:8000/creationSalle?salleNom=testNom
+		// localhost:8000/creationSalle?salleNom=testNom&description=bonjour
 		@Override
 		public void handle(HttpExchange t) throws IOException {
 			// Récupération des variables de la requête
@@ -128,11 +129,12 @@ public class SocketTCP extends Thread {
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 
 			// Creer la nouvelle salle & attacher au observeur pattern
-			initSalle(new Salle(params.get(salleNomParam), getSalleCount(), "Description de la salle"));
+			initSalle(new Salle(params.get(salleNomParam), getSalleCount(), params.get(salleDescriptionParam)));
 
 			// ### REPONSE ###
 			String response = "Creation d'une nouvelle salle" + lineReturn + salleNomParam + ": "
-					+ params.get(salleNomParam) + lineReturn + "Nombre total de salles: " + getSalleCount();
+					+ params.get(salleNomParam) + lineReturn + salleDescriptionParam + ": "
+					+ params.get(salleDescriptionParam) + lineReturn + "Nombre total de salles: " + getSalleCount();
 			response += serveurStateResponse();
 			t.sendResponseHeaders(200, response.length());
 
@@ -152,19 +154,27 @@ public class SocketTCP extends Thread {
 			// (username et password)
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 
-			// Création d'un usager
-			// TODO Test sur la présence d'un Usager avec le même nom d'utilisateur dans la
-			// BDD
-
-			initUsager(new User(params.get(usagerNomParam), params.get(usagerPasswordParam), getUserCount()));
-
 			// ### REPONSE ###
-			String response = "Creation d'un nouvel usager: " + lineReturn + "Nom d'utilisateur: "
-					+ params.get(usagerNomParam) + lineReturn + "Mot de passe: " + params.get(usagerPasswordParam)
-					+ lineReturn + " Nombre total d'usagers: " + getUserCount() + lineReturn;
+			String resp = "";
 
-			String resp = response + serveurStateResponse();
-			t.sendResponseHeaders(200, resp.length());
+			if (usernameIsFree(params.get(usagerNomParam))) {
+
+				// Création d'un usager
+				initUsager(new User(params.get(usagerNomParam), params.get(usagerPasswordParam), getUserCount()));
+				String response = "Creation d'un nouvel usager: " + lineReturn + "Nom d'utilisateur: "
+						+ params.get(usagerNomParam) + lineReturn + "Mot de passe: " + params.get(usagerPasswordParam)
+						+ lineReturn + " Nombre total d'usagers: " + getUserCount() + lineReturn;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(200, resp.length());
+
+			} else {
+				String response = "ERREUR Creation usager: " + lineReturn + "Nom d'utilisateur: "
+						+ params.get(usagerNomParam) + " deja utilise !" + lineReturn + " Nombre total d'usagers: "
+						+ getUserCount() + lineReturn;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(600, resp.length());
+			}
+
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
 			os.close();
@@ -267,8 +277,7 @@ public class SocketTCP extends Thread {
 			System.out.println("Données en cours d'enregistrement");
 			JsonHandler.saveDatas(usagers, salles);
 			System.out.println("Données enregistrées");
-			
-			
+
 			// ### REPONSE ###
 			String response = "A implementer (GetArchive)" + lineReturn + "id user: " + idUser + lineReturn
 					+ "id salle: " + idSalle;
@@ -299,26 +308,23 @@ public class SocketTCP extends Thread {
 			// ### FIN REPONSE ###
 		}
 	}
-	
+
 	class authenticateUser implements HttpHandler {
 		// localhost:8000/getConnectedUsers?userId=1
 		public void handle(HttpExchange t) throws IOException {
 			// TODO GetConnectedUsers
 			// Récupération des paramètres:
 
-			//int idUser = Integer.parseInt(params.get(usagerIdParam));
-			
-			
-            InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
-            BufferedReader br = new BufferedReader(isr);
-            String query = br.readLine();
-            Map<String, String>  params = parseQueryString(query);
-            System.out.println("Params du serveur" + params.toString());
+			// int idUser = Integer.parseInt(params.get(usagerIdParam));
 
-            
-            
+			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+			BufferedReader br = new BufferedReader(isr);
+			String query = br.readLine();
+			Map<String, String> params = parseQueryString(query);
+			System.out.println("Params du serveur" + params.toString());
+
 			// ### REPONSE ###
- 
+
 			String response = "true";
 			String resp = response;
 			t.sendResponseHeaders(200, resp.length());
@@ -328,7 +334,7 @@ public class SocketTCP extends Thread {
 
 			// ### FIN REPONSE ###
 		}
-}
+	}
 
 	// ###################### FIN HANDLERS pour endpoints
 	// ##################################
@@ -466,6 +472,16 @@ public class SocketTCP extends Thread {
 		}
 		System.out.println("ID salle n°" + idSalle + " introuvable.");
 		return null;
+	}
+
+	public boolean usernameIsFree(String username) {
+		for (int i = 0; i < usagers.size(); i++) {
+			if (usagers.get(i).getUsername().equals(username)) {
+				System.out.println("Le username \"" + username + "\" est déjà utilisé.");
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
