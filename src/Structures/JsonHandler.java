@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -25,12 +24,24 @@ public class JsonHandler {
 	}
 
 	public static void saveDatas(ArrayList<User> userArray, ArrayList<Salle> salleArray) {
+		System.out.println("Exporten cours...");
+		saveUsersDatas(userArray);
+		saveSallesDatas(salleArray);
+		System.out.println("Exportation terminée!");
+	}
+
+	public static void saveUsersDatas(ArrayList<User> userArray) {
 		for (User tempUser : userArray) {
 			userToJson(tempUser);
 		}
+		System.out.println("Données des utilisateurs enregistrées");
+	}
+
+	public static void saveSallesDatas(ArrayList<Salle> salleArray) {
 		for (Salle tempSalle : salleArray) {
 			salleToJson(tempSalle);
 		}
+		System.out.println("Données des salles enregistrées");
 	}
 
 	public static void userToJson(User user) {

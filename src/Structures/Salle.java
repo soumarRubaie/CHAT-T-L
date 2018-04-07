@@ -42,8 +42,6 @@ public class Salle {
 		this.messagesList = messagesList;
 	}
 	
-	
-	
 	public void addSubscriber(User u) {
 		for(int i = 0; i<suscribersList.size(); i++) {
 			if (suscribersList.get(i).getId() == u.getId()) {
@@ -52,9 +50,19 @@ public class Salle {
 			}
 		}
 		suscribersList.add(u);
-		System.out.println("Ajout de l'utilisateur " + u.getId() + " à la salle n°" + id);
-		
+		System.out.println("Ajout de l'utilisateur " + u.getId() + " à la salle n°" + id);	
 	}
+	
+	public void deleteSubscriber(int idUser) {
+		for(int i = 0; i<suscribersList.size(); i++) {
+			if (suscribersList.get(i).getId() == idUser) {
+				suscribersList.remove(i);
+				System.out.println("Utilisateur n°" + idUser + " suprimé de la salle" + id);
+				return;
+			}
+		}	
+	}
+	
 	
 	public void addMessage(Message msg) {
 		messagesList.add(msg);

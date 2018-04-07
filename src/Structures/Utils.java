@@ -6,6 +6,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class Utils {
+	// Codes d'erreur:
+	// 600 : Données non existantes (salle ou user)
+	// 601 : Création Utilisateur: Username déjà utilisé
+	
 	//Params json path
 	public static String userRessourcePath = "ressources/users/";
 	public static String salleRessourcePath = "ressources/salles/";
