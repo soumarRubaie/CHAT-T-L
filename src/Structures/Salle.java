@@ -9,7 +9,7 @@ import Structures.User;
 public class Salle {
 	String salleNom;
 	int id;
-	String Description;
+	String description;
 	ArrayList<User> suscribersList = new ArrayList<User>();
 	ArrayList<Message> messagesList = new ArrayList<Message>();
 	
@@ -19,7 +19,7 @@ public class Salle {
 	public Salle(String salleNom, int id, String description) {
 		this.salleNom = salleNom;
 		this.id = id;
-		Description = description;
+		this.description = description;
 	}
 	
 	public boolean estVide(){
@@ -28,7 +28,7 @@ public class Salle {
 	
 	@Override
 	public String toString() {
-		return "SalleNom: " + salleNom + ", id: " + id + ", Description: " + Description + ", suscribersList: "
+		return "SalleNom: " + salleNom + ", id: " + id + ", Description: " + description + ", suscribersList: "
 				+ suscribersList + ", messagesList: " + messagesList +"";
 	}
 
@@ -37,7 +37,7 @@ public class Salle {
 			ArrayList<Message> messagesList) {
 		this.salleNom = salleNom;
 		this.id = id;
-		Description = description;
+		this.description = description;
 		this.suscribersList = suscribersList;
 		this.messagesList = messagesList;
 	}
@@ -68,6 +68,14 @@ public class Salle {
 
 	public void setSalleNom(String salleNom) {
 		this.salleNom = salleNom;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 
 	public int getId() {

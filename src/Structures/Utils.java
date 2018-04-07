@@ -1,10 +1,15 @@
 package Structures;
 
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class Utils {
+	//Params json path
+	public static String userRessourcePath = "ressources/users/";
+	public static String salleRessourcePath = "ressources/salles/";
+	
 	//Params connection par défaut - seront utilisés si rien n'est passé en argument à la ligne de cmd
 	public static String CLIENT = "client";
 	public static String SERVER = "serveur";

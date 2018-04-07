@@ -17,8 +17,9 @@ public class Main {
 			System.out.println("Usage:  [serveur|client] int tpcport int udpport");
 		} 
 		else {
-			int portServerUDP = Integer.parseInt(args[1]);
-			int portServerTCP = Integer.parseInt(args[2]);
+			int portServerTCP = Integer.parseInt(args[1]);
+			int portServerUDP = Integer.parseInt(args[2]);
+			
 
 			if (args[0].equals(Utils.CLIENT)) {
 				// we start the client

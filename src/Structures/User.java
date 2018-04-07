@@ -11,7 +11,7 @@ public class User {
 	String username;
 	String password;
 	ArrayList<Salle> sallesSuscribed;
-	boolean isConnected;  
+	boolean isConnected = false;  
 	
 	//Création d'un nouveau user
 	public User(String username, String password, int id) {

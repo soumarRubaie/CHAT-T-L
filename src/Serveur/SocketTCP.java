@@ -3,12 +3,10 @@ package Serveur;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +14,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import Structures.JsonHandler;
 import Structures.Message;
 import Structures.Salle;
 import Structures.User;
@@ -70,8 +69,8 @@ public class SocketTCP extends Thread {
 	// ####################### FIN Serveur addresse & port
 
 	// ####################### Listes pour gestion des objets/entités
-	private List<Salle> salles = new ArrayList<>();
-	private List<User> usagers = new ArrayList<>();
+	private ArrayList<Salle> salles = new ArrayList<>();
+	private ArrayList<User> usagers = new ArrayList<>();
 	// ####################### FIN Listes obj
 
 	// ####################### Autres attributs
@@ -82,6 +81,14 @@ public class SocketTCP extends Thread {
 		inetSocketPort = portTCP;
 		serveur = HttpServer.create(new InetSocketAddress(inetSocketPort), serverIP);
 		System.out.println("server:" + super.getName() + " on port:" + inetSocketPort);
+		initServeur();
+	}
+
+	private void initServeur() {
+		JsonHandler.initFolders();
+		salles = JsonHandler.importerSalles();
+		usagers = JsonHandler.importerUsers();
+		System.out.println("Données des salles et utilisateurs importées.");
 	}
 
 	public void run() {
@@ -109,17 +116,15 @@ public class SocketTCP extends Thread {
 
 	class CreationSalleHandler implements HttpHandler {
 		// TODO Passer la description de la salle en parametre
-		// localhost:inetSocketPort/creationSalle?salleNom=testNom
+		// localhost:8000/creationSalle?salleNom=testNom
 		@Override
 		public void handle(HttpExchange t) throws IOException {
-
 			// Récupération des variables de la requête
 			// (salleNom)
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 
 			// Creer la nouvelle salle & attacher au observeur pattern
-			initSalle(new Salle(params.get(salleNomParam), getSalleCount(),
-					"Description de la salle"));
+			initSalle(new Salle(params.get(salleNomParam), getSalleCount(), "Description de la salle"));
 
 			// ### REPONSE ###
 			String response = "Creation d'une nouvelle salle" + lineReturn + salleNomParam + ": "
@@ -136,7 +141,7 @@ public class SocketTCP extends Thread {
 
 	class CreationUsagerHandler implements HttpHandler {
 		@Override
-		// localhost:8000/unsubscribeUsager?userId=1&salleId=1
+		// localhost:8000/creationUsager?username=User&password=Password
 		public void handle(HttpExchange t) throws IOException {
 
 			// Récupération des variables de la requête
@@ -147,8 +152,7 @@ public class SocketTCP extends Thread {
 			// TODO Test sur la présence d'un Usager avec le même nom d'utilisateur dans la
 			// BDD
 
-			initUsager(
-					new User(params.get(usagerNomParam), params.get(usagerPasswordParam), getUserCount()));
+			initUsager(new User(params.get(usagerNomParam), params.get(usagerPasswordParam), getUserCount()));
 
 			// ### REPONSE ###
 			String response = "Creation d'un nouvel usager: " + lineReturn + "Nom d'utilisateur: "
@@ -164,7 +168,7 @@ public class SocketTCP extends Thread {
 
 		}
 	}
-	
+
 	class SuscribeUsagerHandler implements HttpHandler {
 		// localhost:8000/suscribeUsagerSalle?userId=1&salleId=01
 		public void handle(HttpExchange t) throws IOException {
@@ -183,8 +187,8 @@ public class SocketTCP extends Thread {
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
 			} else {
-				String response = "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants" + lineReturn
-						+ "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
+				String response = "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants"
+						+ lineReturn + "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(600, resp.length());
 			}
@@ -205,7 +209,7 @@ public class SocketTCP extends Thread {
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
 			String resp = "";
-				
+
 			// ### REPONSE ###
 			if (unsubscribeUser(idSalle, idUser)) {
 				String response = "Desabonnement: " + lineReturn + "Utilisateur " + idUser
@@ -256,6 +260,11 @@ public class SocketTCP extends Thread {
 			int idUser = Integer.parseInt(params.get(usagerIdParam));
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
+			System.out.println("Données en cours d'enregistrement");
+			JsonHandler.saveDatas(usagers, salles);
+			System.out.println("Données enregistrées");
+			
+			
 			// ### REPONSE ###
 			String response = "A implementer (GetArchive)" + lineReturn + "id user: " + idUser + lineReturn
 					+ "id salle: " + idSalle;
@@ -402,7 +411,7 @@ public class SocketTCP extends Thread {
 
 	public boolean unsubscribeUser(int idSalle, int idUser) {
 		User currentUser = getUserFromId(idUser);
-		return currentUser.seDesabonner(idSalle); 
+		return currentUser.seDesabonner(idSalle);
 	}
 
 	public User getUserFromId(int userId) {
