@@ -101,13 +101,17 @@ public class LoginPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if (Requests.athenticateUser(userText.getText(), passwordText.getText())) {
-						System.out.println("success");
+						System.out.println("AUTH: loggin success");
 						// display Home
 						Home home = new Home();
 						home.setVisible(true);
 						frame.dispose();
 					} else {
-						System.out.println("MdP ou username incorrect, essayer à nouveau");
+						System.out.println("AUTH: login incorrect, essayer à nouveau");
+						LoginPage lp = new LoginPage();
+						lp.setVisible(true);
+						frame.dispose();
+						
 					}
 
 				} catch (UnsupportedEncodingException e1) {

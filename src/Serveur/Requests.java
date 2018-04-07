@@ -68,7 +68,7 @@ public abstract class Requests {
 		String urlParameters = Utils.usagerNomParam+"=" + URLEncoder.encode(param_username, "UTF-8") 
 		+ "&"+Utils.usagerPasswordParam+"=" + URLEncoder.encode(param_password, "UTF-8");
 		
-		System.out.println("CREATEUSER: urlParam - " + urlParameters);
+		System.out.println("INSC: urlParam - " + urlParameters);
 		//Encoder l'URL - doit inclure le port & le context de la requête 
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.creationUsagerURI;
 
@@ -78,7 +78,7 @@ public abstract class Requests {
 		String response = executePost(targetURL, urlParameters);
 		//REMOVE THE SPACES & LINE RETURN!!!!
 		response = response.trim();
-		System.out.println("CREATEUSER: server response - " + response);
+		System.out.println("INSC: server response - " + response);
 
 		return response.equals(Utils.OK);
 	}

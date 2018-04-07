@@ -173,23 +173,19 @@ public class Inscription extends JFrame {
 				try {
 					String param_username = textField_username.getText();
 					String param_password = textField_password.getText();
-					System.out.println("INSC: username proposed:" + param_username + " pass:" + param_password);
+					System.out.println("INSC: username:" + param_username + " pass:" + param_password);
 
 					System.out.println("INSC: Appel à Requests.java pour utiliser le endpoint ");
 
 					if (Requests.createUser(param_username, param_password)) {
-						
-
-						
-						
 						System.out.println("INSC: Réponse du serveur: ");
 
 						// display Home
 						Home home = new Home();
 						home.setVisible(true);
-						dispose();		//not sure that works but there's not JFrame otherwise?
+						dispose();	
 					} else {
-						System.out.println("Échec de l'inscription - réessayer");
+						System.out.println("INSC: Échec de l'inscription - réessayer");
 					}
 
 				} catch (Exception e1) {

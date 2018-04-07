@@ -149,12 +149,11 @@ public class SocketTCP extends Thread {
 		// localhost:8000/creationUsager?username=User&password=Password
 		public void handle(HttpExchange t) throws IOException {
 			
-			
 			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
 			BufferedReader br = new BufferedReader(isr);
 			String query = br.readLine();
 			Map<String, String> params = parseQueryString(query);
-			System.out.println("Params du serveur" + params.toString());
+			System.out.println("INSC: param server: " + params.toString());
 			
 			String resp = Utils.ERR_USER_EXIST;
 			//TODO: Check if this username is in the DB
@@ -165,7 +164,7 @@ public class SocketTCP extends Thread {
 				resp = Utils.OK;
 			}
 			
-			System.out.println("Lst users: " + usagers.toString());
+			System.out.println("INSC: Lst users: " + usagers.toString());
 
 
 			// ### REPONSE ###
@@ -352,7 +351,7 @@ public class SocketTCP extends Thread {
 			BufferedReader br = new BufferedReader(isr);
 			String query = br.readLine();
 			Map<String, String> params = parseQueryString(query);
-			System.out.println("Params du serveur" + params.toString());
+			System.out.println("ATUH: Params du serveur" + params.toString());
 			
 			String resp = Utils.ERR_REFUSED_LOGGIN;
 			//Check if this user is in the DB

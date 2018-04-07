@@ -136,12 +136,24 @@ public class Home extends JFrame {
 		);
 		contentPane.setLayout(gl_contentPane);
 		
-		
+		// ############### Buttons (ACTION) listeners
+
 		btnAjouterUneSalle.addActionListener(new ActionListener() {    
             @Override
             public void actionPerformed(ActionEvent e) {
                  AjouterSalle test = new AjouterSalle();
                  test.setVisible(true);
+                 dispose();
+
+            }
+        });
+		btnDconenxion.addActionListener(new ActionListener() {    
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	LoginPage l = new LoginPage();
+                 l.setVisible(true);
+                 dispose();
+
             }
         });
 		
