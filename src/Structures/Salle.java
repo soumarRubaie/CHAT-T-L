@@ -63,12 +63,21 @@ public class Salle {
 		}	
 	}
 	
-	
 	public void addMessage(Message msg) {
 		messagesList.add(msg);
 		System.out.println("Ajout du message " + msg.getIdMessage() + " à la salle n°" + id);
 	}
 
+	public boolean isSubscribed(int idUser) {
+		for(int i = 0; i<suscribersList.size(); i++) {
+			if (suscribersList.get(i).getId() == idUser) {
+				System.out.println("Utilisateur n°" + idUser + " abonné à la salle" + id);
+				return true;
+			}
+		}	
+		return false;
+	}
+	
 	// Getters et setters
 	public String getSalleNom() {
 		return salleNom;
@@ -108,5 +117,21 @@ public class Salle {
 
 	public void setMessagesList(ArrayList<Message> messagesList) {
 		this.messagesList = messagesList;
+	}
+	
+	public String messagesToJsonFormat() {
+		boolean first = true;
+		String jsonMessages="[";
+		for(Message msg: messagesList) {
+			if(!first) {
+				jsonMessages += ",";
+			} else {
+				first = false;
+			}
+			jsonMessages += msg.toJsonFormat();
+			
+		}
+		jsonMessages += "]";
+		return jsonMessages;
 	}
 }

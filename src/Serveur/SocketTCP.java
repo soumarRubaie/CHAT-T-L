@@ -178,7 +178,6 @@ public class SocketTCP extends Thread {
 			os.close();
 			// ### FIN REPONSE ###
 
-			
 		}
 	}
 
@@ -230,8 +229,8 @@ public class SocketTCP extends Thread {
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
 			} else {
-				String response = "ERREUR lors du desabonnement!" + lineReturn + " salle non-existantes"
-						+ lineReturn + "Utilisateur " + idUser + " Salle " + idSalle + lineReturn;
+				String response = "ERREUR lors du desabonnement!" + lineReturn + " salle non-existantes" + lineReturn
+						+ "Utilisateur " + idUser + " Salle " + idSalle + lineReturn;
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(600, resp.length());
 			}
@@ -273,11 +272,24 @@ public class SocketTCP extends Thread {
 			int idUser = Integer.parseInt(params.get(usagerIdParam));
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
-			// ### REPONSE ###
-			String response = "A implementer (GetArchive)" + lineReturn + "id user: " + idUser + lineReturn
-					+ "id salle: " + idSalle;
-			String resp = response + serveurStateResponse();
-			t.sendResponseHeaders(200, resp.length());
+			String resp = "";
+			Salle s = getSalleFromId(idSalle);
+			if (s.isSubscribed(idUser)) {
+				// ### REPONSE ###
+				String response = "Liste des messages de la salle " + idSalle + ":" + lineReturn;
+				response += s.messagesToJsonFormat();
+				System.out.println(response);
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(200, resp.length());
+			} else {
+				String response = "ERREUR! Acces refuse, l'utilisateur " + idUser + " n'est pas abonne a la salle "
+						+ idSalle + lineReturn;
+				response += s.messagesToJsonFormat();
+				System.out.println(response);
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(200, resp.length());
+			}
+
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
 			os.close();
@@ -404,8 +416,8 @@ public class SocketTCP extends Thread {
 		salles.add(s);
 		System.out.println("Salle créée: " + s.toString());
 		System.out.println("Nombre de salles: " + salles.size());
-		
-		//Sauvegarde de la nouvelle salle
+
+		// Sauvegarde de la nouvelle salle
 		JsonHandler.salleToJson(s);
 	}
 
@@ -417,7 +429,7 @@ public class SocketTCP extends Thread {
 		usagers.add(u);
 		System.out.println("Usager créé: " + u.toString());
 		System.out.println("Nombre usagers: " + usagers.size());
-		//Sauvegarde du nouvel utilisateur:
+		// Sauvegarde du nouvel utilisateur:
 		JsonHandler.userToJson(u);
 	}
 

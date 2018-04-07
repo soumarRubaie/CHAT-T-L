@@ -213,17 +213,17 @@ public class JsonHandler {
 
 	}
 
-	public static Message msgFromJsonObject(JsonObject jsonUser) {
+	public static Message msgFromJsonObject(JsonObject jsonMsg) {
 		String contenuMessage = null;
 		int idMessage = 0;
 		int idUtilisateur = 0;
 		int idSalle = 0;
 
-		idMessage = jsonUser.getInt("idMessage");
-		idUtilisateur = jsonUser.getInt("idUtilisateur");
-		contenuMessage = jsonUser.getString("contenuMessage");
-		idSalle = jsonUser.getInt("idSalle");
-
+		idMessage = jsonMsg.getInt("idMessage");
+		idUtilisateur = jsonMsg.getInt("idUtilisateur");
+		contenuMessage = jsonMsg.getString("contenuMessage");
+		idSalle = jsonMsg.getInt("idSalle");
+		
 		Message m = new Message(idMessage, contenuMessage, idSalle, idUtilisateur);
 		return m;
 
