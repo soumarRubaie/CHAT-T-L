@@ -3,14 +3,14 @@ package Serveur;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -19,6 +19,7 @@ import com.sun.net.httpserver.HttpServer;
 import Structures.Message;
 import Structures.Salle;
 import Structures.User;
+import Structures.Utils;
 
 public class SocketTCP extends Thread {
 
@@ -35,33 +36,33 @@ public class SocketTCP extends Thread {
 	}
 
 	// ####################### endpoint et params ##########
-
+	// ####### IMPORTANT: mettre ces infos dans UTILS car le client en a aussi
+	// besoin pour les requêtes...
 	// Endpoint: creation salle
-	private static String creationSalleURI = "/creationSalle";
-	private static String salleNomParam = "salleNom";
+	private static String creationSalleURI = Utils.creationSalleURI;
+	private static String salleNomParam = Utils.salleNomParam;
 
 	// Endpoint: creation usager
-	private static String creationUsagerURI = "/creationUsager";
-	private static String usagerNomParam = "username";
-	private static String usagerPasswordParam = "password";
+	private static String creationUsagerURI = Utils.creationUsagerURI;
+	private static String usagerNomParam = Utils.usagerNomParam;
+	private static String usagerPasswordParam = Utils.usagerPasswordParam;
 
 	// Endpoint: suscriber un usager a une salle
-	private static String suscribeUsagerURI = "/suscribeUsagerSalle";
-	private static String usagerIdParam = "userId";
-	private static String salleIdParam = "salleId";
+	private static String suscribeUsagerURI = Utils.suscribeUsagerURI;
+	private static String usagerIdParam = Utils.usagerIdParam;
+	private static String salleIdParam = Utils.salleIdParam;
 
 	// Endpoint: delete msg
-	private static String deleteMessageURI = "/deleteMessage";
-	private static String msgIdParam = "messageId";
+	private static String deleteMessageURI = Utils.deleteMessageURI;
+	private static String msgIdParam = Utils.msgIdParam;
 
 	// Endpoint: autres
-	private static String getArchiveURI = "/getArchive";
-	private static String getConnectedUsersURI = "/getConnectedUsers";
-	private static String unsubscribeUsagerURI = "/unsubscribeUsager";
+	private static String getArchiveURI = Utils.getArchiveURI;
+	private static String getConnectedUsersURI = Utils.getConnectedUsersURI;
+	private static String unsubscribeUsagerURI = Utils.unsubscribeUsagerURI;
+	private static String authUser = Utils.authUser;
 
-	// TODO: Ajouter nouveau Endpoints si nécessaire ICI
-
-	// ####################### FIND endpoint et param ###########
+	// ####################### FIN endpoint et param ###########
 
 	// ####################### Serveur addresse & port
 	private HttpServer serveur = null;
@@ -95,7 +96,8 @@ public class SocketTCP extends Thread {
 		serveur.createContext(getArchiveURI, new GetArchiveHandler());
 		serveur.createContext(getConnectedUsersURI, new GetConnectedUsersHandler());
 		serveur.createContext(unsubscribeUsagerURI, new UnsuscribeUsagerHandler());
-
+		serveur.createContext(authUser, new authenticateUser());
+		
 		serveur.setExecutor(null); // Associe un thread par défaut au Serveur
 		serveur.start(); // Démarre le serveur
 
@@ -118,8 +120,7 @@ public class SocketTCP extends Thread {
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 
 			// Creer la nouvelle salle & attacher au observeur pattern
-			initSalle(new Salle(params.get(salleNomParam), getSalleCount(),
-					"Description de la salle"));
+			initSalle(new Salle(params.get(salleNomParam), getSalleCount(), "Description de la salle"));
 
 			// ### REPONSE ###
 			String response = "Creation d'une nouvelle salle" + lineReturn + salleNomParam + ": "
@@ -147,8 +148,7 @@ public class SocketTCP extends Thread {
 			// TODO Test sur la présence d'un Usager avec le même nom d'utilisateur dans la
 			// BDD
 
-			initUsager(
-					new User(params.get(usagerNomParam), params.get(usagerPasswordParam), getUserCount()));
+			initUsager(new User(params.get(usagerNomParam), params.get(usagerPasswordParam), getUserCount()));
 
 			// ### REPONSE ###
 			String response = "Creation d'un nouvel usager: " + lineReturn + "Nom d'utilisateur: "
@@ -164,7 +164,7 @@ public class SocketTCP extends Thread {
 
 		}
 	}
-	
+
 	class SuscribeUsagerHandler implements HttpHandler {
 		// localhost:8000/suscribeUsagerSalle?userId=1&salleId=01
 		public void handle(HttpExchange t) throws IOException {
@@ -183,8 +183,8 @@ public class SocketTCP extends Thread {
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
 			} else {
-				String response = "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants" + lineReturn
-						+ "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
+				String response = "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants"
+						+ lineReturn + "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(600, resp.length());
 			}
@@ -205,7 +205,7 @@ public class SocketTCP extends Thread {
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
 			String resp = "";
-				
+
 			// ### REPONSE ###
 			if (unsubscribeUser(idSalle, idUser)) {
 				String response = "Desabonnement: " + lineReturn + "Utilisateur " + idUser
@@ -286,6 +286,36 @@ public class SocketTCP extends Thread {
 			// ### FIN REPONSE ###
 		}
 	}
+	
+	class authenticateUser implements HttpHandler {
+		// localhost:8000/getConnectedUsers?userId=1
+		public void handle(HttpExchange t) throws IOException {
+			// TODO GetConnectedUsers
+			// Récupération des paramètres:
+
+			//int idUser = Integer.parseInt(params.get(usagerIdParam));
+			
+			
+            InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+            BufferedReader br = new BufferedReader(isr);
+            String query = br.readLine();
+            Map<String, String>  params = parseQueryString(query);
+            System.out.println("Params du serveur" + params.toString());
+
+            
+            
+			// ### REPONSE ###
+ 
+			String response = "true";
+			String resp = response;
+			t.sendResponseHeaders(200, resp.length());
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+
+			// ### FIN REPONSE ###
+		}
+}
 
 	// ###################### FIN HANDLERS pour endpoints
 	// ##################################
@@ -402,7 +432,7 @@ public class SocketTCP extends Thread {
 
 	public boolean unsubscribeUser(int idSalle, int idUser) {
 		User currentUser = getUserFromId(idUser);
-		return currentUser.seDesabonner(idSalle); 
+		return currentUser.seDesabonner(idSalle);
 	}
 
 	public User getUserFromId(int userId) {
