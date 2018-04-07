@@ -2,10 +2,9 @@ package Client;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 import Structures.Message;
 import Structures.Utils;
-
+import Serveur.Requests.*;
 
 public class Client extends Thread {
 	/*Il faudra redéfinir cela mieux/ailleurs mais pour fins de tests*/
