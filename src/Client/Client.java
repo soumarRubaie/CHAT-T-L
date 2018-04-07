@@ -18,7 +18,6 @@ public class Client extends Thread {
 		port = portServerUDP;
 	}
 
-
 	public void run() {
 		
 		//Définit un socket, 
@@ -28,7 +27,6 @@ public class Client extends Thread {
 		} catch (SocketException e) {
 			e.printStackTrace();
 			socket.close();
-
 		}
 		InetAddress address = null;
 		try {
@@ -43,7 +41,6 @@ public class Client extends Thread {
 		
 		//lire input du keyboard (ligne par line). Kill avec ctrl-c
 		while (true) {
-			
 			byte[] buf = new byte[Utils.datagrameSizeBytes];
 			//lire l'input du clavier
 			Scanner scan = new Scanner(System.in);
@@ -57,7 +54,6 @@ public class Client extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				socket.close();
-
 			}
 			System.out.println("Msg origine: " + msg.toString());
 
@@ -82,7 +78,6 @@ public class Client extends Thread {
 			//DEBUG: display response
 			msg = new Message(inpacket.getData());
 			System.out.println("From server:" + msg.toString());
-
 		}
 		//Would normally close the socket at some point
 		//socket.close();

@@ -74,57 +74,76 @@ public class Home extends JFrame {
 		
 		JButton btnConsulterSalle = new JButton("Consulter ");
 		
-		JButton btnModifierMonProfil = new JButton("Modifier mon profil");
-		
 		JButton btnDconenxion = new JButton("Déconenxion");
 		
 		JButton btnAjouterUneSalle = new JButton("Ajouter une salle de discussion");
 		btnAjouterUneSalle.setForeground(Color.RED);
+		
+		JLabel lblBonjour = new JLabel("Bonjour :)");
+		lblBonjour.setForeground(new Color(220, 20, 60));
+		lblBonjour.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(111, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnAjouterUneSalle)
-						.addComponent(btnModifierMonProfil)
-						.addComponent(btnDconenxion, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-							.addComponent(lblListeDesUtilisateurs)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(btnConsulterProfile)
-								.addComponent(list, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))))
-					.addGap(30)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnConsulterSalle, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-						.addComponent(list2, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblListeDesSalles, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE))
-					.addGap(290))
+		    gl_contentPane.createParallelGroup(Alignment.LEADING)
+		        .addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+		            .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+		                .addGroup(gl_contentPane.createSequentialGroup()
+		                    .addContainerGap()
+		                    .addComponent(btnDconenxion, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE))
+		                .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+		                    .addGroup(gl_contentPane.createSequentialGroup()
+		                        .addGap(27)
+		                        .addComponent(lblBonjour)
+		                        .addPreferredGap(ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+		                        .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+		                            .addComponent(lblListeDesUtilisateurs)
+		                            .addComponent(list, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+		                            .addComponent(btnConsulterProfile, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+		                    .addGroup(gl_contentPane.createSequentialGroup()
+		                        .addContainerGap(165, Short.MAX_VALUE)
+		                        .addComponent(btnAjouterUneSalle))))
+		            .addGap(30)
+		            .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+		                .addComponent(btnConsulterSalle, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+		                .addComponent(list2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+		                .addComponent(lblListeDesSalles, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE))
+		            .addGap(290))
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblListeDesSalles)
-						.addComponent(lblListeDesUtilisateurs))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(list2, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(list)
-							.addGap(18)
-							.addComponent(btnConsulterProfile)))
-					.addGap(18)
-					.addComponent(btnConsulterSalle)
-					.addGap(41)
-					.addComponent(btnAjouterUneSalle)
-					.addGap(18)
-					.addComponent(btnModifierMonProfil)
-					.addGap(18)
-					.addComponent(btnDconenxion)
-					.addGap(82))
+		    gl_contentPane.createParallelGroup(Alignment.LEADING)
+		        .addGroup(gl_contentPane.createSequentialGroup()
+		            .addContainerGap()
+		            .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+		                .addGroup(gl_contentPane.createSequentialGroup()
+		                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+		                        .addComponent(lblListeDesSalles)
+		                        .addComponent(lblListeDesUtilisateurs))
+		                    .addPreferredGap(ComponentPlacement.UNRELATED)
+		                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+		                        .addComponent(list2, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE)
+		                        .addGroup(gl_contentPane.createSequentialGroup()
+		                            .addComponent(list)
+		                            .addGap(5)
+		                            .addComponent(btnConsulterProfile)))
+		                    .addPreferredGap(ComponentPlacement.RELATED)
+		                    .addComponent(btnConsulterSalle)
+		                    .addGap(53)
+		                    .addComponent(btnAjouterUneSalle))
+		                .addComponent(lblBonjour))
+		            .addGap(18)
+		            .addComponent(btnDconenxion)
+		            .addContainerGap(220, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
+		
+		
+		btnAjouterUneSalle.addActionListener(new ActionListener() {    
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                 AjouterSalle test = new AjouterSalle();
+                 test.setVisible(true);
+            }
+        });
+		
 	}
 }

@@ -1,158 +1,158 @@
 package Client;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.SpringLayout;
+import java.awt.List;
+import java.awt.Button;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import javax.swing.JScrollPane;
 import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JPasswordField;
+import java.awt.Color;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class Inscription extends JFrame {
 
-	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
+    private JPanel contentPane;
+    private JTextField textField;
+    private JTextField textField_1;
+    private JTextField textField_2;
+    private JTextField textField_3;
+    private JTextField textField_4;
+    
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    Inscription frame = new Inscription();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Inscription frame = new Inscription();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-
-	/**
-	 * Create the frame.
-	 */
-	public Inscription() {
-		//Define frame
-		setBounds(100, 100, 551, 589);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		SpringLayout sl_contentPane = new SpringLayout();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		contentPane.setLayout(sl_contentPane);
-		
-		//Details of layout performed there
-		placeComponents(sl_contentPane);
-	}
-
-	public void placeComponents(SpringLayout sl_contentPane) {
-		//######### Labels
-		JLabel lblNom = new JLabel("Nom");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblNom, 67, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, textField, 1, SpringLayout.NORTH, lblNom);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblNom, 28, SpringLayout.WEST, contentPane);
-		lblNom.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		contentPane.add(lblNom);
-		
-		JLabel lblDescription = new JLabel("Description");
-		sl_contentPane.putConstraint(SpringLayout.WEST, textField_1, 142, SpringLayout.EAST, lblDescription);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblDescription, 41, SpringLayout.SOUTH, lblNom);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblDescription, 0, SpringLayout.WEST, lblNom);
-		lblDescription.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		contentPane.add(lblDescription);
-		
-		JLabel lblPays = new JLabel("Pays");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblPays, 47, SpringLayout.SOUTH, lblDescription);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, textField_2, 1, SpringLayout.NORTH, lblPays);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblPays, 0, SpringLayout.WEST, lblNom);
-		lblPays.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		contentPane.add(lblPays);
-		
-		JLabel lblUsername = new JLabel("Username");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, textField_3, 1, SpringLayout.NORTH, lblUsername);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblUsername, 0, SpringLayout.WEST, lblNom);
-		lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		contentPane.add(lblUsername);
-		
-		JLabel lblMotDePasse = new JLabel("Mot de passe");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblMotDePasse, 315, SpringLayout.NORTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, lblUsername, -38, SpringLayout.NORTH, lblMotDePasse);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblMotDePasse, 0, SpringLayout.WEST, lblNom);
-		lblMotDePasse.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		contentPane.add(lblMotDePasse);
-		
-		JLabel lblConfirmationMotDe = new JLabel("Confirmation mot de passe");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, lblConfirmationMotDe, 32, SpringLayout.SOUTH, lblMotDePasse);
-		sl_contentPane.putConstraint(SpringLayout.WEST, lblConfirmationMotDe, 0, SpringLayout.WEST, lblNom);
-		lblConfirmationMotDe.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		contentPane.add(lblConfirmationMotDe);
-		
-		//############# Text fields
-		textField = new JTextField();
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, textField_1, 34, SpringLayout.SOUTH, textField);
-		sl_contentPane.putConstraint(SpringLayout.EAST, textField, 0, SpringLayout.EAST, textField_1);
-		sl_contentPane.putConstraint(SpringLayout.EAST, textField_1, -56, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, textField, 0, SpringLayout.WEST, textField_1);
-		textField_1.setColumns(10);
-		contentPane.add(textField_1);
-		
-		textField_2 = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, textField_1, -23, SpringLayout.NORTH, textField_2);
-		textField_2.setColumns(10);
-		contentPane.add(textField_2);
-		
-		textField_3 = new JTextField();
-		sl_contentPane.putConstraint(SpringLayout.WEST, textField_2, 0, SpringLayout.WEST, textField_3);
-		sl_contentPane.putConstraint(SpringLayout.EAST, textField_2, 0, SpringLayout.EAST, textField_3);
-		textField_3.setColumns(10);
-		contentPane.add(textField_3);
-		passwordField = new JPasswordField();
-		sl_contentPane.putConstraint(SpringLayout.WEST, textField_3, 0, SpringLayout.WEST, passwordField);
-		sl_contentPane.putConstraint(SpringLayout.EAST, textField_3, 213, SpringLayout.WEST, passwordField);
-		sl_contentPane.putConstraint(SpringLayout.NORTH, passwordField, 1, SpringLayout.NORTH, lblMotDePasse);
-		contentPane.add(passwordField);
-		
-		passwordField_1 = new JPasswordField();
-		sl_contentPane.putConstraint(SpringLayout.NORTH, passwordField_1, 31, SpringLayout.SOUTH, passwordField);
-		sl_contentPane.putConstraint(SpringLayout.EAST, passwordField, 0, SpringLayout.EAST, passwordField_1);
-		sl_contentPane.putConstraint(SpringLayout.WEST, passwordField_1, 27, SpringLayout.EAST, lblConfirmationMotDe);
-		sl_contentPane.putConstraint(SpringLayout.EAST, passwordField_1, -56, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, passwordField, 0, SpringLayout.WEST, passwordField_1);
-		contentPane.add(passwordField_1);
-		//########### Buttons
-		JButton btnNewButton = new JButton("Inscription");
-		sl_contentPane.putConstraint(SpringLayout.NORTH, btnNewButton, -88, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.WEST, btnNewButton, 202, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, btnNewButton, -37, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, btnNewButton, 316, SpringLayout.WEST, contentPane);
-		contentPane.add(btnNewButton);
-
-		//###############Button listeners
-
-				
-
-		
-
-		
-
-		
-
-	}
-
-	
+    /**
+     * Create the frame.
+     */
+    public Inscription() {
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 745, 603);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        
+        JButton btnConsulterProfile = new JButton("Terminer");
+        btnConsulterProfile.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        btnConsulterProfile.setBackground(Color.GREEN);
+        btnConsulterProfile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        
+        JLabel lblListeDesSalles = new JLabel("Inscription");
+        lblListeDesSalles.setForeground(Color.RED);
+        lblListeDesSalles.setFont(new Font("Thorndale AMT", Font.PLAIN, 23));
+        
+        textField = new JTextField();
+        textField.setColumns(10);
+        
+        JLabel lblNewLabel = new JLabel("Nom ");
+        
+        JLabel lblNewLabel_1 = new JLabel("Description");
+        
+        textField_1 = new JTextField();
+        textField_1.setHorizontalAlignment(SwingConstants.LEFT);
+        textField_1.setColumns(10);
+        
+        textField_2 = new JTextField();
+        textField_2.setColumns(10);
+        
+        textField_3 = new JTextField();
+        textField_3.setColumns(10);
+        
+        textField_4 = new JTextField();
+        textField_4.setColumns(10);
+        
+        JLabel lblNewLabel_2 = new JLabel("Pays");
+        
+        JLabel lblNewLabel_3 = new JLabel("Nom d'utilisateur");
+        
+        JLabel lblNewLabel_4 = new JLabel("Mot de passe");
+        GroupLayout gl_contentPane = new GroupLayout(contentPane);
+        gl_contentPane.setHorizontalGroup(
+            gl_contentPane.createParallelGroup(Alignment.LEADING)
+                .addGroup(gl_contentPane.createSequentialGroup()
+                    .addGap(336)
+                    .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+                        .addComponent(lblNewLabel)
+                        .addComponent(lblNewLabel_1)
+                        .addComponent(lblNewLabel_2)
+                        .addComponent(lblNewLabel_3)
+                        .addComponent(lblNewLabel_4))
+                    .addGap(18)
+                    .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+                        .addComponent(btnConsulterProfile)
+                        .addComponent(textField_1, 116, 116, 116)
+                        .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+                            .addComponent(lblListeDesSalles, GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                            .addComponent(textField)
+                            .addComponent(textField_3)
+                            .addComponent(textField_4)
+                            .addComponent(textField_2)))
+                    .addContainerGap(170, Short.MAX_VALUE))
+        );
+        gl_contentPane.setVerticalGroup(
+            gl_contentPane.createParallelGroup(Alignment.LEADING)
+                .addGroup(gl_contentPane.createSequentialGroup()
+                    .addGap(55)
+                    .addComponent(lblListeDesSalles, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                    .addGap(18)
+                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblNewLabel))
+                    .addGap(30)
+                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(lblNewLabel_1)
+                        .addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE))
+                    .addGap(43)
+                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblNewLabel_2))
+                    .addGap(29)
+                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblNewLabel_3))
+                    .addGap(34)
+                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblNewLabel_4))
+                    .addGap(18)
+                    .addComponent(btnConsulterProfile)
+                    .addGap(137))
+        );
+        contentPane.setLayout(gl_contentPane);
+        
+        
+    }
 }

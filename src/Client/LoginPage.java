@@ -125,7 +125,6 @@ public class LoginPage extends JFrame {
 				System.out.println("test redirect inscription");
 				 Inscription test = new Inscription();
 				 test.setVisible(true);
-				 
 			}
 
 		});
