@@ -51,11 +51,11 @@ public abstract class Requests {
 
 		
 		//TODO: science de la comparaison des string en java... ma sinon ça marche.
+		//Found it: there was a /r (line return) in the response...
 		String response = executePost(targetURL, urlParameters);
-		String dum = "true";
-		System.out.println(response);
+		response = response.trim();
 		System.out.println("comparaison: "+response.length() + " " + "true".length());
-		return response.equals(dum);
+		return response.equals("true");
 }
 
 	public Requests(RequestType type) {

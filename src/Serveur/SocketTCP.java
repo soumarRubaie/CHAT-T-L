@@ -359,17 +359,32 @@ public class SocketTCP extends Thread {
 			String query = br.readLine();
 			Map<String, String> params = parseQueryString(query);
 			System.out.println("Params du serveur" + params.toString());
+			
+			String resp = "false";
+			//Check if this user is in the DB
+			if (is_valid_loggin(params.get(Utils.usagerNomParam),params.get(Utils.usagerPasswordParam) )) {
+				resp = "true";
+			}
 
 			// ### REPONSE ###
 
-			String response = "true";
-			String resp = response;
 			t.sendResponseHeaders(200, resp.length());
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
 			os.close();
 
 			// ### FIN REPONSE ###
+		}
+
+		private boolean is_valid_loggin(String username, String password) {
+			/*Check is le usernmae & password match un des usagers de la liste*/ 
+			for (User u : usagers) {
+				if (u.checkAuth(username, password)) {
+					return true;
+				}
+			}
+			
+			return false;
 		}
 
 	}

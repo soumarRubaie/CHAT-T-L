@@ -12,15 +12,20 @@ public class User {
 	String password;
 	ArrayList<Salle> sallesSuscribed;
 	boolean isConnected;  
-	AuthentificationUser auth;
+	//AuthentificationUser auth;
 	
 	//Création d'un nouveau user
 	public User(String username, String password, int id) {
 		this.password = password;
 		this.username = username;
 		this.id = id;
-		auth = new AuthentificationUser(username, password);
+		//auth = new AuthentificationUser(username, password);
 	}
+	
+	public boolean checkAuth(String username, String password) {
+		/*Checks if provided auth matches this user*/
+		return this.username.equals(username) && this.password.equals(password);
+}
 
 	public boolean isConnected() {
 		return isConnected;
