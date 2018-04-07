@@ -76,3 +76,5 @@ http://localhost:8000/suscribeUsagerSalle?userId=1&salleId=1
 ```
 ## Erreurs connues:
 * Si le serveur n'est pas fermé proprement, il ne sera pas possible de re-démarrer le serveur sur le même port. Une erreur de type **Exception in thread "main" java.net.BindException: Address already in use** . Il faut alors arrêter le processus correspondant sur votre système (e.g. gestionnaire de tâches). Ou alors choisir un autre port pour démarrer l'application (avec argumenrs optionels comme ci-haut).
+
+# Authentification
