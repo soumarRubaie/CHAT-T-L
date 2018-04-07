@@ -102,6 +102,7 @@ public class Salle {
 		JList list_1 = new JList();
 		
 		JTextPane txtpnSoumarAcrit = new JTextPane();
+		txtpnSoumarAcrit.setEditable(false);
 		txtpnSoumarAcrit.setText("Soumar a \u00E9crit \u00E0 7:28 le 2018-04-04 : Bonjour;Aziz a \u00E9crit \u00E0 7:30 le 2018-04-04 : Bonjour Soumar;");
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(

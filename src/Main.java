@@ -24,7 +24,7 @@ public class Main {
 			if (args[0].equals(Utils.CLIENT)) {
 				// we start the client
 				System.out.println("Démarrage client UDP. PortUDP (serveur):" + portServerUDP);
-				new Client(portServerUDP).start();
+				new Client(portServerUDP, portServerTCP).start();
 
 			} else if (args[0].equals(Utils.SERVER)) {
 				// we start the server

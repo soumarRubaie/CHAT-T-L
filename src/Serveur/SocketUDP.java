@@ -7,6 +7,7 @@ import Structures.Utils;
 
 public class SocketUDP extends Thread {
 	/*Simple socketUDP. Port selon Utils.udpPort ou argument en ligne de commande si donné
+	 * edit
 	 * */
 	
 	protected int port = Utils.udpPort;
