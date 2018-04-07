@@ -62,7 +62,7 @@ public class SocketTCP extends Thread {
 	private static String getArchiveURI = Utils.getArchiveURI;
 	private static String getConnectedUsersURI = Utils.getConnectedUsersURI;
 	private static String unsubscribeUsagerURI = Utils.unsubscribeUsagerURI;
-	private static String authUser = Utils.authUser;
+	private static String authUser = Utils.authUserURI;
 
 	// ####################### FIN endpoint et param ###########
 
@@ -148,36 +148,34 @@ public class SocketTCP extends Thread {
 		@Override
 		// localhost:8000/creationUsager?username=User&password=Password
 		public void handle(HttpExchange t) throws IOException {
+			
+			
+			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+			BufferedReader br = new BufferedReader(isr);
+			String query = br.readLine();
+			Map<String, String> params = parseQueryString(query);
+			System.out.println("Params du serveur" + params.toString());
+			
+			String resp = Utils.ERR_USER_EXIST;
+			//TODO: Check if this username is in the DB
+			User u = new User(params.get(Utils.usagerNomParam), params.get(Utils.usagerPasswordParam), usagers.size());
 
-			// Récupération des variables de la requête
-			// (username et password)
-			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			if (u != null) {
+				usagers.add(u);
+				resp = Utils.OK;
+			}
+			
+			System.out.println("Lst users: " + usagers.toString());
+
 
 			// ### REPONSE ###
-			String resp = "";
 
-			if (usernameIsFree(params.get(usagerNomParam))) {
-
-				// Création d'un usager
-				initUsager(new User(params.get(usagerNomParam), params.get(usagerPasswordParam), getUserCount()));
-				String response = "Creation d'un nouvel usager: " + lineReturn + "Nom d'utilisateur: "
-						+ params.get(usagerNomParam) + lineReturn + "Mot de passe: " + params.get(usagerPasswordParam)
-						+ lineReturn + " Nombre total d'usagers: " + getUserCount() + lineReturn;
-				resp = response + serveurStateResponse();
-				t.sendResponseHeaders(200, resp.length());
-			} else {
-				String response = "ERREUR Creation usager: " + lineReturn + "Nom d'utilisateur: "
-						+ params.get(usagerNomParam) + " deja utilise !" + lineReturn + " Nombre total d'usagers: "
-						+ getUserCount() + lineReturn;
-				resp = response + serveurStateResponse();
-				t.sendResponseHeaders(601, resp.length());
-			}
-
+			t.sendResponseHeaders(200, resp.length());
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
 			os.close();
-			// ### FIN REPONSE ###
 
+			// ### FIN REPONSE ###
 		}
 	}
 
@@ -347,12 +345,8 @@ public class SocketTCP extends Thread {
 	}
 
 	class authenticateUser implements HttpHandler {
-		// localhost:8000/getConnectedUsers?userId=1
 		public void handle(HttpExchange t) throws IOException {
-			// TODO GetConnectedUsers
-			// Récupération des paramètres:
 
-			// int idUser = Integer.parseInt(params.get(usagerIdParam));
 
 			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
 			BufferedReader br = new BufferedReader(isr);
@@ -360,10 +354,10 @@ public class SocketTCP extends Thread {
 			Map<String, String> params = parseQueryString(query);
 			System.out.println("Params du serveur" + params.toString());
 			
-			String resp = "false";
+			String resp = Utils.ERR_REFUSED_LOGGIN;
 			//Check if this user is in the DB
 			if (is_valid_loggin(params.get(Utils.usagerNomParam),params.get(Utils.usagerPasswordParam) )) {
-				resp = "true";
+				resp = Utils.OK;
 			}
 
 			// ### REPONSE ###

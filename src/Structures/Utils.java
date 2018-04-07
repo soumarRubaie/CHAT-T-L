@@ -6,7 +6,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class Utils {
-	// Codes d'erreur:
+	// Codes d'erreur & de réponses serveurTCP
+	public static String OK = "200";
+
+	public static String ERR_NO_DATA = "400";
+	public static String ERR_REFUSED_LOGGIN= "401";
+	public static String ERR_USER_EXIST = "403";
+
 	// 600 : Données non existantes (salle ou user)
 	// 601 : Création Utilisateur: Username déjà utilisé
 	// 602 : Accès refusé
@@ -47,7 +53,7 @@ public class Utils {
 		public static String getArchiveURI = "/getArchive";
 		public static String getConnectedUsersURI = "/getConnectedUsers";
 		public static String unsubscribeUsagerURI = "/unsubscribeUsager";
-		public static String authUser = "/authUser";
+		public static String authUserURI = "/authUser";
 
 	// ####################### endpoint et params ##########
 

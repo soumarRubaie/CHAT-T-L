@@ -42,13 +42,6 @@ public class LoginPage extends JFrame {
 
 	}
 
-	public static boolean authenticate(String username, String password) throws UnsupportedEncodingException {
-		/*
-		 * Créer un obj Requests avec type AUTH et ensuite le Requests gère les détails
-		 */
-		return Requests.athenticateUser(username, password);
-	}
-
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -107,7 +100,7 @@ public class LoginPage extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (LoginPage.authenticate(userText.getText(), passwordText.getText())) {
+					if (Requests.athenticateUser(userText.getText(), passwordText.getText())) {
 						System.out.println("success");
 						// display Home
 						Home home = new Home();

@@ -38,25 +38,53 @@ public abstract class Requests {
 		LOGOUT_RESPONSE
 	}
 	
+	//##################### LIST OF REQUESTS FOR EACH ENDPOINTS
+	//#########################
 	public static boolean athenticateUser(String username, String password) throws UnsupportedEncodingException {
 		/*Envoie une requête au serveur pour voir si un user matche avec ce qui a été donné*/
-		System.out.println("auth 1");
 		//Encoder tous les params de la requête
 		String urlParameters = Utils.usagerNomParam+"=" + URLEncoder.encode(username, "UTF-8") 
 		+ "&"+Utils.usagerPasswordParam+"=" + URLEncoder.encode(password, "UTF-8");
 		
-		System.out.println("urlParam:" + urlParameters);
+		System.out.println("AUTH: urlParam - " + urlParameters);
 		//Encoder l'URL - doit inclure le port & le context de la requête 
-		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.authUser;
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.authUserURI;
 
 		
 		//TODO: science de la comparaison des string en java... ma sinon ça marche.
 		//Found it: there was a /r (line return) in the response...
 		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!
 		response = response.trim();
-		System.out.println("comparaison: "+response.length() + " " + "true".length());
-		return response.equals("true");
+		System.out.println("AUTH: server response - " + response);
+
+		return response.equals(Utils.OK);
 }
+	
+
+	public static boolean createUser(String param_username, String param_password)throws UnsupportedEncodingException {
+		/*Envoie une requête au serveur pour voir si un user matche avec ce qui a été donné*/
+		//Encoder tous les params de la requête
+		String urlParameters = Utils.usagerNomParam+"=" + URLEncoder.encode(param_username, "UTF-8") 
+		+ "&"+Utils.usagerPasswordParam+"=" + URLEncoder.encode(param_password, "UTF-8");
+		
+		System.out.println("CREATEUSER: urlParam - " + urlParameters);
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.creationUsagerURI;
+
+		
+		//TODO: science de la comparaison des string en java... ma sinon ça marche.
+		//Found it: there was a /r (line return) in the response...
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!
+		response = response.trim();
+		System.out.println("CREATEUSER: server response - " + response);
+
+		return response.equals(Utils.OK);
+	}
+	//#########################
+	//##################### END LIST OF REQUESTS FOR EACH ENDPOINTS
+
 
 	public Requests(RequestType type) {
 		this.type = type;
@@ -115,6 +143,7 @@ public abstract class Requests {
 		    }
 		  }
 }
+
 	
 	
 	
