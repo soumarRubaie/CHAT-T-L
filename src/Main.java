@@ -15,7 +15,8 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		if (args.length != 3) {
 			System.out.println("Usage:  [serveur|client] int tpcport int udpport");
-		} else {
+		} 
+		else {
 			int portServerUDP = Integer.parseInt(args[1]);
 			int portServerTCP = Integer.parseInt(args[2]);
 

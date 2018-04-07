@@ -21,6 +21,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.List;
 import java.awt.TextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Salle {
 	static String label[] = { "Zero", "One", "Two", "Three", "Four", "Five", "Six",
@@ -33,7 +35,7 @@ public class Salle {
 		
 		// TODO Auto-generated method stub
 		JFrame frame = new JFrame("Salle discussion");
-		frame.setSize(641, 545);
+		frame.setSize(902, 739);
 		
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.WEST);
@@ -41,10 +43,15 @@ public class Salle {
 		JScrollPane scrollPane = new JScrollPane();
 		JList list = new JList(label);
 		scrollPane.setViewportView(list);
-		JButton btnConsulterProfil = new JButton("Consulter profil");
+		JButton btnConsulterProfil = new JButton("Ajouter utilisateur dans la salle");
+		btnConsulterProfil.setForeground(Color.RED);
+		btnConsulterProfil.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnConsulterProfil.setBounds(36, 224, 169, 25);
 		
-		JLabel lblListeDesUtilisateurs = new JLabel("Liste des utilisateurs");
+		JLabel lblListeDesUtilisateurs = new JLabel("Liste des utilisateurs : ");
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -90,6 +97,7 @@ public class Salle {
 		textField.setColumns(10);
 		
 		JButton btnEnvoyer = new JButton("Envoyer");
+		btnEnvoyer.setForeground(new Color(255, 0, 255));
 		
 		JList list_1 = new JList();
 		
@@ -99,18 +107,16 @@ public class Salle {
 		gl_panel_2.setHorizontalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_2.createSequentialGroup()
-					.addGap(41)
-					.addComponent(txtpnSoumarAcrit, GroupLayout.PREFERRED_SIZE, 329, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(71, Short.MAX_VALUE))
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addGap(58)
+					.addContainerGap()
 					.addComponent(lblMessage)
-					.addGap(18)
+					.addGap(27)
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnEnvoyer)
-						.addGroup(Alignment.TRAILING, gl_panel_2.createSequentialGroup()
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 229, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+						.addGroup(gl_panel_2.createSequentialGroup()
+							.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+								.addComponent(textField, GroupLayout.PREFERRED_SIZE, 347, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtpnSoumarAcrit, GroupLayout.PREFERRED_SIZE, 444, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
 							.addComponent(list_1, GroupLayout.PREFERRED_SIZE, 1, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
@@ -122,15 +128,15 @@ public class Salle {
 							.addGap(119)
 							.addComponent(list_1, GroupLayout.PREFERRED_SIZE, 1, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panel_2.createSequentialGroup()
-							.addGap(48)
-							.addComponent(txtpnSoumarAcrit, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
-					.addPreferredGap(ComponentPlacement.RELATED, 247, Short.MAX_VALUE)
+							.addGap(22)
+							.addComponent(txtpnSoumarAcrit, GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)))
+					.addGap(18)
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblMessage))
 					.addGap(18)
 					.addComponent(btnEnvoyer)
-					.addGap(21))
+					.addGap(7))
 		);
 		panel_2.setLayout(gl_panel_2);
 		
