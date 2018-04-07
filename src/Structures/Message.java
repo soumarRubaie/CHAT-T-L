@@ -92,8 +92,8 @@ public class Message {
 
 	@Override
 	public String toString() {
-		return "idMessage: " + idMessage + ", contenuMessage: " + contenuMessage + ", idSalle: " + idSalle
-				+ ", idUtilisateur: " + idUtilisateur;
+		return "{idMessage: " + idMessage + ", contenuMessage: " + contenuMessage + ", idSalle: " + idSalle
+				+ ", idUtilisateur: " + idUtilisateur+"}";
 	}
 
 	public String toJsonFormat() {

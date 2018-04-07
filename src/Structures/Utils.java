@@ -9,6 +9,8 @@ public class Utils {
 	// Codes d'erreur:
 	// 600 : Données non existantes (salle ou user)
 	// 601 : Création Utilisateur: Username déjà utilisé
+	// 602 : Accès refusé
+	// 603 : Données non existantes (Message)
 	
 	//Params json path
 	public static String userRessourcePath = "ressources/users/";

@@ -198,6 +198,7 @@ public class SocketTCP extends Thread {
 						+ " abonne a la salle " + idSalle;
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
+				JsonHandler.salleToJson(getSalleFromId(idSalle));
 			} else {
 				String response = "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants"
 						+ lineReturn + "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
@@ -228,6 +229,7 @@ public class SocketTCP extends Thread {
 						+ " se desabonne de la salle " + idSalle;
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
+				JsonHandler.salleToJson(getSalleFromId(idSalle));
 			} else {
 				String response = "ERREUR lors du desabonnement!" + lineReturn + " salle non-existantes" + lineReturn
 						+ "Utilisateur " + idUser + " Salle " + idSalle + lineReturn;
@@ -244,23 +246,52 @@ public class SocketTCP extends Thread {
 	class DeleteMessageHandler implements HttpHandler {
 		// localhost:8000/deleteMessage?userId=1&salleId=1&messageId=1
 		public void handle(HttpExchange t) throws IOException {
-			// TODO Delete Message
 			// Récupération des paramètres:
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 			int idUser = Integer.parseInt(params.get(usagerIdParam));
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 			int idMsg = Integer.parseInt(params.get(msgIdParam));
 
-			// ### REPONSE ###
-			String response = "A implementer (DeleteMessage)" + lineReturn + "id user: " + idUser + lineReturn
-					+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
-			String resp = response + serveurStateResponse();
-			t.sendResponseHeaders(200, resp.length());
+			String response = "";
+			String resp = "";
+			Salle s = getSalleFromId(idSalle);
+
+			if (s != null) {
+				switch (s.deleteMessage(idUser, idMsg)) {
+				case 0:
+					response = "Message supprime avec succes!" + lineReturn + "id user: " + idUser + lineReturn
+							+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
+					resp = response + serveurStateResponse();
+					t.sendResponseHeaders(200, resp.length());
+					JsonHandler.salleToJson(s);
+					break;
+
+				case 1:
+					response = "ERREUR! Message introuvable" + lineReturn + "id user: " + idUser + lineReturn
+							+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
+					resp = response + serveurStateResponse();
+					t.sendResponseHeaders(604, resp.length());
+					break;
+
+				case 2:
+					response = "ERREUR! Accees refuse!" + lineReturn + "id user: " + idUser + lineReturn
+							+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
+					resp = response + serveurStateResponse();
+					t.sendResponseHeaders(602, resp.length());
+					break;
+				}
+				
+			} else {
+				response = "ERREUR! Salle introuvable" + lineReturn + "id user: " + idUser + lineReturn
+						+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
+				resp = response + serveurStateResponse();
+				t.sendResponseHeaders(600, resp.length());
+			}
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
 			os.close();
-			// ### FIN REPONSE ###
 		}
+		// ### FIN REPONSE ###
 	}
 
 	class GetArchiveHandler implements HttpHandler {
@@ -278,7 +309,6 @@ public class SocketTCP extends Thread {
 				// ### REPONSE ###
 				String response = "Liste des messages de la salle " + idSalle + ":" + lineReturn;
 				response += s.messagesToJsonFormat();
-				System.out.println(response);
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
 			} else {
@@ -341,6 +371,7 @@ public class SocketTCP extends Thread {
 
 			// ### FIN REPONSE ###
 		}
+
 	}
 
 	// ###################### FIN HANDLERS pour endpoints

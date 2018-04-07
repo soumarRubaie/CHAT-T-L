@@ -67,6 +67,24 @@ public class Salle {
 		messagesList.add(msg);
 		System.out.println("Ajout du message " + msg.getIdMessage() + " à la salle n°" + id);
 	}
+	
+	public int deleteMessage(int idUser, int idMsg) {
+		//0 => Pas d'erreur
+		//1 => Message introuvable
+		//2 => Acces Denied (Message ne provenant pas de l'utilisateur
+		
+		for(int i = 0; i<messagesList.size(); i++) {
+			if(messagesList.get(i).getIdMessage() == idMsg) {
+				if (messagesList.get(i).getIdUtilisateur() == idUser) {
+					messagesList.remove(i);
+					return 0;
+				} else {
+					return 2;
+				}
+			}
+		}
+		return 1;
+	}
 
 	public boolean isSubscribed(int idUser) {
 		for(int i = 0; i<suscribersList.size(); i++) {
