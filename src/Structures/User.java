@@ -2,7 +2,7 @@ package Structures;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
+import Serveur.AuthentificationUser;
 import Structures.Salle;
 
 public class User {
@@ -12,12 +12,14 @@ public class User {
 	String password;
 	ArrayList<Salle> sallesSuscribed;
 	boolean isConnected;  
+	AuthentificationUser auth;
 	
 	//Création d'un nouveau user
 	public User(String username, String password, int id) {
 		this.password = password;
 		this.username = username;
 		this.id = id;
+		auth = new AuthentificationUser(username, password);
 	}
 
 	public boolean isConnected() {
