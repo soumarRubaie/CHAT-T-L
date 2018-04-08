@@ -81,26 +81,32 @@ public class Home extends JFrame {
 		JLabel lblBonjour = new JLabel("Bonjour :)");
 		lblBonjour.setForeground(new Color(220, 20, 60));
 		lblBonjour.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		
+		JButton btnModifierProfil = new JButton("Modifier mon profil");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-		    gl_contentPane.createParallelGroup(Alignment.LEADING)
-		        .addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+		    gl_contentPane.createParallelGroup(Alignment.TRAILING)
+		        .addGroup(gl_contentPane.createSequentialGroup()
 		            .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 		                .addGroup(gl_contentPane.createSequentialGroup()
 		                    .addContainerGap()
-		                    .addComponent(btnDconenxion, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE))
+		                    .addComponent(btnModifierProfil, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
 		                .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 		                    .addGroup(gl_contentPane.createSequentialGroup()
-		                        .addGap(27)
-		                        .addComponent(lblBonjour)
-		                        .addPreferredGap(ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
-		                        .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-		                            .addComponent(lblListeDesUtilisateurs)
-		                            .addComponent(list, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
-		                            .addComponent(btnConsulterProfile, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-		                    .addGroup(gl_contentPane.createSequentialGroup()
-		                        .addContainerGap(165, Short.MAX_VALUE)
-		                        .addComponent(btnAjouterUneSalle))))
+		                        .addContainerGap()
+		                        .addComponent(btnDconenxion, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE))
+		                    .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+		                        .addGroup(gl_contentPane.createSequentialGroup()
+		                            .addGap(27)
+		                            .addComponent(lblBonjour)
+		                            .addPreferredGap(ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+		                            .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+		                                .addComponent(lblListeDesUtilisateurs)
+		                                .addComponent(list, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+		                                .addComponent(btnConsulterProfile, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+		                        .addGroup(gl_contentPane.createSequentialGroup()
+		                            .addContainerGap(165, Short.MAX_VALUE)
+		                            .addComponent(btnAjouterUneSalle)))))
 		            .addGap(30)
 		            .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
 		                .addComponent(btnConsulterSalle, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -126,7 +132,9 @@ public class Home extends JFrame {
 		                            .addComponent(btnConsulterProfile)))
 		                    .addPreferredGap(ComponentPlacement.RELATED)
 		                    .addComponent(btnConsulterSalle)
-		                    .addGap(53)
+		                    .addGap(19)
+		                    .addComponent(btnModifierProfil)
+		                    .addPreferredGap(ComponentPlacement.UNRELATED)
 		                    .addComponent(btnAjouterUneSalle))
 		                .addComponent(lblBonjour))
 		            .addGap(18)
@@ -143,7 +151,6 @@ public class Home extends JFrame {
                  AjouterSalle test = new AjouterSalle();
                  test.setVisible(true);
                  dispose();
-
             }
         });
 		btnDconenxion.addActionListener(new ActionListener() {    
@@ -152,9 +159,19 @@ public class Home extends JFrame {
             	LoginPage l = new LoginPage();
                  l.setVisible(true);
                  dispose();
-
             }
         });
+		
+		btnModifierProfil.addActionListener(new ActionListener() {    
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                ModifierUtilisateur l = new ModifierUtilisateur();
+	                 l.setVisible(true);
+	                 dispose();
+	            }
+	        });
+	        
+		
 		
 	}
 }
