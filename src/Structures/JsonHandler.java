@@ -198,7 +198,6 @@ public class JsonHandler {
 	    String password = objectUser.getString("password");
 	    boolean isConnected = objectUser.getBoolean("isConnected");
 	    
-	    
 		User user = new User(username, password, id, isConnected);
 		return user;
 	}

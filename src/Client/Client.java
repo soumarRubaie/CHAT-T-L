@@ -4,9 +4,17 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.json.JsonArray;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import Serveur.Requests;
 import Serveur.Requests.RequestType;
+import Structures.JsonHandler;
 import Structures.Message;
+import Structures.User;
 import Structures.Utils;
 
 public class Client extends Thread {
@@ -21,6 +29,8 @@ public class Client extends Thread {
 
 	// Définit un socket,
 	DatagramSocket socket = null;
+	List<User> usagers = new ArrayList<User>();
+
 
 	public Client(int portServerUDP, int portServerTCP) {
 		Utils.tcpPort = portServerTCP;
@@ -59,9 +69,39 @@ public class Client extends Thread {
 	}
 
 	private void initClient() throws UnsupportedEncodingException {
-		// TODO Auto-generated method stub
-		//Requests.initClient();
+		// TODO Checker que jsonData!=null (e.g. empty DB)
 		
+		
+		String jsonData = Requests.initClient();
+
+			
+		if (jsonData==Utils.ERR_NO_DATA || jsonData==Utils.ERR_REFUSED_LOGGIN) {
+			System.out.println("No data:" + jsonData.toString());
+		} else {	
+			
+			//Get a list out of the string
+			List<String> jsonStrings = new ArrayList<String>(Arrays.asList(jsonData.split("#"))) ;
+			
+			for (String user : jsonStrings) {
+				usagers.add(JsonHandler.userFromString(user));
+			}
+
+			
+			
+			User u = JsonHandler.userFromString(jsonData);
+			/*
+			JsonParser par = new JsonParser();
+			com.google.gson.JsonArray arr = par.parse(jsonData).getAsJsonArray();
+			ArrayList<User> usagers = new ArrayList<>();
+			for (JsonElement je: arr) {
+				User u = JsonHandler.userFromString(je.getAsString());
+				usagers.add(u);
+				
+			}
+*/
+			System.out.println("INITCLT: User list:" + usagers.toString());
+			}
+
 	}
 
 	public void sendMsg(String strMessage) {

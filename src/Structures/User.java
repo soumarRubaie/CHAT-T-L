@@ -5,7 +5,7 @@ import java.util.Iterator;
 import Serveur.AuthentificationUser;
 import Structures.Salle;
 
-public class User {
+public class User implements JsonUtils {
 
 	int id;
 	String username;

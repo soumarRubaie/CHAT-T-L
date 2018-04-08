@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import Structures.JsonHandler;
+import Structures.JsonUtils;
 import Structures.Message;
 import Structures.Salle;
 import Structures.User;
@@ -425,35 +427,43 @@ public class SocketTCP extends Thread {
 
 	class initClient implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-			// No params for this query - it' just a get
-			// InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
-			// BufferedReader br = new BufferedReader(isr);
-			// String query = br.readLine();
-			// Map<String, String> params = parseQueryString(query);
-
-			String resp = Utils.ERR_REFUSED_LOGGIN;
-			// Check if this user is in the DB
-			listSalleToJSON();
+			String resp = Utils.ERR_NO_DATA;
+			
+			//2b - better yet a jsonarray of jsonstrings
+			String jsonArr = listToJsonArrayStr(usagers);
+			
+			
+			
+			//3- Return that as response
 
 			// ### REPONSE ###
 
-			t.sendResponseHeaders(200, resp.length());
+			t.sendResponseHeaders(200, jsonArr.length());
 			OutputStream os = t.getResponseBody();
-			os.write(resp.getBytes());
+			os.write(jsonArr.getBytes());
 			os.close();
 
 			// ### FIN REPONSE ###
 		}
 
-		private void listSalleToJSON() {
-			Salle s = new Salle("testsalle", 66, "botched test");
-
+		private String listToJsonArrayStr(ArrayList<User> lst) {
+			/*For arrays - not working yet ahvent worked much on it*/
+			//Salle s = new Salle("testsalle", 66, "botched test");
+			
+			
+			List<String> array = new ArrayList<String>();
+			
 			JsonArrayBuilder jb = Json.createArrayBuilder();
+			for (JsonUtils obj: lst) {
+				array.add(obj.toJsonFormat());
+			}
 
-			jb.add(Json.createObjectBuilder().add(Utils.salleNomParam, s.getSalleNom()).add(Utils.salleDescriptionParam,
-					s.getDescription()));
-			jb.build();
-			System.out.println("JARRAJ:" + jb.toString());
+			JsonArray jarr =  jb.build();
+			Arrays.toString(array.toArray());
+			
+			String listAsStr = String.join("# ", array);
+			System.out.println("TCP array of obj in json format:" + listAsStr.toString());
+			return listAsStr;
 		}
 
 	}

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import Structures.Message;
 import Structures.User;
 
-public class Salle {
+public class Salle  implements JsonUtils {
 	String salleNom;
 	int id;
 	String description;
