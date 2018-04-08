@@ -123,23 +123,32 @@ public class SocketTCP extends Thread {
 		// localhost:8000/creationSalle?salleNom=testNom&description=bonjour
 		@Override
 		public void handle(HttpExchange t) throws IOException {
-			// Récupération des variables de la requête
-			// (salleNom)
-			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			
+			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+			BufferedReader br = new BufferedReader(isr);
+			String query = br.readLine();
+			Map<String, String> params = parseQueryString(query);
+			System.out.println("CREATESALLE: param server: " + params.toString());
+			
+			String resp = Utils.ERR_SALLE_EXIST;
+			//TODO: Check if this salle name exists
+			Salle s = new Salle(params.get(Utils.salleNomParam), salles.size(), params.get(Utils.salleDescriptionParam));
 
-			// Creer la nouvelle salle & attacher au observeur pattern
-			initSalle(new Salle(params.get(salleNomParam), getSalleCount(), params.get(salleDescriptionParam)));
+			if (s != null) {
+				initSalle(s);
+				resp = Utils.OK;
+			}
+			
+			System.out.println("CREATESALLE: Lst salles: " + salles.toString());
+
 
 			// ### REPONSE ###
-			String response = "Creation d'une nouvelle salle" + lineReturn + salleNomParam + ": "
-					+ params.get(salleNomParam) + lineReturn + salleDescriptionParam + ": "
-					+ params.get(salleDescriptionParam) + lineReturn + "Nombre total de salles: " + getSalleCount();
-			response += serveurStateResponse();
-			t.sendResponseHeaders(200, response.length());
 
+			t.sendResponseHeaders(200, resp.length());
 			OutputStream os = t.getResponseBody();
-			os.write(response.getBytes());
+			os.write(resp.getBytes());
 			os.close();
+
 			// ### FIN REPONSE ###
 		}
 	}
@@ -160,7 +169,7 @@ public class SocketTCP extends Thread {
 			User u = new User(params.get(Utils.usagerNomParam), params.get(Utils.usagerPasswordParam), usagers.size());
 
 			if (u != null) {
-				usagers.add(u);
+				initUsager(u);;
 				resp = Utils.OK;
 			}
 			
@@ -453,8 +462,6 @@ public class SocketTCP extends Thread {
 		 * lors de la création
 		 */
 		salles.add(s);
-		System.out.println("Salle créée: " + s.toString());
-		System.out.println("Nombre de salles: " + salles.size());
 
 		// Sauvegarde de la nouvelle salle
 		JsonHandler.salleToJson(s);
@@ -466,8 +473,7 @@ public class SocketTCP extends Thread {
 		 * lors de la création
 		 */
 		usagers.add(u);
-		System.out.println("Usager créé: " + u.toString());
-		System.out.println("Nombre usagers: " + usagers.size());
+
 		// Sauvegarde du nouvel utilisateur:
 		JsonHandler.userToJson(u);
 	}

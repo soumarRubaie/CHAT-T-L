@@ -68,7 +68,7 @@ public abstract class Requests {
 		String urlParameters = Utils.usagerNomParam+"=" + URLEncoder.encode(param_username, "UTF-8") 
 		+ "&"+Utils.usagerPasswordParam+"=" + URLEncoder.encode(param_password, "UTF-8");
 		
-		System.out.println("INSC: urlParam - " + urlParameters);
+		System.out.println("CREATEUSER: urlParam - " + urlParameters);
 		//Encoder l'URL - doit inclure le port & le context de la requête 
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.creationUsagerURI;
 
@@ -78,10 +78,83 @@ public abstract class Requests {
 		String response = executePost(targetURL, urlParameters);
 		//REMOVE THE SPACES & LINE RETURN!!!!
 		response = response.trim();
-		System.out.println("INSC: server response - " + response);
+		System.out.println("CREATEUSER: server response - " + response);
 
 		return response.equals(Utils.OK);
 	}
+	
+	public static boolean createSalle(String salleNom, String description)throws UnsupportedEncodingException {
+		/*Creer une salle*/
+		String urlParameters = Utils.salleIdParam+"=" + URLEncoder.encode(salleNom, "UTF-8") 
+		+ "&"+Utils.salleDescriptionParam+"=" + URLEncoder.encode(description, "UTF-8");
+		
+		System.out.println("CREATESALLE: urlParam - " + urlParameters);
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.creationSalleURI;
+
+		
+		//TODO: verifier si une salle existe déjà meme nom
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!
+		response = response.trim();
+		System.out.println("CREATESALLE: server response - " + response);
+
+		return response.equals(Utils.OK);
+	}
+	
+	public static boolean suscribeUsager(String userId, String salleId)throws UnsupportedEncodingException {
+		/*Suscribe user to salle*/
+		String urlParameters = Utils.usagerIdParam+"=" + URLEncoder.encode(userId, "UTF-8") 
+		+ "&"+Utils.salleIdParam+"=" + URLEncoder.encode(salleId, "UTF-8");
+		
+		System.out.println("SUSC: urlParam - " + urlParameters);
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.suscribeUsagerURI;
+
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!
+		response = response.trim();
+		System.out.println("SUSC: server response - " + response);
+
+		return response.equals(Utils.OK);
+	}
+	
+	public static boolean unsuscribeUsager(String userId, String salleId)throws UnsupportedEncodingException {
+		/*UnsSuscribe user to salle*/
+		String urlParameters = Utils.usagerIdParam+"=" + URLEncoder.encode(userId, "UTF-8") 
+		+ "&"+Utils.salleIdParam+"=" + URLEncoder.encode(salleId, "UTF-8");
+		
+		System.out.println("UNSUSC: urlParam - " + urlParameters);
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.unsubscribeUsagerURI;
+
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!
+		response = response.trim();
+		System.out.println("UNSUSC: server response - " + response);
+
+		return response.equals(Utils.OK);
+	}
+	
+	public static boolean deleteMessage(String messageId)throws UnsupportedEncodingException {
+		/*UnsSuscribe user to salle*/
+		String urlParameters = Utils.msgIdParam+"=" + URLEncoder.encode(messageId, "UTF-8") ;
+		//+ "&"+Utils.salleDescriptionParam+"=" + URLEncoder.encode(salleId, "UTF-8");
+		
+		System.out.println("DELMSG: urlParam - " + urlParameters);
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.deleteMessageURI;
+
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!
+		response = response.trim();
+		System.out.println("DELMSG: server response - " + response);
+
+		return response.equals(Utils.OK);
+	}
+	
+	
+	
 	//#########################
 	//##################### END LIST OF REQUESTS FOR EACH ENDPOINTS
 
