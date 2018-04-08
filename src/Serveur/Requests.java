@@ -85,7 +85,7 @@ public abstract class Requests {
 	
 	public static boolean createSalle(String salleNom, String description)throws UnsupportedEncodingException {
 		/*Creer une salle*/
-		String urlParameters = Utils.salleIdParam+"=" + URLEncoder.encode(salleNom, "UTF-8") 
+		String urlParameters = Utils.salleNomParam+"=" + URLEncoder.encode(salleNom, "UTF-8") 
 		+ "&"+Utils.salleDescriptionParam+"=" + URLEncoder.encode(description, "UTF-8");
 		
 		System.out.println("CREATESALLE: urlParam - " + urlParameters);
@@ -173,7 +173,7 @@ public abstract class Requests {
 		 * */
 		  HttpURLConnection connection = null;
 		  try {
-
+			 System.out.println("execPost: "+ targetURL +"?" +  urlParameters);
 		    //Create connection
 		    URL url = new URL(targetURL);
 		    connection = (HttpURLConnection) url.openConnection();

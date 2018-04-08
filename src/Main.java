@@ -46,10 +46,5 @@ public class Main {
 		}
 
 	}
-	/*
-	 * auth use example JsonObject obj = new JsonObject();
-	 * obj.addProperty("username", "soumar"); obj.addProperty("password",
-	 * "password"); Requests requests= new AuthentificationUser(obj);
-	 * System.out.println(requests.getType());
-	 */
+
 }

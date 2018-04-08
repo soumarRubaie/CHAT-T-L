@@ -89,10 +89,18 @@ public class SocketTCP extends Thread {
 	}
 
 	private void initServeur() {
+		/*TODO: bug. Quand je crée une salle, que je ferme le serveur et tente de le redémarrer, j'ai une erreur:
+		 *  javax.json.JsonException: Cannot auto-detect encoding, not enough chars
+		 *  J'ai cmté pour l'instant pour pouvoir tester le rest.
+		 *  */
 		JsonHandler.initFolders();
-		salles = JsonHandler.importerSalles();
+		
+		//C'est la ligne qui crash
+		//salles = JsonHandler.importerSalles();
+		
+		
 		usagers = JsonHandler.importerUsers();
-		System.out.println("Données des salles et utilisateurs importées.");
+		System.out.println("Données des salles et utilisateurs importées. [BUG]");
 	}
 
 	public void run() {
