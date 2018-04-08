@@ -79,6 +79,14 @@ http://localhost:8000/suscribeUsagerSalle?userId=1&salleId=1
 
 # Authentification & POSTS
 Cette section détail l'authentification et le POSTS qui sont envoyés du client au serveur. Authentification est la 1ere méthode implémentée en POSTS et sert d'exemple.
+"" Sommaire des composantes
+* Démarre avec un btnLogin.addListener(...) dans lequel le code spécifie les actions a prendre
+* Le btnListener() appel une méthode (static) de Requests.java
+* La métho de R.java prend les params donnés par le listener et le encode en un URLParams pour requête POST
+* Le SocketTCP recoit une requête au endpoint correspondant. Il prends les actions nécessaires côté serveur.
+* R.java recoit une code réponse du serveur (Utils.ERR_CODES). Si tout va bien, il recoit 200.
+* Le ERR_CODE (ou alors 200) remonte jusqu'au listener qui a initié la requête.
+* Le listener prend les actions nécessaires (loader la home page par exemple apres un login).
 
 Un élément de l'interface (le bouton Login) est lié à un ActionListener. Lorsque le bouton est cliqué, les champs texts username & passwords sont lus et envoyé au listener (loginButton.addActionListener(...)). LoginPage.authenticate() fait appel à la classe Requests.java pour communiquer avec le serveur. Tous les autres boutons de l'interface devraient passer par cette classe lorsqu'elles impliquent de faire un appel aux endpoints (cela permet de centraliser le code pour traiter ces échanges).
 
