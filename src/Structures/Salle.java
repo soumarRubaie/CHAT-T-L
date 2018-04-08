@@ -152,4 +152,31 @@ public class Salle {
 		jsonMessages += "]";
 		return jsonMessages;
 	}
+	
+	public String usersToJsonFormat() {
+		boolean first = true;
+		String jsonUsers="[";
+		for(User u: suscribersList) {
+			if(!first) {
+				jsonUsers += ",";
+			} else {
+				first = false;
+			}
+			jsonUsers += u.getId();
+			
+		}
+		jsonUsers += "]";
+		return jsonUsers;
+	}
+	
+	public String toJsonFormat() {
+		String jsonSalle;
+		jsonSalle = "{\"salleNom\":\""+ salleNom + "\",";
+		jsonSalle += "\"salleId\":"+ id + ",";
+		jsonSalle += "\"description\":\""+ description + "\",";
+		jsonSalle += "\"suscribersList\":"+ usersToJsonFormat() + ",";
+		jsonSalle += "\"messagesList\":"+ messagesToJsonFormat() + "}";
+		
+		return jsonSalle;
+	}
 }

@@ -93,4 +93,13 @@ public class User {
 	public void setSallesSuscribed(ArrayList<Salle> sallesSuscribed) {
 		this.sallesSuscribed = sallesSuscribed;
 	}
+	
+	public String toJsonFormat() {
+		String userJson;
+		userJson = "{\"id\":" + id +",";
+		userJson += "\"username\":\"" + username +"\",";
+		userJson += "\"password\":\"" + password +"\",";
+		userJson += "\"isConnected\":" + isConnected +"}";
+		return userJson;
+	}
 }

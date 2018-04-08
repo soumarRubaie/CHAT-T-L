@@ -13,6 +13,7 @@ public class Utils {
 	public static String ERR_REFUSED_LOGGIN= "401";
 	public static String ERR_USER_EXIST = "403";
 	public static String ERR_SALLE_EXIST = "413";
+	public static String ERR_ACCES_REFUSED = "405";
 
 	// 600 : Données non existantes (salle ou user)
 	// 601 : Création Utilisateur: Username déjà utilisé

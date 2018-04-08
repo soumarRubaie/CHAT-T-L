@@ -98,16 +98,17 @@ public class SocketTCP extends Thread {
 	}
 
 	private void initServeur() {
-		/*TODO: bug. Quand je crée une salle, que je ferme le serveur et tente de le redémarrer, j'ai une erreur:
-		 *  javax.json.JsonException: Cannot auto-detect encoding, not enough chars
-		 *  J'ai cmté pour l'instant pour pouvoir tester le rest.
-		 *  */
+		/*
+		 * TODO: bug. Quand je crée une salle, que je ferme le serveur et tente de le
+		 * redémarrer, j'ai une erreur: javax.json.JsonException: Cannot auto-detect
+		 * encoding, not enough chars J'ai cmté pour l'instant pour pouvoir tester le
+		 * rest.
+		 */
 		JsonHandler.initFolders();
-		
-		//C'est la ligne qui crash
-		//salles = JsonHandler.importerSalles();
-		
-		//Mais le usagers semble fonctionner
+
+		// C'est la ligne qui crash
+		salles = JsonHandler.importerSalles();
+		// Mais le usagers semble fonctionner
 		usagers = JsonHandler.importerUsers();
 		System.out.println("Données des salles et utilisateurs importées. [BUG]");
 	}
@@ -138,24 +139,24 @@ public class SocketTCP extends Thread {
 		// localhost:8000/creationSalle?salleNom=testNom&description=bonjour
 		@Override
 		public void handle(HttpExchange t) throws IOException {
-			
+
 			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
 			BufferedReader br = new BufferedReader(isr);
 			String query = br.readLine();
 			Map<String, String> params = parseQueryString(query);
 			System.out.println("CREATESALLE: param server: " + params.toString());
-			
+
 			String resp = Utils.ERR_SALLE_EXIST;
-			//TODO: Check if this salle name exists
-			Salle s = new Salle(params.get(Utils.salleNomParam), salles.size(), params.get(Utils.salleDescriptionParam));
+			// TODO: Check if this salle name exists
+			Salle s = new Salle(params.get(Utils.salleNomParam), salles.size(),
+					params.get(Utils.salleDescriptionParam));
 
 			if (s != null) {
 				initSalle(s);
 				resp = Utils.OK;
 			}
-			
-			System.out.println("CREATESALLE: Lst salles: " + salles.toString());
 
+			System.out.println("CREATESALLE: Lst salles: " + salles.toString());
 
 			// ### REPONSE ###
 
@@ -172,24 +173,24 @@ public class SocketTCP extends Thread {
 		@Override
 		// localhost:8000/creationUsager?username=User&password=Password
 		public void handle(HttpExchange t) throws IOException {
-			
+
 			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
 			BufferedReader br = new BufferedReader(isr);
 			String query = br.readLine();
 			Map<String, String> params = parseQueryString(query);
 			System.out.println("INSC: param server: " + params.toString());
-			
+
 			String resp = Utils.ERR_USER_EXIST;
-			//TODO: Check if this username is in the DB
+			// TODO: Check if this username is in the DB
 			User u = new User(params.get(Utils.usagerNomParam), params.get(Utils.usagerPasswordParam), usagers.size());
 
 			if (u != null) {
-				initUsager(u);;
+				initUsager(u);
+				;
 				resp = Utils.OK;
 			}
-			
-			System.out.println("INSC: Lst users: " + usagers.toString());
 
+			System.out.println("INSC: Lst users: " + usagers.toString());
 
 			// ### REPONSE ###
 
@@ -295,16 +296,16 @@ public class SocketTCP extends Thread {
 					break;
 
 				case 2:
-					response = "ERREUR! Accees refuse!" + lineReturn + "id user: " + idUser + lineReturn
-							+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
+					response = "ERREUR! Accees refuse!" + lineReturn + "id user: " + idUser + lineReturn + "id salle: "
+							+ idSalle + lineReturn + "id msg: " + idMsg;
 					resp = response + serveurStateResponse();
 					t.sendResponseHeaders(602, resp.length());
 					break;
 				}
-				
+
 			} else {
-				response = "ERREUR! Salle introuvable" + lineReturn + "id user: " + idUser + lineReturn
-						+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
+				response = "ERREUR! Salle introuvable" + lineReturn + "id user: " + idUser + lineReturn + "id salle: "
+						+ idSalle + lineReturn + "id msg: " + idMsg;
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(600, resp.length());
 			}
@@ -318,7 +319,6 @@ public class SocketTCP extends Thread {
 	class GetArchiveHandler implements HttpHandler {
 		// localhost:8000/getArchive?userId=1&salleId=1
 		public void handle(HttpExchange t) throws IOException {
-			// TODO GetArchive
 			// Récupération des paramètres:
 			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
 			int idUser = Integer.parseInt(params.get(usagerIdParam));
@@ -330,6 +330,7 @@ public class SocketTCP extends Thread {
 				// ### REPONSE ###
 				String response = "Liste des messages de la salle " + idSalle + ":" + lineReturn;
 				response += s.messagesToJsonFormat();
+				System.out.println(response);
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
 			} else {
@@ -338,8 +339,25 @@ public class SocketTCP extends Thread {
 				response += s.messagesToJsonFormat();
 				System.out.println(response);
 				resp = response + serveurStateResponse();
-				t.sendResponseHeaders(200, resp.length());
+				t.sendResponseHeaders(405, resp.length());
 			}
+
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+			// ### FIN REPONSE ###
+		}
+	}
+
+	class GetSallesHandler implements HttpHandler {
+		// localhost:8000/getSalles
+		public void handle(HttpExchange t) throws IOException {
+
+			// ### REPONSE ###
+			String response = "Liste des salles :" + lineReturn;
+			response += sallesToJsonFormat();
+			String resp = response + serveurStateResponse();
+			t.sendResponseHeaders(200, resp.length());
 
 			OutputStream os = t.getResponseBody();
 			os.write(resp.getBytes());
@@ -370,16 +388,15 @@ public class SocketTCP extends Thread {
 	class authenticateUser implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
 
-
 			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
 			BufferedReader br = new BufferedReader(isr);
 			String query = br.readLine();
 			Map<String, String> params = parseQueryString(query);
 			System.out.println("ATUH: Params du serveur" + params.toString());
-			
+
 			String resp = Utils.ERR_REFUSED_LOGGIN;
-			//Check if this user is in the DB
-			if (is_valid_loggin(params.get(Utils.usagerNomParam),params.get(Utils.usagerPasswordParam) )) {
+			// Check if this user is in the DB
+			if (is_valid_loggin(params.get(Utils.usagerNomParam), params.get(Utils.usagerPasswordParam))) {
 				resp = Utils.OK;
 			}
 
@@ -394,28 +411,28 @@ public class SocketTCP extends Thread {
 		}
 
 		private boolean is_valid_loggin(String username, String password) {
-			/*Check is le usernmae & password match un des usagers de la liste*/ 
+			/* Check is le usernmae & password match un des usagers de la liste */
 			for (User u : usagers) {
 				if (u.checkAuth(username, password)) {
 					return true;
 				}
 			}
-			
+
 			return false;
 		}
 
 	}
-	
+
 	class initClient implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-			//No params for this query - it' just a get
-			//InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
-			//BufferedReader br = new BufferedReader(isr);
-			//String query = br.readLine();
-			//Map<String, String> params = parseQueryString(query);
-			
+			// No params for this query - it' just a get
+			// InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+			// BufferedReader br = new BufferedReader(isr);
+			// String query = br.readLine();
+			// Map<String, String> params = parseQueryString(query);
+
 			String resp = Utils.ERR_REFUSED_LOGGIN;
-			//Check if this user is in the DB
+			// Check if this user is in the DB
 			listSalleToJSON();
 
 			// ### REPONSE ###
@@ -429,15 +446,14 @@ public class SocketTCP extends Thread {
 		}
 
 		private void listSalleToJSON() {
-			 Salle s = new Salle("testsalle", 66, "botched test");
+			Salle s = new Salle("testsalle", 66, "botched test");
 
-			 JsonArrayBuilder jb = Json.createArrayBuilder();
+			JsonArrayBuilder jb = Json.createArrayBuilder();
 
-			     jb.add(Json.createObjectBuilder()
-			         .add(Utils.salleNomParam, s.getSalleNom())
-			         .add(Utils.salleDescriptionParam, s.getDescription()));
-			     jb.build();
-			     System.out.println("JARRAJ:" + jb.toString());
+			jb.add(Json.createObjectBuilder().add(Utils.salleNomParam, s.getSalleNom()).add(Utils.salleDescriptionParam,
+					s.getDescription()));
+			jb.build();
+			System.out.println("JARRAJ:" + jb.toString());
 		}
 
 	}
@@ -451,16 +467,18 @@ public class SocketTCP extends Thread {
 		 * serveur (salle usagers etc...) pour fin de debug surtout
 		 */
 		String response = System.lineSeparator() + "Users - sommaire de l'etat:" + System.lineSeparator();
-		for (User u : getUsers()) {
-			response += u.toString();
-			response += System.lineSeparator();
-		}
+		response += usersToJsonFormat();
+		
+		//		for (User u : getUsers()) {
+//			response += u.toString();
+//			response += System.lineSeparator();
+//		}
 		response += System.lineSeparator() + "Salles - sommaire de l'etat:" + System.lineSeparator();
-
-		for (Salle s : getSalles()) {
-			response += s.toString();
-			response += System.lineSeparator();
-		}
+		response += sallesToJsonFormat();
+		// for (Salle s : getSalles()) {
+		// response += s.toString();
+		// response += System.lineSeparator();
+		// }
 		return response;
 	}
 
@@ -595,4 +613,33 @@ public class SocketTCP extends Thread {
 		return true;
 	}
 
+	public String sallesToJsonFormat() {
+		boolean first = true;
+		String jsonSalles = "[";
+		for (Salle salleTemp : salles) {
+			if (!first) {
+				jsonSalles += ",";
+			} else {
+				first = false;
+			}
+			jsonSalles += salleTemp.toJsonFormat();
+		}
+		jsonSalles += "]";
+		return jsonSalles;
+	}
+	
+	public String usersToJsonFormat() {
+		boolean first = true;
+		String jsonUsers = "[";
+		for (User userTemp : usagers) {
+			if (!first) {
+				jsonUsers += ",";
+			} else {
+				first = false;
+			}
+			jsonUsers += userTemp.toJsonFormat();
+		}
+		jsonUsers += "]";
+		return jsonUsers;
+	}
 }
