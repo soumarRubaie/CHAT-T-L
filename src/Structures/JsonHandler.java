@@ -189,17 +189,18 @@ public class JsonHandler {
 	}
 	
 	public static User userFromString(String jsonUser) {
-		JsonReader jsonReader = Json.createReader(new StringReader(jsonUser));
-	    JsonObject objectUser = jsonReader.readObject();
-	    jsonReader.close();
-	    
-	    int id = objectUser.getInt("id");
-	    String username = objectUser.getString("username");
-	    String password = objectUser.getString("password");
-	    boolean isConnected = objectUser.getBoolean("isConnected");
-	    
-		User user = new User(username, password, id, isConnected);
-		return user;
+		if (jsonUser!="") {
+			JsonReader jsonReader = Json.createReader(new StringReader(jsonUser));
+			JsonObject objectUser = jsonReader.readObject();
+			jsonReader.close();
+			int id = objectUser.getInt("id");
+			String username = objectUser.getString("username");
+			String password = objectUser.getString("password");
+			boolean isConnected = objectUser.getBoolean("isConnected");
+			User user = new User(username, password, id, isConnected);
+			return user;
+		}
+		return null;
 	}
 	
 	public static Salle salleFromJsonObject(JsonObject objectSalle) {

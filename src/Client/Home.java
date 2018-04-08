@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Structures.Salle;
+
 import javax.swing.SpringLayout;
 import java.awt.List;
 import java.awt.Button;
@@ -52,15 +55,14 @@ public class Home extends JFrame {
 		
 		Client client = Client.getInstance();
 		
-		//String label[] = { "Zero", "One", "Two", "Three" };
-		//Getting sallename as labels
+		//Peupler les labels avec le noms des salles existantes
 		ArrayList<String> labels = new ArrayList<String>();
 		
 		for (Salle s : client.getSalles()) {
-			
+			labels.add(s.getSalleNom());
 		}
-		
-		String label[] = client.getSalles();
+		String label[] = new String[labels.size()];
+		label= labels.toArray(label);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 831, 705);
