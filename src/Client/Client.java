@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import Serveur.Requests;
+import Serveur.SocketTCP;
 import Serveur.Requests.RequestType;
 import Structures.JsonHandler;
 import Structures.Message;
@@ -19,6 +20,23 @@ import Structures.User;
 import Structures.Utils;
 
 public class Client extends Thread {
+	// ############## Gestion du singleton
+	private static Client instance;
+
+	public static Client getInstance(int portServerUDP, int portServerTCP) {
+		if (instance == null) {
+			instance = new Client(portServerUDP, portServerTCP);
+			return instance;
+		}
+		return instance;
+	}
+	
+	public static Client getInstance() {
+		//Cette metho suppose que le client a été initéi - devrait toujours être le cas sauf au démarrage,
+		//qui utilise l'autre getisntance
+		return instance;
+	}
+	
 	/* Il faudra redéfinir cela mieux/ailleurs mais pour fins de tests */
 	int userId = 0;
 	int salleId = 0;
@@ -35,7 +53,7 @@ public class Client extends Thread {
 	List<Salle> salles = new ArrayList<>();
 
 
-	public Client(int portServerUDP, int portServerTCP) {
+	private Client(int portServerUDP, int portServerTCP) {
 		Utils.tcpPort = portServerTCP;
 		Utils.udpPort = portServerUDP;
 		portUDP = portServerUDP;
@@ -57,6 +75,7 @@ public class Client extends Thread {
 		}
 
 	}
+
 
 	public void run() {
 
@@ -181,4 +200,15 @@ public class Client extends Thread {
 		this.salleId = salleId;
 	}
 
+
+	public List<User> getUsagers() {
+		return usagers;
+	}
+
+
+	public List<Salle> getSalles() {
+		return salles;
+	}
+
+	
 }

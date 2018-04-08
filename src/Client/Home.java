@@ -21,6 +21,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 
@@ -49,7 +50,17 @@ public class Home extends JFrame {
 	 */
 	public Home() {
 		
-		String label[] = { "Zero", "One", "Two", "Three" };
+		Client client = Client.getInstance();
+		
+		//String label[] = { "Zero", "One", "Two", "Three" };
+		//Getting sallename as labels
+		ArrayList<String> labels = new ArrayList<String>();
+		
+		for (Salle s : client.getSalles()) {
+			
+		}
+		
+		String label[] = client.getSalles();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 831, 705);
