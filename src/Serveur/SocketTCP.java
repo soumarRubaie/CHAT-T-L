@@ -9,9 +9,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import org.glassfish.json.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -63,6 +71,7 @@ public class SocketTCP extends Thread {
 	private static String getConnectedUsersURI = Utils.getConnectedUsersURI;
 	private static String unsubscribeUsagerURI = Utils.unsubscribeUsagerURI;
 	private static String authUser = Utils.authUserURI;
+	private static String initClient = Utils.initClientURI;
 
 	// ####################### FIN endpoint et param ###########
 
@@ -98,7 +107,7 @@ public class SocketTCP extends Thread {
 		//C'est la ligne qui crash
 		//salles = JsonHandler.importerSalles();
 		
-		
+		//Mais le usagers semble fonctionner
 		usagers = JsonHandler.importerUsers();
 		System.out.println("Données des salles et utilisateurs importées. [BUG]");
 	}
@@ -115,6 +124,7 @@ public class SocketTCP extends Thread {
 		serveur.createContext(getConnectedUsersURI, new GetConnectedUsersHandler());
 		serveur.createContext(unsubscribeUsagerURI, new UnsuscribeUsagerHandler());
 		serveur.createContext(authUser, new authenticateUser());
+		serveur.createContext(initClient, new initClient());
 
 		serveur.setExecutor(null); // Associe un thread par défaut au Serveur
 		serveur.start(); // Démarre le serveur
@@ -123,9 +133,6 @@ public class SocketTCP extends Thread {
 
 	// ###################### HANDLERS pour endpoints
 	// ##################################
-	// Chaque handler a une section PRINT, surtout pour afficher à la console pour
-	// debug... voir si utile long terme ou non
-	// la logique de réponse au browser est probablement pertinente par contre
 
 	class CreationSalleHandler implements HttpHandler {
 		// localhost:8000/creationSalle?salleNom=testNom&description=bonjour
@@ -395,6 +402,42 @@ public class SocketTCP extends Thread {
 			}
 			
 			return false;
+		}
+
+	}
+	
+	class initClient implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+			//No params for this query - it' just a get
+			//InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+			//BufferedReader br = new BufferedReader(isr);
+			//String query = br.readLine();
+			//Map<String, String> params = parseQueryString(query);
+			
+			String resp = Utils.ERR_REFUSED_LOGGIN;
+			//Check if this user is in the DB
+			listSalleToJSON();
+
+			// ### REPONSE ###
+
+			t.sendResponseHeaders(200, resp.length());
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+
+			// ### FIN REPONSE ###
+		}
+
+		private void listSalleToJSON() {
+			 Salle s = new Salle("testsalle", 66, "botched test");
+
+			 JsonArrayBuilder jb = Json.createArrayBuilder();
+
+			     jb.add(Json.createObjectBuilder()
+			         .add(Utils.salleNomParam, s.getSalleNom())
+			         .add(Utils.salleDescriptionParam, s.getDescription()));
+			     jb.build();
+			     System.out.println("JARRAJ:" + jb.toString());
 		}
 
 	}

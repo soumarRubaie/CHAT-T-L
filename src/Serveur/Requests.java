@@ -40,6 +40,26 @@ public abstract class Requests {
 	
 	//##################### LIST OF REQUESTS FOR EACH ENDPOINTS
 	//#########################
+	public static boolean initClient() throws UnsupportedEncodingException {
+		/*Envoie une requête au serveur pour voir si un user matche avec ce qui a été donné*/
+		//Encoder tous les params de la requête
+		String urlParameters = "";
+		System.out.println("INITCLT: " + urlParameters);
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.initClientURI;
+
+		
+		//TODO: science de la comparaison des string en java... ma sinon ça marche.
+		//Found it: there was a /r (line return) in the response...
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!
+		response = response.trim();
+		System.out.println("INITCLT: server response - " + response);
+
+		return response.equals(Utils.OK);
+}
+	
+	
 	public static boolean athenticateUser(String username, String password) throws UnsupportedEncodingException {
 		/*Envoie une requête au serveur pour voir si un user matche avec ce qui a été donné*/
 		//Encoder tous les params de la requête

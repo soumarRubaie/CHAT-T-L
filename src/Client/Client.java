@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import Serveur.Requests;
 import Serveur.Requests.RequestType;
 import Structures.Message;
 import Structures.Utils;
@@ -24,7 +25,6 @@ public class Client extends Thread {
 	public Client(int portServerUDP, int portServerTCP) {
 		Utils.tcpPort = portServerTCP;
 		Utils.udpPort = portServerUDP;
-
 		portUDP = portServerUDP;
 		portTCP = portServerTCP;
 
@@ -48,7 +48,20 @@ public class Client extends Thread {
 	public void run() {
 
 		// Démarrer la page Login pour authentification
+		try {
+			initClient();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		LoginPage lp = new LoginPage();
+		
+	}
+
+	private void initClient() throws UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		//Requests.initClient();
+		
 	}
 
 	public void sendMsg(String strMessage) {

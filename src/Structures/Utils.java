@@ -55,7 +55,9 @@ public class Utils {
 		public static String getConnectedUsersURI = "/getConnectedUsers";
 		public static String unsubscribeUsagerURI = "/unsubscribeUsager";
 		public static String authUserURI = "/authUser";
+		public static String initClientURI = "/initClient";
 
+		
 	// ####################### endpoint et params ##########
 
 	
@@ -65,6 +67,7 @@ public class Utils {
 	public static int salleIdBytes = 4;
 	public static int datagrameSizeBytes = 10000;
 	public static int totalBytes = messageIdBytes+ authorIdBytes+salleIdBytes+datagrameSizeBytes;
+
 
 	/*Autres choses méthos etc.*/
 	public static byte[] intTo4Bytes(int numb) {
