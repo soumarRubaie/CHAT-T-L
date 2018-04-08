@@ -14,6 +14,7 @@ import Serveur.Requests;
 import Serveur.Requests.RequestType;
 import Structures.JsonHandler;
 import Structures.Message;
+import Structures.Salle;
 import Structures.User;
 import Structures.Utils;
 
@@ -29,7 +30,9 @@ public class Client extends Thread {
 
 	// Définit un socket,
 	DatagramSocket socket = null;
+	
 	List<User> usagers = new ArrayList<User>();
+	List<Salle> salles = new ArrayList<>();
 
 
 	public Client(int portServerUDP, int portServerTCP) {
@@ -70,38 +73,42 @@ public class Client extends Thread {
 
 	private void initClient() throws UnsupportedEncodingException {
 		// TODO Checker que jsonData!=null (e.g. empty DB)
+		usagers = getUsersFromServer();
+		salles = getSallesFromServer();
 		
-		
-		String jsonData = Requests.initClient();
-
-			
+	}
+	private List<User> getUsersFromServer() throws UnsupportedEncodingException {
+		String jsonData = Requests.getUsersFromServer();
+		List<User> dum = new ArrayList<User>();
 		if (jsonData==Utils.ERR_NO_DATA || jsonData==Utils.ERR_REFUSED_LOGGIN) {
 			System.out.println("No data:" + jsonData.toString());
 		} else {	
 			
 			//Get a list out of the string
-			List<String> jsonStrings = new ArrayList<String>(Arrays.asList(jsonData.split("#"))) ;
-			
+			List<String> jsonStrings = new ArrayList<String>(Arrays.asList(jsonData.split(Utils.jsonarrayStringSeparator))) ;
 			for (String user : jsonStrings) {
-				usagers.add(JsonHandler.userFromString(user));
+				dum.add(JsonHandler.userFromString(user));
 			}
-
-			
-			
-			User u = JsonHandler.userFromString(jsonData);
-			/*
-			JsonParser par = new JsonParser();
-			com.google.gson.JsonArray arr = par.parse(jsonData).getAsJsonArray();
-			ArrayList<User> usagers = new ArrayList<>();
-			for (JsonElement je: arr) {
-				User u = JsonHandler.userFromString(je.getAsString());
-				usagers.add(u);
-				
-			}
-*/
 			System.out.println("INITCLT: User list:" + usagers.toString());
 			}
+		return dum;
+	}
+	private List<Salle> getSallesFromServer() throws UnsupportedEncodingException {
+		String jsonData = Requests.getSallesFromServer();
+		List<Salle> dum = new ArrayList<>();
 
+		if (jsonData==Utils.ERR_NO_DATA || jsonData==Utils.ERR_REFUSED_LOGGIN) {
+			System.out.println("No data:" + jsonData.toString());
+		} else {	
+			
+			//Get a list out of the string
+			List<String> jsonStrings = new ArrayList<String>(Arrays.asList(jsonData.split(Utils.jsonarrayStringSeparator))) ;
+			for (String salle : jsonStrings) {
+				dum.add(JsonHandler.salleFromString(salle));
+			}
+			System.out.println("INITCLT: User list:" + usagers.toString());
+			}
+		return dum;
 	}
 
 	public void sendMsg(String strMessage) {

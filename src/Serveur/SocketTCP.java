@@ -74,6 +74,10 @@ public class SocketTCP extends Thread {
 	private static String unsubscribeUsagerURI = Utils.unsubscribeUsagerURI;
 	private static String authUser = Utils.authUserURI;
 	private static String initClient = Utils.initClientURI;
+	
+	// Endpoint: getters
+	public static String getUsersFromServer = Utils.getUsersFromServer;
+	public static String getSallesFromServer = Utils.getSallesFromServer;
 
 	// ####################### FIN endpoint et param ###########
 
@@ -128,6 +132,8 @@ public class SocketTCP extends Thread {
 		serveur.createContext(unsubscribeUsagerURI, new UnsuscribeUsagerHandler());
 		serveur.createContext(authUser, new authenticateUser());
 		serveur.createContext(initClient, new initClient());
+		serveur.createContext(getSallesFromServer, new getSallesFromServer());
+		serveur.createContext(getUsersFromServer, new getUsersFromServer());
 
 		serveur.setExecutor(null); // Associe un thread par défaut au Serveur
 		serveur.start(); // Démarre le serveur
@@ -426,14 +432,13 @@ public class SocketTCP extends Thread {
 	}
 
 	class initClient implements HttpHandler {
+		//DEPREC
 		public void handle(HttpExchange t) throws IOException {
 			String resp = Utils.ERR_NO_DATA;
 			
 			//2b - better yet a jsonarray of jsonstrings
-			String jsonArr = listToJsonArrayStr(usagers);
-			
-			
-			
+			String jsonArr = userListToJsonArrayStr(usagers);
+
 			//3- Return that as response
 
 			// ### REPONSE ###
@@ -445,27 +450,76 @@ public class SocketTCP extends Thread {
 
 			// ### FIN REPONSE ###
 		}
+	}
+		
+	class getUsersFromServer implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+			String resp = Utils.ERR_NO_DATA;
+			
+			//1-jsonarray of jsonstrings
+			String jsonArr = userListToJsonArrayStr(usagers);
 
-		private String listToJsonArrayStr(ArrayList<User> lst) {
-			/*For arrays - not working yet ahvent worked much on it*/
-			//Salle s = new Salle("testsalle", 66, "botched test");
-			
-			
-			List<String> array = new ArrayList<String>();
-			
-			JsonArrayBuilder jb = Json.createArrayBuilder();
-			for (JsonUtils obj: lst) {
-				array.add(obj.toJsonFormat());
-			}
+			//3- Return that as response
+			t.sendResponseHeaders(200, jsonArr.length());
+			OutputStream os = t.getResponseBody();
+			os.write(jsonArr.getBytes());
+			os.close();
 
-			JsonArray jarr =  jb.build();
-			Arrays.toString(array.toArray());
+		}
+	}
+	class getSallesFromServer implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+			String resp = Utils.ERR_NO_DATA;
 			
-			String listAsStr = String.join("# ", array);
-			System.out.println("TCP array of obj in json format:" + listAsStr.toString());
-			return listAsStr;
+			//1-jsonarray of jsonstrings
+			String jsonArr = salleListToJsonArrayStr(salles);
+
+			//3- Return that as response
+			t.sendResponseHeaders(200, jsonArr.length());
+			OutputStream os = t.getResponseBody();
+			os.write(jsonArr.getBytes());
+			os.close();
+
+		}
+	}
+	
+	
+	public String userListToJsonArrayStr(ArrayList<User> lst) {
+		/*For arrays - not working yet ahvent worked much on it*/
+		//Salle s = new Salle("testsalle", 66, "botched test");
+		
+		List<String> array = new ArrayList<String>();
+		
+		JsonArrayBuilder jb = Json.createArrayBuilder();
+		for (JsonUtils obj: lst) {
+			array.add(obj.toJsonFormat());
 		}
 
+		JsonArray jarr =  jb.build();
+		Arrays.toString(array.toArray());
+		
+		String listAsStr = String.join(Utils.jsonarrayStringSeparator, array);
+		System.out.println("TCP array of obj in json format:" + listAsStr.toString());
+		return listAsStr;
+	}
+	
+	public String salleListToJsonArrayStr(ArrayList<Salle> lst) {
+		/*For arrays - not working yet ahvent worked much on it*/
+		//Salle s = new Salle("testsalle", 66, "botched test");
+		
+		List<String> array = new ArrayList<String>();
+		
+		JsonArrayBuilder jb = Json.createArrayBuilder();
+		for (JsonUtils obj: lst) {
+			array.add(obj.toJsonFormat());
+		}
+
+		JsonArray jarr =  jb.build();
+		Arrays.toString(array.toArray());
+		
+		String listAsStr = String.join(Utils.jsonarrayStringSeparator, array);
+		System.out.println("TCP array of obj in json format:" + listAsStr.toString());
+		return listAsStr;
 	}
 
 	// ###################### FIN HANDLERS pour endpoints
