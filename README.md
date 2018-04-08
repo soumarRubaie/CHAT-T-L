@@ -88,10 +88,4 @@ Cette section détail l'authentification et le POSTS qui sont envoyés du client
 * Le ERR_CODE (ou alors 200) remonte jusqu'au listener qui a initié la requête.
 * Le listener prend les actions nécessaires (loader la home page par exemple apres un login).
 
-Un élément de l'interface (le bouton Login) est lié à un ActionListener. Lorsque le bouton est cliqué, les champs texts username & passwords sont lus et envoyé au listener (loginButton.addActionListener(...)). LoginPage.authenticate() fait appel à la classe Requests.java pour communiquer avec le serveur. Tous les autres boutons de l'interface devraient passer par cette classe lorsqu'elles impliquent de faire un appel aux endpoints (cela permet de centraliser le code pour traiter ces échanges).
-
-La classe Requests.java contient plusieurs méthodes liées à ces actions. Pour l'authentification, c'est athenticateUser(String username, String password) qui formule la requête POST vers le serveur en passant en paramètre du POST ces strings entrés par l'utilisateur voulant se connecter. En fait, le fonction (static) Requests.executePost() devrait traiter toutes les demandes vers les endpoints devant se faire par POST (un seul endroit pour corrections si on doit changer plus tard la façon ces échanges sont gérés). La classe Requests.java a accès à toutes les infos nécessaires (URL, port, /endpoints) pour composer l'URL cible et encoder les paramètres.
-
-Le serveur reçoit le POST au endpoint /authUser (avec les paramètres). SocketTCP a accès à la liste de tous les usagers enregistrés. Elle vérifie donc si l'un "match" le username/password entrés par l'utilisateur. Elle retourn true/false (en string parce que les réponses http sont toutes des strings). Le true/false fait son chemin jusqu'à la LoginPage.authenticate(). Si true, alors on transfer vers la HomePage. Sinon, message d'erreur et essaie à nouveau.
-
 
