@@ -153,7 +153,8 @@ public class SocketTCP extends Thread {
 
 			if (s != null) {
 				initSalle(s);
-				resp = Utils.OK;
+				resp = Utils.OK + "\n";
+				resp += s.toJsonFormat();
 			}
 
 			System.out.println("CREATESALLE: Lst salles: " + salles.toString());

@@ -122,6 +122,33 @@ public abstract class Requests {
 		return response.equals(Utils.OK);
 	}
 	
+	public static boolean createSalle(String salleNom, String description, String userId)throws UnsupportedEncodingException {
+		/*Creer une salle*/
+		String urlParameters = Utils.salleNomParam+"=" + URLEncoder.encode(salleNom, "UTF-8") 
+		+ "&"+Utils.salleDescriptionParam+"=" + URLEncoder.encode(description, "UTF-8");
+		
+		System.out.println("CREATESALLE: urlParam - " + urlParameters);
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.creationSalleURI;
+
+		
+		//TODO: verifier si une salle existe déjà meme nom
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!
+		response = response.trim();
+		String errorCode = response.substring(0, 3);
+		String salleInfo = response.substring(3, response.length());
+		
+		System.out.println("CREATESALLE: server response - " + response);
+		
+		if (errorCode.equals(Utils.OK))
+		{
+			
+		}
+
+		return errorCode.equals(Utils.OK);
+	}
+	
 	public static boolean suscribeUsager(String userId, String salleId)throws UnsupportedEncodingException {
 		/*Suscribe user to salle*/
 		String urlParameters = Utils.usagerIdParam+"=" + URLEncoder.encode(userId, "UTF-8") 
