@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 import javax.json.Json;
@@ -13,6 +14,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.stream.JsonGenerator;
+import javax.json.stream.JsonParser;
 
 public class JsonHandler {
 
@@ -53,7 +55,7 @@ public class JsonHandler {
 			// user = UserJSONWriter.createUser();
 			jsonGenerator.writeStartObject(); // {
 			jsonGenerator.write("id", user.getId());
-			jsonGenerator.write("name", user.getUsername());
+			jsonGenerator.write("username", user.getUsername());
 			jsonGenerator.write("password", user.getPassword());
 
 			jsonGenerator.writeEnd(); // }
@@ -72,7 +74,7 @@ public class JsonHandler {
 			// salle = SalleJSONWriter.createSalle();
 			jsonGenerator.writeStartObject(); // {
 			jsonGenerator.write("id", salle.getId());
-			jsonGenerator.write("name", salle.getSalleNom());
+			jsonGenerator.write("salleNom", salle.getSalleNom());
 			jsonGenerator.write("description", salle.getDescription());
 
 			ArrayList<User> x = salle.getSuscribersList();
@@ -82,7 +84,7 @@ public class JsonHandler {
 					jsonGenerator.writeStartObject(); // {
 
 					jsonGenerator.write("id", user.getId());
-					jsonGenerator.write("name", user.getUsername());
+					jsonGenerator.write("username", user.getUsername());
 					jsonGenerator.write("password", user.getPassword());
 
 					jsonGenerator.writeEnd(); // }
@@ -163,36 +165,9 @@ public class JsonHandler {
 		try {
 			fis = new FileInputStream(fichier);
 			JsonReader reader = Json.createReader(fis);
-
-			String salleNom = null;
-			String Description = null;
-			int id = 0;
-			ArrayList<User> sub = new ArrayList<User>();
-			ArrayList<Message> msg = new ArrayList<Message>();
-
 			JsonObject obj = reader.readObject();
-			id = obj.getInt("id");
-			salleNom = obj.getString("name");
-			Description = obj.getString("description");
-
-			JsonArray array = obj.getJsonArray("suscribersList");
-			for (int n = 0; n < array.size(); n++) {
-				JsonObject object;
-				object = array.getJsonObject(n);
-				User objetUser = userFromJsonObject(object);
-				sub.add(objetUser);
-			}
-
-			JsonArray arrayMsg = obj.getJsonArray("messagesList");
-			for (int n = 0; n < arrayMsg.size(); n++) {
-				JsonObject objectMsg;
-				objectMsg = arrayMsg.getJsonObject(n);
-				Message objetM = msgFromJsonObject(objectMsg);
-				msg.add(objetM);
-			}
-
-			Salle salle = new Salle(salleNom, id, Description, sub, msg);
-			return salle;
+			return salleFromJsonObject(obj);
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;
@@ -205,12 +180,68 @@ public class JsonHandler {
 		int id = 0;
 
 		id = jsonUser.getInt("id");
-		username = jsonUser.getString("name");
+		username = jsonUser.getString("username");
 		password = jsonUser.getString("password");
 
 		User user = new User(username, password, id);
 		return user;
 
+	}
+	
+	public static User userFromString(String jsonUser) {
+		JsonReader jsonReader = Json.createReader(new StringReader(jsonUser));
+	    JsonObject objectUser = jsonReader.readObject();
+	    jsonReader.close();
+	    
+	    int id = objectUser.getInt("id");
+	    String username = objectUser.getString("username");
+	    String password = objectUser.getString("password");
+	    boolean isConnected = objectUser.getBoolean("isConnected");
+	    
+	    
+		User user = new User(username, password, id, isConnected);
+		return user;
+	}
+	
+	public static Salle salleFromJsonObject(JsonObject objectSalle) {
+	    String salleNom = null;
+		String Description = null;
+		int id = 0;
+		ArrayList<User> sub = new ArrayList<User>();
+		ArrayList<Message> msg = new ArrayList<Message>();
+
+		id = objectSalle.getInt("id");
+		salleNom = objectSalle.getString("salleNom");
+		Description = objectSalle.getString("description");
+
+		JsonArray array = objectSalle.getJsonArray("suscribersList");
+		for (int n = 0; n < array.size(); n++) {
+			JsonObject object;
+			object = array.getJsonObject(n);
+			User objetUser = userFromJsonObject(object);
+			sub.add(objetUser);
+		}
+
+		JsonArray arrayMsg = objectSalle.getJsonArray("messagesList");
+		for (int n = 0; n < arrayMsg.size(); n++) {
+			JsonObject objectMsg;
+			objectMsg = arrayMsg.getJsonObject(n);
+			Message objetM = msgFromJsonObject(objectMsg);
+			msg.add(objetM);
+		}
+
+		Salle salle = new Salle(salleNom, id, Description, sub, msg);
+		return salle;
+	    
+	}
+	
+	public static Salle salleFromString(String jsonSalle) {
+		JsonReader jsonReader = Json.createReader(new StringReader(jsonSalle));
+	    JsonObject objectSalle = jsonReader.readObject();
+	    jsonReader.close();
+	    
+		return salleFromJsonObject(objectSalle);
+	    
 	}
 
 	public static Message msgFromJsonObject(JsonObject jsonMsg) {

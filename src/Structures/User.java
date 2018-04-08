@@ -22,6 +22,14 @@ public class User {
 		//auth = new AuthentificationUser(username, password);
 	}
 	
+	public User(String username, String password, int id, boolean isConnected) {
+		this.password = password;
+		this.username = username;
+		this.id = id;
+		this.isConnected = isConnected;
+		//auth = new AuthentificationUser(username, password);
+	}
+	
 	public boolean checkAuth(String username, String password) {
 		/*Checks if provided auth matches this user*/
 		return this.username.equals(username) && this.password.equals(password);

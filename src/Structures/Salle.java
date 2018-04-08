@@ -172,7 +172,7 @@ public class Salle {
 	public String toJsonFormat() {
 		String jsonSalle;
 		jsonSalle = "{\"salleNom\":\""+ salleNom + "\",";
-		jsonSalle += "\"salleId\":"+ id + ",";
+		jsonSalle += "\"id\":"+ id + ",";
 		jsonSalle += "\"description\":\""+ description + "\",";
 		jsonSalle += "\"suscribersList\":"+ usersToJsonFormat() + ",";
 		jsonSalle += "\"messagesList\":"+ messagesToJsonFormat() + "}";
