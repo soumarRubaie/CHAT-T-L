@@ -94,9 +94,20 @@ public class Client extends Thread {
 		// TODO Checker que jsonData!=null (e.g. empty DB)
 		usagers = getUsersFromServer();
 		salles = getSallesFromServer();
-		
+		System.out.println("INITCLT: User list:" + usagers.toString());
+		System.out.println("INITCLT: salle list:" + salles.toString());
+	
 	}
-	private List<User> getUsersFromServer() throws UnsupportedEncodingException {
+	
+	public void updateClient() throws UnsupportedEncodingException {
+		/*Quand on créer une salle, usager on veut udpate les listes*/
+		usagers = getUsersFromServer();
+		salles = getSallesFromServer();
+		System.out.println("UPCLT: User list:" + usagers.toString());
+		System.out.println("UPCLT: salle list:" + salles.toString());
+	
+	}
+	public List<User> getUsersFromServer() throws UnsupportedEncodingException {
 		String jsonData = Requests.getUsersFromServer();
 		List<User> dum = new ArrayList<User>();
 		if (jsonData==Utils.ERR_NO_DATA || jsonData==Utils.ERR_REFUSED_LOGGIN) {
@@ -108,24 +119,26 @@ public class Client extends Thread {
 			for (String user : jsonStrings) {
 				dum.add(JsonHandler.userFromString(user));
 			}
-			System.out.println("INITCLT: User list:" + usagers.toString());
 			}
 		return dum;
 	}
-	private List<Salle> getSallesFromServer() throws UnsupportedEncodingException {
+	public List<Salle> getSallesFromServer() throws UnsupportedEncodingException {
 		String jsonData = Requests.getSallesFromServer();
 		List<Salle> dum = new ArrayList<>();
 
-		if (jsonData==Utils.ERR_NO_DATA || jsonData==Utils.ERR_REFUSED_LOGGIN) {
+		if (jsonData==Utils.ERR_NO_DATA || jsonData==Utils.ERR_REFUSED_LOGGIN || jsonData=="") {
 			System.out.println("No data:" + jsonData.toString());
 		} else {	
 			
 			//Get a list out of the string
 			List<String> jsonStrings = new ArrayList<String>(Arrays.asList(jsonData.split(Utils.jsonarrayStringSeparator))) ;
+			
 			for (String salle : jsonStrings) {
-				dum.add(JsonHandler.salleFromString(salle));
+
+			if (salle!="") {
+					dum.add(JsonHandler.salleFromString(salle));
+				} 
 			}
-			System.out.println("INITCLT: User list:" + usagers.toString());
 			}
 		return dum;
 	}

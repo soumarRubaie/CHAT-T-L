@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Structures.Salle;
+import Structures.User;
 
 import javax.swing.SpringLayout;
 import java.awt.List;
@@ -55,14 +56,28 @@ public class Home extends JFrame {
 		
 		Client client = Client.getInstance();
 		
-		//Peupler les labels avec le noms des salles existantes
-		ArrayList<String> labels = new ArrayList<String>();
+		//Peupler les labels avec le noms des salles existantes & des usagers
+		//salles
+		ArrayList<String> dum = new ArrayList<String>();
 		
 		for (Salle s : client.getSalles()) {
-			labels.add(s.getSalleNom());
+			if (s!=null) {
+				dum.add(s.getSalleNom());
+			}
 		}
-		String label[] = new String[labels.size()];
-		label= labels.toArray(label);
+		String salleLabels[] = new String[dum.size()];
+		salleLabels= dum.toArray(salleLabels);
+		
+		//usagers
+		dum = new ArrayList<String>();
+		String userLabels[] = new String[dum.size()];
+
+		for (User u : client.getUsagers()) {
+			if (u!=null) {
+				dum.add(u.getUsername());
+			}
+		}
+		userLabels = dum.toArray(userLabels);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 831, 705);
@@ -70,9 +85,9 @@ public class Home extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JList list = new JList(label);
+		JList userList = new JList(userLabels);
 		
-		JList list2 = new JList(label);
+		JList salleList = new JList(salleLabels);
 		
 		JButton btnConsulterProfile = new JButton("Consulter");
 		btnConsulterProfile.addActionListener(new ActionListener() {
@@ -115,7 +130,7 @@ public class Home extends JFrame {
 		                            .addPreferredGap(ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
 		                            .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 		                                .addComponent(lblListeDesUtilisateurs)
-		                                .addComponent(list, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+		                                .addComponent(userList, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
 		                                .addComponent(btnConsulterProfile, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
 		                        .addGroup(gl_contentPane.createSequentialGroup()
 		                            .addContainerGap(165, Short.MAX_VALUE)
@@ -123,7 +138,7 @@ public class Home extends JFrame {
 		            .addGap(30)
 		            .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
 		                .addComponent(btnConsulterSalle, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-		                .addComponent(list2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+		                .addComponent(salleList, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
 		                .addComponent(lblListeDesSalles, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE))
 		            .addGap(290))
 		);
@@ -138,9 +153,9 @@ public class Home extends JFrame {
 		                        .addComponent(lblListeDesUtilisateurs))
 		                    .addPreferredGap(ComponentPlacement.UNRELATED)
 		                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-		                        .addComponent(list2, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE)
+		                        .addComponent(salleList, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE)
 		                        .addGroup(gl_contentPane.createSequentialGroup()
-		                            .addComponent(list)
+		                            .addComponent(userList)
 		                            .addGap(5)
 		                            .addComponent(btnConsulterProfile)))
 		                    .addPreferredGap(ComponentPlacement.RELATED)

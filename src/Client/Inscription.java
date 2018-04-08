@@ -63,7 +63,7 @@ public class Inscription extends JFrame {
 		// ######## Text fields
 		// ########### Buttons
 		// ############### Buttons (ACTION) listeners
-
+    	Client client = Client.getInstance();
     	
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,9 +74,9 @@ public class Inscription extends JFrame {
         
         
 		// ########### Buttons
-        JButton btnConsulterProfile = new JButton("Terminer");
-        btnConsulterProfile.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        btnConsulterProfile.setBackground(Color.GREEN);
+        JButton btnTermine = new JButton("Terminer");
+        btnTermine.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        btnTermine.setBackground(Color.GREEN);
 
         
 		// ######### Labels
@@ -125,7 +125,7 @@ public class Inscription extends JFrame {
                         .addComponent(lblNewLabel_4))
                     .addGap(18)
                     .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-                        .addComponent(btnConsulterProfile)
+                        .addComponent(btnTermine)
                         .addComponent(textField_description, 116, 116, 116)
                         .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
                             .addComponent(lblListeDesSalles, GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
@@ -161,13 +161,13 @@ public class Inscription extends JFrame {
                         .addComponent(textField_password, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblNewLabel_4))
                     .addGap(18)
-                    .addComponent(btnConsulterProfile)
+                    .addComponent(btnTermine)
                     .addGap(137))
         );
         contentPane.setLayout(gl_contentPane);
         
 		// ############### Buttons (ACTION) listeners
-        btnConsulterProfile.addActionListener(new ActionListener() {
+        btnTermine.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -183,7 +183,9 @@ public class Inscription extends JFrame {
 						// display Home
 						Home home = new Home();
 						home.setVisible(true);
+						client.updateClient();
 						dispose();	
+
 					} else {
 						System.out.println("INSC: Échec de l'inscription - réessayer");
 					}

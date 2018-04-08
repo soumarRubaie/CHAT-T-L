@@ -116,7 +116,9 @@ public class SocketTCP extends Thread {
 		salles = JsonHandler.importerSalles();
 		// Mais le usagers semble fonctionner
 		usagers = JsonHandler.importerUsers();
-		System.out.println("Données des salles et utilisateurs importées. [BUG]");
+		System.out.println("INITSERVEUR: users: " + usagers.toString());
+		System.out.println("INITSERVEUR: salle: " + salles.toString());
+
 	}
 
 	public void run() {
@@ -192,9 +194,8 @@ public class SocketTCP extends Thread {
 			// TODO: Check if this username is in the DB
 			User u = new User(params.get(Utils.usagerNomParam), params.get(Utils.usagerPasswordParam), usagers.size());
 
-			if (u != null) {
+			if (u != null && usernameIsFree(u.getUsername())) {
 				initUsager(u);
-				;
 				resp = Utils.OK;
 			}
 
@@ -499,7 +500,6 @@ public class SocketTCP extends Thread {
 		Arrays.toString(array.toArray());
 		
 		String listAsStr = String.join(Utils.jsonarrayStringSeparator, array);
-		System.out.println("TCP array of obj in json format:" + listAsStr.toString());
 		return listAsStr;
 	}
 	
@@ -518,7 +518,6 @@ public class SocketTCP extends Thread {
 		Arrays.toString(array.toArray());
 		
 		String listAsStr = String.join(Utils.jsonarrayStringSeparator, array);
-		System.out.println("TCP array of obj in json format:" + listAsStr.toString());
 		return listAsStr;
 	}
 

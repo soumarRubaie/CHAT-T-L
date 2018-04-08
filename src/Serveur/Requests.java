@@ -61,14 +61,11 @@ public abstract class Requests {
 		 * 
 		 * */
 		String urlParameters = "";
-		System.out.println("INITCLT: " + urlParameters);
 		//Encoder l'URL - doit inclure le port & le context de la requête 
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.getUsersFromServer;
 
 		String response = executePost(targetURL, urlParameters);
-		//REMOVE THE SPACES & LINE RETURN!!!!
-		System.out.println("INITCLT: users - " + response);
-		
+		//REMOVE THE SPACES & LINE RETURN!!!!		
 		return response.trim();
 	}
 
@@ -78,14 +75,11 @@ public abstract class Requests {
 		 * 
 		 * */
 		String urlParameters = "";
-		System.out.println("INITCLT: " + urlParameters);
 		//Encoder l'URL - doit inclure le port & le context de la requête 
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.getSallesFromServer;
 
 		String response = executePost(targetURL, urlParameters);
-		//REMOVE THE SPACES & LINE RETURN!!!!
-		System.out.println("INITCLT: salles- " + response);
-		
+		//REMOVE THE SPACES & LINE RETURN!!!!		
 		return response.trim();
 	}
 	
