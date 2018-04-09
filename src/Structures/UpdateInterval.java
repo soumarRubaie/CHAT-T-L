@@ -1,7 +1,7 @@
 package Structures;
 
-public class UpdateInterval {
-	public static void main(String[] args) {
+public class UpdateInterval extends Thread {
+	public void run() {
 		// run in a second
 		final long timeInterval = 1000;
 		Runnable runnable = new Runnable() {
@@ -18,7 +18,6 @@ public class UpdateInterval {
 				}
 			}
 		};
-		Thread thread = new Thread(runnable);
-		thread.start();
+
 	}
-}
+} 
