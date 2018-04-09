@@ -8,6 +8,7 @@ import java.nio.ByteOrder;
 public class Utils {
 	// Codes d'erreur & de réponses serveurTCP
 	public static String OK = "200";
+	public static String lineReturn = System.lineSeparator();
 
 	public static String ERR_NO_DATA = "400";
 	public static String ERR_REFUSED_LOGGIN= "401";

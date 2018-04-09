@@ -55,8 +55,6 @@ public class AjouterSalle extends JFrame {
      */
     public AjouterSalle() {
     	Client client = Client.getInstance();
-
-        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 745, 483);
         contentPane = new JPanel();
@@ -83,7 +81,6 @@ public class AjouterSalle extends JFrame {
 						// display Home
 						Home home = new Home();
 						home.setVisible(true);
-					
 						dispose();	
 					} else {
 						System.out.println("CREATESALL: Échec de créeation salle - réessayer");
