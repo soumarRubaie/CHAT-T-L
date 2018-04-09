@@ -153,7 +153,7 @@ public class Salle  implements JsonUtils {
 		return jsonMessages;
 	}
 	
-	public String usersToJsonFormat() {
+	public String salleToJsonFormat() {
 		boolean first = true;
 		String jsonUsers="[";
 		for(User u: suscribersList) {
@@ -174,7 +174,7 @@ public class Salle  implements JsonUtils {
 		jsonSalle = "{\"salleNom\":\""+ salleNom + "\",";
 		jsonSalle += "\"id\":"+ id + ",";
 		jsonSalle += "\"description\":\""+ description + "\",";
-		jsonSalle += "\"suscribersList\":"+ usersToJsonFormat() + ",";
+		jsonSalle += "\"suscribersList\":"+ salleToJsonFormat() + ",";
 		jsonSalle += "\"messagesList\":"+ messagesToJsonFormat() + "}";
 		
 		return jsonSalle;
