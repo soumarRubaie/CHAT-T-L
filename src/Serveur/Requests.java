@@ -40,24 +40,48 @@ public abstract class Requests {
 	
 	//##################### LIST OF REQUESTS FOR EACH ENDPOINTS
 	//#########################
-	public static boolean initClient() throws UnsupportedEncodingException {
-		/*Envoie une requête au serveur pour voir si un user matche avec ce qui a été donné*/
-		//Encoder tous les params de la requête
+	public static String initClient() throws UnsupportedEncodingException {
+		/*Prendre les data du serveur: salles, users...
+		 * Autres init() procedure at serveur start
+		 * */
 		String urlParameters = "";
 		System.out.println("INITCLT: " + urlParameters);
 		//Encoder l'URL - doit inclure le port & le context de la requête 
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.initClientURI;
 
-		
-		//TODO: science de la comparaison des string en java... ma sinon ça marche.
-		//Found it: there was a /r (line return) in the response...
 		String response = executePost(targetURL, urlParameters);
 		//REMOVE THE SPACES & LINE RETURN!!!!
-		response = response.trim();
 		System.out.println("INITCLT: server response - " + response);
-
-		return response.equals(Utils.OK);
+		
+		return response.trim();
 }
+	
+	public static String getUsersFromServer() {
+		/*Prendre les data du serveur: users...
+		 * 
+		 * */
+		String urlParameters = "";
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.getUsersFromServer;
+
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!		
+		return response.trim();
+	}
+
+
+	public static String getSallesFromServer() {
+		/*Prendre les data du serveur: salles...
+		 * 
+		 * */
+		String urlParameters = "";
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.getSallesFromServer;
+
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!		
+		return response.trim();
+	}
 	
 	
 	public static boolean athenticateUser(String username, String password) throws UnsupportedEncodingException {
@@ -74,7 +98,7 @@ public abstract class Requests {
 		//TODO: science de la comparaison des string en java... ma sinon ça marche.
 		//Found it: there was a /r (line return) in the response...
 		String response = executePost(targetURL, urlParameters);
-		//REMOVE THE SPACES & LINE RETURN!!!!
+		//REMOVE THE SPACES & LINE RETURN!!!!private
 		response = response.trim();
 		System.out.println("AUTH: server response - " + response);
 
@@ -109,7 +133,7 @@ public abstract class Requests {
 		+ "&"+Utils.salleDescriptionParam+"=" + URLEncoder.encode(description, "UTF-8");
 		
 		System.out.println("CREATESALLE: urlParam - " + urlParameters);
-		//Encoder l'URL - doit inclure le port & le context de la requête 
+		//Encoder l'URL - doer from the serve in json:it inclure le port & le context de la requête 
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.creationSalleURI;
 
 		
@@ -263,6 +287,9 @@ public abstract class Requests {
 		    }
 		  }
 }
+
+
+
 
 	
 	

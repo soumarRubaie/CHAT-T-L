@@ -189,18 +189,19 @@ public class JsonHandler {
 	}
 	
 	public static User userFromString(String jsonUser) {
-		JsonReader jsonReader = Json.createReader(new StringReader(jsonUser));
-	    JsonObject objectUser = jsonReader.readObject();
-	    jsonReader.close();
-	    
-	    int id = objectUser.getInt("id");
-	    String username = objectUser.getString("username");
-	    String password = objectUser.getString("password");
-	    boolean isConnected = objectUser.getBoolean("isConnected");
-	    
-	    
-		User user = new User(username, password, id, isConnected);
-		return user;
+		if (jsonUser.length()>0) {
+			JsonReader jsonReader = Json.createReader(new StringReader(jsonUser));
+			JsonObject objectUser = jsonReader.readObject();
+			jsonReader.close();
+			int id = objectUser.getInt("id");
+			String username = objectUser.getString("username");
+			String password = objectUser.getString("password");
+			boolean isConnected = objectUser.getBoolean("isConnected");
+			User user = new User(username, password, id, isConnected);
+			return user;
+		} else {
+		return null;
+		}
 	}
 	
 	public static Salle salleFromJsonObject(JsonObject objectSalle) {
@@ -236,12 +237,16 @@ public class JsonHandler {
 	}
 	
 	public static Salle salleFromString(String jsonSalle) {
+		
+		if (jsonSalle.length()>0) {
 		JsonReader jsonReader = Json.createReader(new StringReader(jsonSalle));
 	    JsonObject objectSalle = jsonReader.readObject();
 	    jsonReader.close();
 	    
 		return salleFromJsonObject(objectSalle);
-	    
+		} else {
+		return null;
+		}
 	}
 
 	public static Message msgFromJsonObject(JsonObject jsonMsg) {

@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import Structures.JsonHandler;
+import Structures.JsonUtils;
 import Structures.Message;
 import Structures.Salle;
 import Structures.User;
@@ -72,6 +74,10 @@ public class SocketTCP extends Thread {
 	private static String unsubscribeUsagerURI = Utils.unsubscribeUsagerURI;
 	private static String authUser = Utils.authUserURI;
 	private static String initClient = Utils.initClientURI;
+	
+	// Endpoint: getters
+	public static String getUsersFromServer = Utils.getUsersFromServer;
+	public static String getSallesFromServer = Utils.getSallesFromServer;
 
 	// ####################### FIN endpoint et param ###########
 
@@ -110,7 +116,9 @@ public class SocketTCP extends Thread {
 		salles = JsonHandler.importerSalles();
 		// Mais le usagers semble fonctionner
 		usagers = JsonHandler.importerUsers();
-		System.out.println("Données des salles et utilisateurs importées. [BUG]");
+		System.out.println("INITSERVEUR: users: " + usagers.toString());
+		System.out.println("INITSERVEUR: salle: " + salles.toString());
+
 	}
 
 	public void run() {
@@ -126,6 +134,8 @@ public class SocketTCP extends Thread {
 		serveur.createContext(unsubscribeUsagerURI, new UnsuscribeUsagerHandler());
 		serveur.createContext(authUser, new authenticateUser());
 		serveur.createContext(initClient, new initClient());
+		serveur.createContext(getSallesFromServer, new getSallesFromServer());
+		serveur.createContext(getUsersFromServer, new getUsersFromServer());
 
 		serveur.setExecutor(null); // Associe un thread par défaut au Serveur
 		serveur.start(); // Démarre le serveur
@@ -185,9 +195,8 @@ public class SocketTCP extends Thread {
 			// TODO: Check if this username is in the DB
 			User u = new User(params.get(Utils.usagerNomParam), params.get(Utils.usagerPasswordParam), usagers.size());
 
-			if (u != null) {
+			if (u != null && usernameIsFree(u.getUsername())) {
 				initUsager(u);
-				;
 				resp = Utils.OK;
 			}
 
@@ -425,38 +434,92 @@ public class SocketTCP extends Thread {
 	}
 
 	class initClient implements HttpHandler {
+		//DEPREC
 		public void handle(HttpExchange t) throws IOException {
-			// No params for this query - it' just a get
-			// InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
-			// BufferedReader br = new BufferedReader(isr);
-			// String query = br.readLine();
-			// Map<String, String> params = parseQueryString(query);
+			String resp = Utils.ERR_NO_DATA;
+			
+			//2b - better yet a jsonarray of jsonstrings
+			String jsonArr = userListToJsonArrayStr(usagers);
 
-			String resp = Utils.ERR_REFUSED_LOGGIN;
-			// Check if this user is in the DB
-			listSalleToJSON();
+			//3- Return that as response
 
 			// ### REPONSE ###
 
-			t.sendResponseHeaders(200, resp.length());
+			t.sendResponseHeaders(200, jsonArr.length());
 			OutputStream os = t.getResponseBody();
-			os.write(resp.getBytes());
+			os.write(jsonArr.getBytes());
 			os.close();
 
 			// ### FIN REPONSE ###
 		}
+	}
+		
+	class getUsersFromServer implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+			String resp = Utils.ERR_NO_DATA;
+			
+			//1-jsonarray of jsonstrings
+			String jsonArr = userListToJsonArrayStr(usagers);
 
-		private void listSalleToJSON() {
-			Salle s = new Salle("testsalle", 66, "botched test");
+			//3- Return that as response
+			t.sendResponseHeaders(200, jsonArr.length());
+			OutputStream os = t.getResponseBody();
+			os.write(jsonArr.getBytes());
+			os.close();
 
-			JsonArrayBuilder jb = Json.createArrayBuilder();
+		}
+	}
+	class getSallesFromServer implements HttpHandler {
+		public void handle(HttpExchange t) throws IOException {
+			String resp = Utils.ERR_NO_DATA;
+			
+			//1-jsonarray of jsonstrings
+			String jsonArr = salleListToJsonArrayStr(salles);
 
-			jb.add(Json.createObjectBuilder().add(Utils.salleNomParam, s.getSalleNom()).add(Utils.salleDescriptionParam,
-					s.getDescription()));
-			jb.build();
-			System.out.println("JARRAJ:" + jb.toString());
+			//3- Return that as response
+			t.sendResponseHeaders(200, jsonArr.length());
+			OutputStream os = t.getResponseBody();
+			os.write(jsonArr.getBytes());
+			os.close();
+
+		}
+	}
+	
+	
+	public String userListToJsonArrayStr(ArrayList<User> lst) {
+		/*For arrays - not working yet ahvent worked much on it*/
+		//Salle s = new Salle("testsalle", 66, "botched test");
+		
+		List<String> array = new ArrayList<String>();
+		
+		JsonArrayBuilder jb = Json.createArrayBuilder();
+		for (JsonUtils obj: lst) {
+			array.add(obj.toJsonFormat());
 		}
 
+		JsonArray jarr =  jb.build();
+		Arrays.toString(array.toArray());
+		
+		String listAsStr = String.join(Utils.jsonarrayStringSeparator, array);
+		return listAsStr;
+	}
+	
+	public String salleListToJsonArrayStr(ArrayList<Salle> lst) {
+		/*For arrays - not working yet ahvent worked much on it*/
+		//Salle s = new Salle("testsalle", 66, "botched test");
+		
+		List<String> array = new ArrayList<String>();
+		
+		JsonArrayBuilder jb = Json.createArrayBuilder();
+		for (JsonUtils obj: lst) {
+			array.add(obj.toJsonFormat());
+		}
+
+		JsonArray jarr =  jb.build();
+		Arrays.toString(array.toArray());
+		
+		String listAsStr = String.join(Utils.jsonarrayStringSeparator, array);
+		return listAsStr;
 	}
 
 	// ###################### FIN HANDLERS pour endpoints

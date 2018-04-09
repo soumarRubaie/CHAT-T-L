@@ -24,7 +24,7 @@ import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Salle {
+public class SallePage {
 	static String label[] = { "Zero", "One", "Two", "Three", "Four", "Five", "Six",
 		      "Seven", "Eight", "Nine", "Ten", "Eleven" };
 	

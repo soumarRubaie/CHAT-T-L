@@ -4,12 +4,39 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.json.JsonArray;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import Serveur.Requests;
+import Serveur.SocketTCP;
 import Serveur.Requests.RequestType;
+import Structures.JsonHandler;
 import Structures.Message;
+import Structures.Salle;
+import Structures.User;
 import Structures.Utils;
 
 public class Client extends Thread {
+	// ############## Gestion du singleton
+	private static Client instance;
+
+	public static Client getInstance(int portServerUDP, int portServerTCP) {
+		if (instance == null) {
+			instance = new Client(portServerUDP, portServerTCP);
+			return instance;
+		}
+		return instance;
+	}
+	
+	public static Client getInstance() {
+		//Cette metho suppose que le client a été initéi - devrait toujours être le cas sauf au démarrage,
+		//qui utilise l'autre getisntance
+		return instance;
+	}
+	
 	/* Il faudra redéfinir cela mieux/ailleurs mais pour fins de tests */
 	int userId = 0;
 	int salleId = 0;
@@ -21,8 +48,12 @@ public class Client extends Thread {
 
 	// Définit un socket,
 	DatagramSocket socket = null;
+	
+	List<User> usagers = new ArrayList<User>();
+	List<Salle> salles = new ArrayList<>();
 
-	public Client(int portServerUDP, int portServerTCP) {
+
+	private Client(int portServerUDP, int portServerTCP) {
 		Utils.tcpPort = portServerTCP;
 		Utils.udpPort = portServerUDP;
 		portUDP = portServerUDP;
@@ -45,6 +76,7 @@ public class Client extends Thread {
 
 	}
 
+
 	public void run() {
 
 		// Démarrer la page Login pour authentification
@@ -59,9 +91,56 @@ public class Client extends Thread {
 	}
 
 	private void initClient() throws UnsupportedEncodingException {
-		// TODO Auto-generated method stub
-		//Requests.initClient();
-		
+		// TODO Checker que jsonData!=null (e.g. empty DB)
+		usagers = getUsersFromServer();
+		salles = getSallesFromServer();
+		System.out.println("INITCLT: User list:" + usagers.toString());
+		System.out.println("INITCLT: salle list:" + salles.toString());
+	
+	}
+	
+	public void updateClient() throws UnsupportedEncodingException {
+		/*Quand on créer une salle, usager on veut udpate les listes*/
+		usagers = getUsersFromServer();
+		salles = getSallesFromServer();
+		System.out.println("UPCLT: User list:" + usagers.toString());
+		System.out.println("UPCLT: salle list:" + salles.toString());
+	
+	}
+	public List<User> getUsersFromServer() throws UnsupportedEncodingException {
+		String jsonData = Requests.getUsersFromServer();
+		List<User> dum = new ArrayList<User>();
+		if (jsonData==Utils.ERR_NO_DATA || jsonData==Utils.ERR_REFUSED_LOGGIN) {
+			System.out.println("No data:" + jsonData.toString());
+		} else {	
+			
+			//Get a list out of the string
+			List<String> jsonStrings = new ArrayList<String>(Arrays.asList(jsonData.split(Utils.jsonarrayStringSeparator))) ;
+			for (String user : jsonStrings) {
+				dum.add(JsonHandler.userFromString(user));
+			}
+			}
+		return dum;
+	}
+	public List<Salle> getSallesFromServer() throws UnsupportedEncodingException {
+		String jsonData = Requests.getSallesFromServer();
+		List<Salle> dum = new ArrayList<>();
+
+		if (jsonData==Utils.ERR_NO_DATA || jsonData==Utils.ERR_REFUSED_LOGGIN || jsonData=="") {
+			System.out.println("No data:" + jsonData.toString());
+		} else {	
+			
+			//Get a list out of the string
+			List<String> jsonStrings = new ArrayList<String>(Arrays.asList(jsonData.split(Utils.jsonarrayStringSeparator))) ;
+			
+			for (String salle : jsonStrings) {
+
+			if (salle!="") {
+					dum.add(JsonHandler.salleFromString(salle));
+				} 
+			}
+			}
+		return dum;
 	}
 
 	public void sendMsg(String strMessage) {
@@ -134,4 +213,15 @@ public class Client extends Thread {
 		this.salleId = salleId;
 	}
 
+
+	public List<User> getUsagers() {
+		return usagers;
+	}
+
+
+	public List<Salle> getSalles() {
+		return salles;
+	}
+
+	
 }

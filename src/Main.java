@@ -20,11 +20,10 @@ public class Main {
 			int portServerTCP = Integer.parseInt(args[1]);
 			int portServerUDP = Integer.parseInt(args[2]);
 			
-
 			if (args[0].equals(Utils.CLIENT)) {
 				// we start the client
 				System.out.println("Démarrage client UDP. PortUDP (serveur):" + portServerUDP);
-				new Client(portServerUDP, portServerTCP).start();
+				Client.getInstance(portServerUDP, portServerTCP).start();
 
 			} else if (args[0].equals(Utils.SERVER)) {
 				// we start the server

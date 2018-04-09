@@ -20,6 +20,8 @@ public class Utils {
 	// 602 : Accès refusé
 	// 603 : Données non existantes (Message)
 	
+	public static String jsonarrayStringSeparator = "##";
+	
 	//Params json path
 	public static String userRessourcePath = "ressources/users/";
 	public static String salleRessourcePath = "ressources/salles/";
@@ -57,7 +59,10 @@ public class Utils {
 		public static String unsubscribeUsagerURI = "/unsubscribeUsager";
 		public static String authUserURI = "/authUser";
 		public static String initClientURI = "/initClient";
-
+		
+		// Endpoint: getters to update list in the client
+		public static String getUsersFromServer = "/getUsersFromServer";
+		public static String getSallesFromServer = "/getSallesFromServer";
 		
 	// ####################### endpoint et params ##########
 
@@ -68,6 +73,8 @@ public class Utils {
 	public static int salleIdBytes = 4;
 	public static int datagrameSizeBytes = 10000;
 	public static int totalBytes = messageIdBytes+ authorIdBytes+salleIdBytes+datagrameSizeBytes;
+
+
 
 
 	/*Autres choses méthos etc.*/
