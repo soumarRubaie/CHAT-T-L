@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -127,13 +128,13 @@ public abstract class Requests {
 		return response.equals(Utils.OK);
 	}
 	
-	public static boolean createSalle(String salleNom, String description)throws UnsupportedEncodingException {
+	public static boolean createSalle(String salleNom, String description, String userId)throws UnsupportedEncodingException {
 		/*Creer une salle*/
 		String urlParameters = Utils.salleNomParam+"=" + URLEncoder.encode(salleNom, "UTF-8") 
 		+ "&"+Utils.salleDescriptionParam+"=" + URLEncoder.encode(description, "UTF-8");
 		
 		System.out.println("CREATESALLE: urlParam - " + urlParameters);
-		//Encoder l'URL - doer from the serve in json:it inclure le port & le context de la requête 
+		//Encoder l'URL - doit inclure le port & le context de la requête 
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.creationSalleURI;
 
 		
@@ -141,9 +142,21 @@ public abstract class Requests {
 		String response = executePost(targetURL, urlParameters);
 		//REMOVE THE SPACES & LINE RETURN!!!!
 		response = response.trim();
+		String errorCode = response.substring(0, 3);
+		String salleInfo = response.substring(3, response.length());
+		
 		System.out.println("CREATESALLE: server response - " + response);
+		
+		if (errorCode.equals(Utils.OK))
+		{
+			JsonParser parser = new JsonParser();
+			JsonObject json = parser.parse(salleInfo).getAsJsonObject();
+			String salleId = json.get("id").toString();
+			
+			return Requests.suscribeUsager(userId, salleId);
+		}
 
-		return response.equals(Utils.OK);
+		return errorCode.equals(Utils.OK);
 	}
 	
 	public static boolean suscribeUsager(String userId, String salleId)throws UnsupportedEncodingException {
@@ -158,9 +171,12 @@ public abstract class Requests {
 		String response = executePost(targetURL, urlParameters);
 		//REMOVE THE SPACES & LINE RETURN!!!!
 		response = response.trim();
+		String errorCode = response.substring(0, 3);
+		String otherInfo = response.substring(3, response.length());
+		
 		System.out.println("SUSC: server response - " + response);
 
-		return response.equals(Utils.OK);
+		return errorCode.equals(Utils.OK);
 	}
 	
 	public static boolean unsuscribeUsager(String userId, String salleId)throws UnsupportedEncodingException {

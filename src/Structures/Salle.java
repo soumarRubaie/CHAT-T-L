@@ -162,7 +162,7 @@ public class Salle  implements JsonUtils {
 			} else {
 				first = false;
 			}
-			jsonUsers += u.getId();
+			jsonUsers += u.toJsonFormat();
 			
 		}
 		jsonUsers += "]";
