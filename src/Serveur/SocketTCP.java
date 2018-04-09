@@ -225,19 +225,20 @@ public class SocketTCP extends Thread {
 			int idUser = Integer.parseInt(params.get(usagerIdParam));
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
-			String resp = "";
+			String resp = "600\n";
 
 			// ### REPONSE ###
 			if (subscribeUser(idSalle, idUser)) {
-				String response = "Abonnement utilisateur: " + lineReturn + "Utilisateur " + idUser
+				resp = Utils.OK + "\n";
+				resp += "Abonnement utilisateur: " + lineReturn + "Utilisateur " + idUser
 						+ " abonne a la salle " + idSalle;
-				resp = response + serveurStateResponse();
+				resp += serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
 				JsonHandler.salleToJson(getSalleFromId(idSalle));
 			} else {
-				String response = "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants"
+				resp += "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants"
 						+ lineReturn + "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
-				resp = response + serveurStateResponse();
+				resp += serveurStateResponse();
 				t.sendResponseHeaders(600, resp.length());
 			}
 			OutputStream os = t.getResponseBody();

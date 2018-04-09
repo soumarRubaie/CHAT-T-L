@@ -11,8 +11,10 @@ import java.util.ArrayList;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonValue;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParser;
 
@@ -171,6 +173,9 @@ public class JsonHandler {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;
+		} catch (JsonException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -218,6 +223,10 @@ public class JsonHandler {
 		JsonArray array = objectSalle.getJsonArray("suscribersList");
 		for (int n = 0; n < array.size(); n++) {
 			JsonObject object;
+//			JsonValue value = array.get(n);
+//			if (value instanceof JsonObject)
+//			{
+//			}
 			object = array.getJsonObject(n);
 			User objetUser = userFromJsonObject(object);
 			sub.add(objetUser);
