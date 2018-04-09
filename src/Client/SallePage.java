@@ -12,6 +12,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
 
+import Structures.Message;
 import Structures.Salle;
 import Structures.User;
 import Structures.Utils;
@@ -40,13 +41,16 @@ public class SallePage extends JFrame{
 	String userLabels[] ;
 	int currenSalleId;
 	String currentUsername;
+	JTextPane mainTextArea = new JTextPane();
+	JFrame frame = new JFrame("Salle discussion");
+	JPanel panel = new JPanel();
+	JTextField writeMessageField;
+
 
 	// so that we can start with the login page, as with Home()
 	public SallePage() {
-		JFrame frame = new JFrame("Salle discussion");
 		frame.setSize(902, 739);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.WEST);
 		client = Client.getInstance();
 		userLabels = client.getUserLabels();
@@ -55,10 +59,8 @@ public class SallePage extends JFrame{
 	}
 	
 	public SallePage(int salleIdAJoindre, String username) {
-		JFrame frame = new JFrame("Salle discussion");
 		frame.setSize(902, 739);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.WEST);
 		client = Client.getInstance();
 		userLabels = client.getUserLabels();
@@ -66,10 +68,47 @@ public class SallePage extends JFrame{
 		client.setCurrentSalle(salleIdAJoindre);
 		currenSalleId = salleIdAJoindre;
 		currentUsername = username;
+		initSalle(frame, panel);
 	
 	}
 	
 	
+	private void initSalle(JFrame frame, JPanel panel) {
+		/*Gets the messages stored if any and prints them on the main screen*/
+		
+		//Getting msg from Client (who got them from server)
+		Salle s = client.getCurrentSalle();
+		String toScreen = "";
+		for (Message msg : s.getMessagesList()) {
+			toScreen =  msg.getContenuMessage();
+			writeToMainTextArea(Utils.lineReturn + toScreen);
+		}
+	
+		
+	}
+	
+	public void writeToMainTextArea(String toWrite) {
+		StyledDocument doc = mainTextArea.getStyledDocument();
+
+		//  Define a keyword attribute
+		SimpleAttributeSet plainStyle = new SimpleAttributeSet();
+		//StyleConstants.setForeground(keyWord, Color.RED);
+		//StyleConstants.setBackground(keyWord, Color.YELLOW);
+		//StyleConstants.setBold(keyWord, true);
+		//  Add some text
+
+	    try {
+			doc.insertString(doc.getLength(), toWrite, plainStyle );
+			client.sendMsg(toWrite);
+			client.updateClient();
+			writeMessageField.setText("");
+			
+		} catch (BadLocationException | UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		
+	}
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -138,8 +177,7 @@ public class SallePage extends JFrame{
 		JPanel panel_2 = new JPanel();
 		frame.getContentPane().add(panel_2, BorderLayout.CENTER);
 		
-		JLabel lblMessage = new JLabel("\u00C9crire Message:");
-		JTextField writeMessageField;
+		JLabel lblMessage = new JLabel("Ecrire Message:");
 
 		writeMessageField = new JTextField();
 		writeMessageField.setColumns(10);
@@ -149,7 +187,6 @@ public class SallePage extends JFrame{
 		
 		JList list_1 = new JList();
 		
-		JTextPane mainTextArea = new JTextPane();
 		mainTextArea.setEditable(false);
 		mainTextArea.setText("Zone de text - Échanges chat ci-dessous");
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
@@ -200,24 +237,10 @@ public class SallePage extends JFrame{
 		
 		btnEnvoyer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				StyledDocument doc = mainTextArea.getStyledDocument();
+				
+				String toWrite = Utils.lineReturn + client.getSignatureForMessage()+": "+ writeMessageField.getText();
+				writeToMainTextArea(toWrite);
 
-				//  Define a keyword attribute
-				SimpleAttributeSet plainStyle = new SimpleAttributeSet();
-				//StyleConstants.setForeground(keyWord, Color.RED);
-				//StyleConstants.setBackground(keyWord, Color.YELLOW);
-				//StyleConstants.setBold(keyWord, true);
-				//  Add some text
-
-			    try {
-			    	String toWrite = Utils.lineReturn + client.getSignatureForMessage()+": "+ writeMessageField.getText();
-					doc.insertString(doc.getLength(), toWrite, plainStyle );
-					client.sendMsg(toWrite);
-					client.updateClient();
-					
-				} catch (BadLocationException | UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-				}
 	
 			}
 		});

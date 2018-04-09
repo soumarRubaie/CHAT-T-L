@@ -236,7 +236,7 @@ public class Client extends Thread {
 
 	public Message build_msg(String content) {
 
-		return new Message(msgId, content, salleId, userId);
+		return new Message(msgId, content, currentSalle.getId(), currentUser.getId());
 	}
 
 	// Getters & setters
