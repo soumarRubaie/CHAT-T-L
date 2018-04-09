@@ -98,8 +98,11 @@ public class Message {
 
 	public String toJsonFormat() {
 		String msgJson;
-		msgJson = "{\"idMessage\":" + idMessage + ",\"idUtilisateur\":" + idUtilisateur + ",\"contenuMessage\":\""
-				+ contenuMessage + "\",\"idSalle\":" + idSalle + "}";
+		msgJson = 
+				"{\"idMessage\":" + idMessage + 
+				",\"idUtilisateur\":" + idUtilisateur + 
+				",\"contenuMessage\":" + contenuMessage + 
+				"\",\"idSalle\":" + idSalle + "}";
 		return msgJson;
 	}
 
