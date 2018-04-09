@@ -30,6 +30,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 
 public class Home extends JFrame {
+	Client client ;
+
 
 	private JPanel contentPane;
 	
@@ -53,31 +55,11 @@ public class Home extends JFrame {
 	 * Create the frame.
 	 */
 	public Home() {
+		client = Client.getInstance();
 		
-		Client client = Client.getInstance();
-		
-		//Peupler les labels avec le noms des salles existantes & des usagers
-		//salles
-		ArrayList<String> dum = new ArrayList<String>();
-		
-		for (Salle s : client.getSalles()) {
-			if (s!=null) {
-				dum.add(s.getSalleNom());
-			}
-		}
-		String salleLabels[] = new String[dum.size()];
-		salleLabels= dum.toArray(salleLabels);
-		
-		//usagers
-		dum = new ArrayList<String>();
-		String userLabels[] = new String[dum.size()];
-
-		for (User u : client.getUsagers()) {
-			if (u!=null) {
-				dum.add(u.getUsername());
-			}
-		}
-		userLabels = dum.toArray(userLabels);
+		//Retrouver les labels à partir des lists salles, usagers
+		String salleLabels[] = client.getSalleLabels();
+		String userLabels[] = client.getUserLabels();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 831, 705);
@@ -90,10 +72,7 @@ public class Home extends JFrame {
 		JList salleList = new JList(salleLabels);
 		
 		JButton btnConsulterProfile = new JButton("Consulter");
-		btnConsulterProfile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+
 		
 		JLabel lblListeDesUtilisateurs = new JLabel("Liste des utilisateurs");
 		
@@ -198,7 +177,20 @@ public class Home extends JFrame {
 	                 dispose();
 	            }
 	        });
-	        
+		btnConsulterProfile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		btnConsulterSalle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//For now, let's just go to salleId 1
+				SallePage sp = new SallePage(1, client.getCurrentUser().getUsername());
+				sp.setVisible(true);
+                dispose();
+
+			}
+		});
 		
 		
 	}

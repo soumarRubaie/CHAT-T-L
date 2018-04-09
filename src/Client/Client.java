@@ -51,6 +51,8 @@ public class Client extends Thread {
 	
 	List<User> usagers = new ArrayList<User>();
 	List<Salle> salles = new ArrayList<>();
+	User currentUser;
+	Salle currentSalle;
 
 
 	private Client(int portServerUDP, int portServerTCP) {
@@ -107,6 +109,29 @@ public class Client extends Thread {
 		System.out.println("UPCLT: salle list:" + salles.toString());
 	
 	}
+	
+	public String[] getSalleLabels() {
+		ArrayList<String> dum = new ArrayList<String>();
+		for (Salle s : getSalles()) {
+			if (s!=null) {
+				dum.add(s.getId() + "_" + s.getSalleNom());
+			}
+		}
+		String salleLabels[] = new String[dum.size()];
+		return dum.toArray(salleLabels);
+	}
+	
+	public String[] getUserLabels() {
+		ArrayList<String> dum = new ArrayList<String>();
+		for (User s : getUsagers()) {
+			if (s!=null) {
+				dum.add(s.getId() + "_" + s.getUsername());
+			}
+		}
+		String userLabels[] = new String[dum.size()];
+		return dum.toArray(userLabels);
+	}
+	
 	public List<User> getUsersFromServer() throws UnsupportedEncodingException {
 		String jsonData = Requests.getUsersFromServer();
 		List<User> dum = new ArrayList<User>();
@@ -145,12 +170,9 @@ public class Client extends Thread {
 
 	public void sendMsg(String strMessage) {
 		byte[] buf = new byte[Utils.datagrameSizeBytes];
-		//lire l'input du clavier
-		Scanner scan = new Scanner(System.in);
-		String myLine = scan.nextLine();
 		
 		//Construire un obj message avec le string & ids etc et ensuite un byte[] pour l'envoie avec toutes ces infos
-		Message msg = build_msg(myLine);
+		Message msg = build_msg(strMessage);
 		try {
 			buf = msg.toBytes();
 		} catch (IOException e) {
@@ -203,6 +225,33 @@ public class Client extends Thread {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	
+	public void setCurrentUser(String username) {
+		for (User u : usagers) {
+			if (u.getUsername().equals(username)) {
+				currentUser = u;
+			}
+		}
+	}
+	public void setCurrentSalle(int salleId) {
+		for (Salle u : salles) {
+			if (salleId==u.getId()) {
+				currentSalle= u;
+			}
+		}
+	}
+	
+	public User getCurrentUser() {
+		return currentUser;
+	}
+
+	public Salle getCurrentSalle() {
+		return currentSalle;
+	}
+
+	public String getSignatureForMessage() {
+		return currentUser.getSignatureForMessage();
 	}
 
 	public int getSalleId() {

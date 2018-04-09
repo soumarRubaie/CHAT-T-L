@@ -591,6 +591,7 @@ public class SocketTCP extends Thread {
 				s.addMessage(msg);
 			}
 		}
+		
 	}
 
 	public void initSalle(Salle s) {
