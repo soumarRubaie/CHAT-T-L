@@ -19,28 +19,24 @@ import java.io.UnsupportedEncodingException;
 
 public class LoginPage extends JFrame {
 	/**
-	 * manque a retrieve les
-	 * 
-	 * @param username
-	 * @param password
-	 * @return
+
 	 */
+	Client client;
 
 	// so that we can start with the login page, as with Home()
 	public LoginPage() {
 		// Define frame
 		JFrame frame = new JFrame("Login IFT585  projet chat");
 		frame.setSize(426, 386);
-
-		// Setting what to do on close
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel);
 
 		// Details of layout performed there
 		placeComponents(panel, frame);
-
+		client = Client.getInstance();
 	}
+
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -55,7 +51,7 @@ public class LoginPage extends JFrame {
 		});
 	}
 
-	private static void placeComponents(JPanel panel, JFrame frame) {
+	private void placeComponents(JPanel panel, JFrame frame) {
 
 		panel.setLayout(null);
 
@@ -103,6 +99,8 @@ public class LoginPage extends JFrame {
 					if (Requests.athenticateUser(userText.getText(), passwordText.getText())) {
 						System.out.println("AUTH: loggin success");
 						// display Home
+						//important pour qu'on puisse signer les messages dans la salle de chat...
+						client.setCurrentUser(userText.getText());
 						Home home = new Home();
 						home.setVisible(true);
 						frame.dispose();
@@ -111,7 +109,6 @@ public class LoginPage extends JFrame {
 						LoginPage lp = new LoginPage();
 						lp.setVisible(true);
 						frame.dispose();
-						
 					}
 
 				} catch (UnsupportedEncodingException e1) {

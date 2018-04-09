@@ -26,6 +26,7 @@ public class SocketUDP extends Thread {
     public void treatNewMessge(Message msg) {
     	//Reçoit un message destiné à une salle - passe le message à la salle en question
     	socketTCP.addMsgSalle(msg);
+    	System.out.println("UDP msg recu:"+ msg.toString());
 	}
 
     public void run() {

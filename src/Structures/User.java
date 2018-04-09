@@ -102,6 +102,10 @@ public class User implements JsonUtils {
 		this.sallesSuscribed = sallesSuscribed;
 	}
 	
+	public String getSignatureForMessage() {
+		return username + "("+id+")";
+	}
+	
 	public String toJsonFormat() {
 		String userJson;
 		userJson = "{\"id\":" + id +",";
