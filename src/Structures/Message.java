@@ -92,14 +92,19 @@ public class Message {
 
 	@Override
 	public String toString() {
-		return "{idMessage: " + idMessage + ", contenuMessage: " + contenuMessage + ", idSalle: " + idSalle
+		return "{idMessage: " + idMessage + ", contenu: " + contenuMessage.trim() + ", idSalle: " + idSalle
 				+ ", idUtilisateur: " + idUtilisateur+"}";
 	}
 
 	public String toJsonFormat() {
 		String msgJson;
-		msgJson = "{\"idMessage\":" + idMessage + ",\"idUtilisateur\":" + idUtilisateur + ",\"contenuMessage\":\""
-				+ contenuMessage + "\",\"idSalle\":" + idSalle + "}";
+
+		
+		msgJson = 
+				"{\"idMessage\":" + idMessage + 
+				",\"idUtilisateur\":" + idUtilisateur + 
+				",\"contenuMessage\":\""+ contenuMessage.trim() + 
+				"\",\"idSalle\":" + idSalle + "}";
 		return msgJson;
 	}
 

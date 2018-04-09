@@ -154,7 +154,6 @@ public class SocketTCP extends Thread {
 			BufferedReader br = new BufferedReader(isr);
 			String query = br.readLine();
 			Map<String, String> params = parseQueryString(query);
-			System.out.println("CREATESALLE: param server: " + params.toString());
 
 			String resp = Utils.ERR_SALLE_EXIST;
 			// TODO: Check if this salle name exists
@@ -189,7 +188,6 @@ public class SocketTCP extends Thread {
 			BufferedReader br = new BufferedReader(isr);
 			String query = br.readLine();
 			Map<String, String> params = parseQueryString(query);
-			System.out.println("INSC: param server: " + params.toString());
 
 			String resp = Utils.ERR_USER_EXIST;
 			// TODO: Check if this username is in the DB
@@ -351,7 +349,6 @@ public class SocketTCP extends Thread {
 				String response = "ERREUR! Acces refuse, l'utilisateur " + idUser + " n'est pas abonne a la salle "
 						+ idSalle + lineReturn;
 				response += s.messagesToJsonFormat();
-				System.out.println(response);
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(405, resp.length());
 			}
@@ -607,7 +604,6 @@ public class SocketTCP extends Thread {
 		for (Salle s : salles) {
 			if (s.getId() == idSalle) {
 				s.addMessage(msg);
-				System.out.println("UDP: msg salle:" + s.getMessagesList().toString());
 			
 			}
 		}

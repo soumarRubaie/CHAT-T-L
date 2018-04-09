@@ -64,6 +64,7 @@ public class Salle  implements JsonUtils {
 	}
 	
 	public void addMessage(Message msg) {
+		msg.setIdMessage(messagesList.size());
 		messagesList.add(msg);
 		System.out.println("Ajout du message " + msg.getIdMessage() + " à la salle n°" + id);
 	}
