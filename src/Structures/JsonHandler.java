@@ -223,10 +223,6 @@ public class JsonHandler {
 		JsonArray array = objectSalle.getJsonArray("suscribersList");
 		for (int n = 0; n < array.size(); n++) {
 			JsonObject object;
-//			JsonValue value = array.get(n);
-//			if (value instanceof JsonObject)
-//			{
-//			}
 			object = array.getJsonObject(n);
 			User objetUser = userFromJsonObject(object);
 			sub.add(objetUser);
