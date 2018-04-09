@@ -11,8 +11,10 @@ import java.util.ArrayList;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonValue;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParser;
 
@@ -169,6 +171,9 @@ public class JsonHandler {
 			return salleFromJsonObject(obj);
 			
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		} catch (JsonException e) {
 			e.printStackTrace();
 			return null;
 		}

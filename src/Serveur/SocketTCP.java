@@ -163,7 +163,8 @@ public class SocketTCP extends Thread {
 
 			if (s != null) {
 				initSalle(s);
-				resp = Utils.OK;
+				resp = Utils.OK + "\n";
+				resp += s.toJsonFormat();
 			}
 
 			System.out.println("CREATESALLE: Lst salles: " + salles.toString());
@@ -217,23 +218,27 @@ public class SocketTCP extends Thread {
 		public void handle(HttpExchange t) throws IOException {
 
 			// Récupération des paramètres:
-			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+			BufferedReader br = new BufferedReader(isr);
+			String query = br.readLine();
+			Map<String, String> params = parseQueryString(query);
 			int idUser = Integer.parseInt(params.get(usagerIdParam));
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
-			String resp = "";
+			String resp = "600\n";
 
 			// ### REPONSE ###
 			if (subscribeUser(idSalle, idUser)) {
-				String response = "Abonnement utilisateur: " + lineReturn + "Utilisateur " + idUser
+				resp = Utils.OK + "\n";
+				resp += "Abonnement utilisateur: " + lineReturn + "Utilisateur " + idUser
 						+ " abonne a la salle " + idSalle;
-				resp = response + serveurStateResponse();
+				resp += serveurStateResponse();
 				t.sendResponseHeaders(200, resp.length());
 				JsonHandler.salleToJson(getSalleFromId(idSalle));
 			} else {
-				String response = "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants"
+				resp += "ERREUR lors de l'abonnement utilisateur" + lineReturn + "User ou salle non-existants"
 						+ lineReturn + "Utilisateur " + idUser + " a la salle " + idSalle + lineReturn;
-				resp = response + serveurStateResponse();
+				resp += serveurStateResponse();
 				t.sendResponseHeaders(600, resp.length());
 			}
 			OutputStream os = t.getResponseBody();
