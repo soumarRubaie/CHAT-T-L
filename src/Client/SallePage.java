@@ -83,9 +83,25 @@ public class SallePage extends JFrame{
 			toScreen =  msg.getContenuMessage();
 			writeToMainTextArea(Utils.lineReturn + toScreen);
 		}
+	}
 	
+	public void updateSalle() {
+		/*Appelé lorsque un client ajoute run new msg a la salle et/ou lors de regular updates*/
+		Salle s = client.getCurrentSalle();
+		String toScreen = "";
+		//to reset
+		resetToMainTextArea();
+		for (Message msg : s.getMessagesList()) {
+			toScreen =  msg.getContenuMessage();
+			writeToMainTextArea(Utils.lineReturn + toScreen);
+		}
+	}
+	public void resetToMainTextArea() {
+		mainTextArea.setText("");
 		
 	}
+
+	
 	
 	public void writeToMainTextArea(String toWrite) {
 		StyledDocument doc = mainTextArea.getStyledDocument();
@@ -99,12 +115,9 @@ public class SallePage extends JFrame{
 
 	    try {
 			doc.insertString(doc.getLength(), toWrite, plainStyle );
-			client.sendMsg(toWrite);
-			client.updateClient();
-			initSalle(frame, panel);
 			writeMessageField.setText("");
 			
-		} catch (BadLocationException | UnsupportedEncodingException e1) {
+		} catch (BadLocationException e1) {
 			e1.printStackTrace();
 		}
 		
@@ -189,7 +202,7 @@ public class SallePage extends JFrame{
 		JList list_1 = new JList();
 		
 		mainTextArea.setEditable(false);
-		mainTextArea.setText("Zone de text - Échanges chat ci-dessous");
+		//mainTextArea.setText("Zone de text - Échanges chat ci-dessous");
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
@@ -238,10 +251,17 @@ public class SallePage extends JFrame{
 		
 		btnEnvoyer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				String toWrite = Utils.lineReturn + client.getSignatureForMessage()+": "+ writeMessageField.getText();
 				writeToMainTextArea(toWrite);
-
+				client.sendMsg(toWrite);
+				try {
+					client.updateClient();
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				updateSalle();
 	
 			}
 		});

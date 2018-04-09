@@ -98,13 +98,17 @@ public class Client extends Thread {
 		System.out.println("INITCLT: User list:" + usagers.toString());
 		System.out.println("INITCLT: salle list:" + salles.toString());
 		System.out.println("INITCLT: Connected User list:" + getConnectedUsersFromServer().toString());
-	updateClient();
 	}
 	
 	public void updateClient() throws UnsupportedEncodingException {
 		/*Quand on créer une salle, usager on veut udpate les listes*/
 		usagers = getUsersFromServer();
 		salles = getSallesFromServer();
+		
+		//to "refresh" current salle otherwise new messages are missing
+		setCurrentSalle(currentSalle.getId());
+		
+		
 		System.out.println("UPCLT: User list:" + usagers.toString());
 		System.out.println("UPCLT: salle list:" + salles.toString());
 		System.out.println("UPCLT: Connected User list:" + getConnectedUsersFromServer().toString());
@@ -204,7 +208,6 @@ public class Client extends Thread {
 
 
 		}
-		System.out.println("Msg AUTHETIFIER_UTILISATEURorigine: " + msg.toString());
 
 		DatagramPacket outpacket = new DatagramPacket(buf, buf.length, address, portUDP);
 		try {
@@ -227,7 +230,6 @@ public class Client extends Thread {
 		
 		//DEBUG: display response
 		msg = new Message(inpacket.getData());
-		System.out.println("From server:" + msg.toString());
 
 	//Would normally close the socket at some point
 	//socket.close();
