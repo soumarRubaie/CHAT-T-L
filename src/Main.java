@@ -22,9 +22,6 @@ public class Main {
 				// we start the client
 				System.out.println("Démarrage client UDP. PortUDP (serveur):" + portServerUDP);
 				Client.getInstance(portServerUDP, portServerTCP).start();
-				UpdateInterval ui = new UpdateInterval();
-				ui.start();
-				
 
 			} else if (args[0].equals(Utils.SERVER)) {
 				// we start the server

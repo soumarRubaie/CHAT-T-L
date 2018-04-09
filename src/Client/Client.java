@@ -97,8 +97,11 @@ public class Client extends Thread {
 		// TODO Checker que jsonData!=null (e.g. empty DB)
 		usagers = getUsersFromServer();
 		salles = getSallesFromServer();
-	
 
+		UpdateInterval ui = new UpdateInterval();
+		Thread test = new Thread(new UpdateInterval());
+		test.start();
+		
 		System.out.println("INITCLT: User list:" + usagers.toString());
 		System.out.println("INITCLT: salle list:" + salles.toString());
 		System.out.println("INITCLT: Connected User list:" + getConnectedUsersFromServer().toString());
