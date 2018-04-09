@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import Structures.Salle;
 import Structures.User;
@@ -148,7 +150,27 @@ public class Home extends JFrame {
 		            .addComponent(btnDconenxion)
 		            .addContainerGap(220, Short.MAX_VALUE))
 		);
+		btnConsulterSalle.setEnabled(false);
 		contentPane.setLayout(gl_contentPane);
+		
+		// ############### List (ACTION) listener
+		salleList.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+			    if (e.getValueIsAdjusting() == false) {
+
+			        if (salleList.getSelectedIndex() == -1) {
+			        //No selection, disable fire button.
+			        	btnConsulterSalle.setEnabled(false);
+
+			        } else {
+			        //Selection, enable the fire button.
+			        	btnConsulterSalle.setEnabled(true);
+			        }
+			    }
+				
+			}
+		});
 		
 		// ############### Buttons (ACTION) listeners
 
@@ -177,6 +199,7 @@ public class Home extends JFrame {
 	                 dispose();
 	            }
 	        });
+		
 		btnConsulterProfile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -184,8 +207,21 @@ public class Home extends JFrame {
 		
 		btnConsulterSalle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//For now, let's just go to salleId 1
-				SallePage sp = new SallePage(1, client.getCurrentUser().getUsername());
+				int salleId = 0;
+				String name = (String)salleList.getSelectedValue();
+				ArrayList<Salle> salles = (ArrayList<Salle>) client.getSalles();
+				
+				for (Salle salle : salles) {
+					String fullName = Integer.toString(salle.getId());
+					fullName += "_";
+					fullName += salle.getSalleNom();
+					if (fullName.equals(name)) {
+						salleId = salle.getId();
+						break;
+					}
+				}
+				
+				SallePage sp = new SallePage(salleId, client.getCurrentUser().getUsername());
 				sp.setVisible(true);
                 dispose();
 
