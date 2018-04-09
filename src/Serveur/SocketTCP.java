@@ -383,17 +383,35 @@ public class SocketTCP extends Thread {
 	class GetConnectedUsersHandler implements HttpHandler {
 		// localhost:8000/getConnectedUsers?userId=1
 		public void handle(HttpExchange t) throws IOException {
-			// TODO GetConnectedUsers
-			// Récupération des paramètres:
-			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
-			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			// Récupération des usagers connectés
+			ArrayList<User> connectedUsers = new ArrayList<User>();
+			ArrayList<User> users = (ArrayList<User>) getUsers();
+			
+			for (User user : users)
+			{
+				if (user.isConnected())
+					connectedUsers.add(user);
+			}
+			
 
 			// ### REPONSE ###
-			String response = "A implementer (GetConnectedUsers)" + lineReturn + "id user: " + idUser;
-			String resp = response + serveurStateResponse();
-			t.sendResponseHeaders(200, resp.length());
+			boolean first = true;
+			String response = "{\"connectedUsers\":[";
+			for (User user : connectedUsers)
+			{
+				if(!first) {
+					response += ",";
+				} else {
+					first = false;
+				}
+				response += user.toJsonFormat();
+			}
+			response += "]}";
+			
+			response += serveurStateResponse();
+			t.sendResponseHeaders(200, response.length());
 			OutputStream os = t.getResponseBody();
-			os.write(resp.getBytes());
+			os.write(response.getBytes());
 			os.close();
 			// ### FIN REPONSE ###
 		}
