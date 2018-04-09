@@ -4,12 +4,11 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.json.Json;
 import javax.json.JsonArray;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+import javax.json.JsonException;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import Serveur.Requests;
 import Serveur.SocketTCP;
 import Serveur.Requests.RequestType;
@@ -98,6 +97,7 @@ public class Client extends Thread {
 		salles = getSallesFromServer();
 		System.out.println("INITCLT: User list:" + usagers.toString());
 		System.out.println("INITCLT: salle list:" + salles.toString());
+		System.out.println("INITCLT: Connected User list:" + getConnectedUsersFromServer().toString());
 	updateClient();
 	}
 	
@@ -107,6 +107,7 @@ public class Client extends Thread {
 		salles = getSallesFromServer();
 		System.out.println("UPCLT: User list:" + usagers.toString());
 		System.out.println("UPCLT: salle list:" + salles.toString());
+		System.out.println("UPCLT: Connected User list:" + getConnectedUsersFromServer().toString());
 	
 	}
 	
@@ -147,6 +148,27 @@ public class Client extends Thread {
 			}
 		return dum;
 	}
+	
+	public List<User> getConnectedUsersFromServer() throws UnsupportedEncodingException {
+		String jsonData = Requests.getConnectedUsersFromServer();
+		List<User> dum = new ArrayList<User>();
+		
+		try {
+			JsonReader jsonReader = Json.createReader(new StringReader(jsonData));
+			JsonObject json = jsonReader.readObject();
+			jsonReader.close();
+			
+			JsonArray users = json.getJsonArray("connectedUsers");
+			for (int i = 0; i < users.size(); i++) {
+			    JsonObject obj = users.getJsonObject(i);
+			    dum.add(JsonHandler.userFromJsonObject(obj));
+			}
+		} catch (JsonException e) {
+			e.printStackTrace();
+		}
+		return dum;
+	}
+	
 	public List<Salle> getSallesFromServer() throws UnsupportedEncodingException {
 		String jsonData = Requests.getSallesFromServer();
 		List<Salle> dum = new ArrayList<>();

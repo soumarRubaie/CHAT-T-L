@@ -69,6 +69,19 @@ public abstract class Requests {
 		//REMOVE THE SPACES & LINE RETURN!!!!		
 		return response.trim();
 	}
+	
+	public static String getConnectedUsersFromServer() {
+		/*Prendre les data du serveur: users...
+		 * 
+		 * */
+		String urlParameters = "";
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.getConnectedUsersURI;
+
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!		
+		return response.trim();
+	}
 
 
 	public static String getSallesFromServer() {
