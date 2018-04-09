@@ -64,12 +64,12 @@ public class SallePage extends JFrame{
 		frame.getContentPane().add(panel, BorderLayout.WEST);
 		client = Client.getInstance();
 		userLabels = client.getUserLabels();
-		placeComponents(panel, frame);
 		client.setCurrentSalle(salleIdAJoindre);
 		currenSalleId = salleIdAJoindre;
 		currentUsername = username;
+		
+		placeComponents(panel, frame);
 		initSalle(frame, panel);
-	
 	}
 	
 	
@@ -184,7 +184,7 @@ public class SallePage extends JFrame{
 		JPanel panel_1 = new JPanel();
 		frame.getContentPane().add(panel_1, BorderLayout.NORTH);
 		
-		JLabel lblSalle = new JLabel("Salle1 ");
+		JLabel lblSalle = new JLabel(String.format("Salle %d : %s", currenSalleId, client.getCurrentSalle().getSalleNom()));
 		panel_1.add(lblSalle);
 		
 		
