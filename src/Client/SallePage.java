@@ -101,6 +101,7 @@ public class SallePage extends JFrame{
 			doc.insertString(doc.getLength(), toWrite, plainStyle );
 			client.sendMsg(toWrite);
 			client.updateClient();
+			initSalle(frame, panel);
 			writeMessageField.setText("");
 			
 		} catch (BadLocationException | UnsupportedEncodingException e1) {
