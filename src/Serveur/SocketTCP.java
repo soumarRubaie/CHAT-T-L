@@ -584,6 +584,8 @@ public class SocketTCP extends Thread {
 		for (Salle s : salles) {
 			if (s.getId() == idSalle) {
 				s.addMessage(msg);
+				System.out.println("UDP: msg salle:" + s.getMessagesList().toString());
+			
 			}
 		}
 		

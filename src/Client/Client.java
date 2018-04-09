@@ -98,7 +98,7 @@ public class Client extends Thread {
 		salles = getSallesFromServer();
 		System.out.println("INITCLT: User list:" + usagers.toString());
 		System.out.println("INITCLT: salle list:" + salles.toString());
-	
+	updateClient();
 	}
 	
 	public void updateClient() throws UnsupportedEncodingException {
