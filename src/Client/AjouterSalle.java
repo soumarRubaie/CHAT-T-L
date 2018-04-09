@@ -75,10 +75,16 @@ public class AjouterSalle extends JFrame {
 					System.out.println("CREATESALL: username:" + param_salleNom + " pass:" + param_salleDesc);
 
 					System.out.println("CREATESALL: Appel à Requests.java pour utiliser le endpoint ");
-
-					if (Requests.createSalle(param_salleNom, param_salleDesc)) {
+					
+					// Needed only when testing this page alone
+					String userId = (Client.getInstance() == null) ? "0" : Integer.toString(Client.getInstance().getUserId()); 
+					
+					if (Requests.createSalle(param_salleNom, param_salleDesc, userId)) {
 						System.out.println("CREATESALL: Réponse du serveur: ");
-						client.updateClient();
+
+						// Needed only when testing this page alone
+						if (client != null)
+							client.updateClient();
 
 						// display Home
 						Home home = new Home();

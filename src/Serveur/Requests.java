@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -167,7 +168,11 @@ public abstract class Requests {
 		
 		if (errorCode.equals(Utils.OK))
 		{
+			JsonParser parser = new JsonParser();
+			JsonObject json = parser.parse(salleInfo).getAsJsonObject();
+			String salleId = json.get("id").toString();
 			
+			return Requests.suscribeUsager(userId, salleId);
 		}
 
 		return errorCode.equals(Utils.OK);

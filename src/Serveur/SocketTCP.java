@@ -218,7 +218,10 @@ public class SocketTCP extends Thread {
 		public void handle(HttpExchange t) throws IOException {
 
 			// Récupération des paramètres:
-			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
+			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+			BufferedReader br = new BufferedReader(isr);
+			String query = br.readLine();
+			Map<String, String> params = parseQueryString(query);
 			int idUser = Integer.parseInt(params.get(usagerIdParam));
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 
