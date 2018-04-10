@@ -150,9 +150,9 @@ public class SallePage extends JFrame{
 		
 		// ######## Text fields
 		// ########### Buttons
-		JButton btnConsulterProfil = new JButton("Ajouter utilisateur dans la salle");
-		btnConsulterProfil.setForeground(Color.RED);
-		btnConsulterProfil.setBounds(36, 224, 169, 25);
+		JButton btnDeconexion = new JButton("DECONNEXION");
+		btnDeconexion.setForeground(Color.RED);
+		btnDeconexion.setBounds(36, 224, 169, 25);
 
 		JLabel lblListeDesUtilisateurs = new JLabel("Liste des utilisateurs : ");
 		GroupLayout gl_panel = new GroupLayout(panel);
@@ -167,7 +167,7 @@ public class SallePage extends JFrame{
 							.addGap(32)
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblListeDesUtilisateurs)
-								.addComponent(btnConsulterProfil))))
+								.addComponent(btnDeconexion))))
 					.addContainerGap(47, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
@@ -178,7 +178,7 @@ public class SallePage extends JFrame{
 					.addGap(18)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(btnConsulterProfil)
+					.addComponent(btnDeconexion)
 					.addContainerGap(270, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
@@ -245,9 +245,18 @@ public class SallePage extends JFrame{
 		
 		
 		// ###############Button listeners
-		btnConsulterProfil.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
+		btnDeconexion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { 
+                try {
+					client.unsuscribeUserToSalle(client.getSalleId(), client.getCurrentUser().getId());
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+               client.setNoSalle();
+            	Home l = new Home();
+                l.setVisible(true);
+                dispose(); 
 				
 			}
 		});
