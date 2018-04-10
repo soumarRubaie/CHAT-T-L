@@ -110,10 +110,26 @@ public class Client extends Thread {
 		/*Quand on créer une salle, usager on veut udpate les listes*/
 		usagers = getUsersFromServer();
 		salles = getSallesFromServer();
+		
+		if (currentSalle!=null) {
+			setCurrentSalle(currentSalle.getId());
+			SallePage.updateSalle();
 
-		System.out.println("UPCLT: User list:" + usagers.toString());
-		System.out.println("UPCLT: salle list:" + salles.toString());
-		System.out.println("UPCLT: Connected User list:" + getConnectedUsersFromServer().toString());
+			
+		} 
+		if (currentUser!=null) {
+			setCurrentUser(currentUser.getUsername());
+			System.out.println("set current user");
+		} 
+		
+		if (currentSalle!=null && currentUser!=null) {
+			String resp = Requests.GetArchives(currentUser.getId(), currentSalle.getId());
+			System.out.println("getarchives:" + resp);
+		}
+
+		//System.out.println("UPCLT: User list:" + usagers.toString());
+		//System.out.println("UPCLT: salle list:" + salles.toString());
+		//System.out.println("UPCLT: Connected User list:" + getConnectedUsersFromServer().toString());
 	
 	}
 	

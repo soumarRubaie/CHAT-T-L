@@ -37,14 +37,14 @@ import java.io.UnsupportedEncodingException;
 import java.awt.event.ActionEvent;
 
 public class SallePage extends JFrame{
-	Client client ;
+	static Client client ;
 	String userLabels[] ;
 	int currenSalleId;
 	String currentUsername;
-	JTextPane mainTextArea = new JTextPane();
+	static JTextPane mainTextArea = new JTextPane();
 	JFrame frame = new JFrame("Salle discussion");
 	JPanel panel = new JPanel();
-	JTextField writeMessageField;
+	static JTextField writeMessageField;
 
 
 	// so that we can start with the login page, as with Home()
@@ -85,7 +85,7 @@ public class SallePage extends JFrame{
 		}
 	}
 	
-	public void updateSalle() {
+	public static void updateSalle() {
 		/*Appelé lorsque un client ajoute run new msg a la salle et/ou lors de regular updates*/
 		Salle s = client.getCurrentSalle();
 		String toScreen = "";
@@ -96,14 +96,14 @@ public class SallePage extends JFrame{
 			writeToMainTextArea(Utils.lineReturn + toScreen);
 		}
 	}
-	public void resetToMainTextArea() {
+	public static void resetToMainTextArea() {
 		mainTextArea.setText("");
 		
 	}
 
 	
 	
-	public void writeToMainTextArea(String toWrite) {
+	public static void writeToMainTextArea(String toWrite) {
 		StyledDocument doc = mainTextArea.getStyledDocument();
 
 		//  Define a keyword attribute

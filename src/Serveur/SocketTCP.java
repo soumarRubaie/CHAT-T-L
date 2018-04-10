@@ -338,7 +338,9 @@ public class SocketTCP extends Thread {
 
 			String resp = "";
 			Salle s = getSalleFromId(idSalle);
-			if (s.isSubscribed(idUser)) {
+			//if (s.isSubscribed(idUser)) {
+			//TODO: this for debug... not sure if suscritpion are fully impltemente yet
+			if (true) {
 				// ### REPONSE ###
 				String response = "Liste des messages de la salle " + idSalle + ":" + lineReturn;
 				response += s.messagesToJsonFormat();

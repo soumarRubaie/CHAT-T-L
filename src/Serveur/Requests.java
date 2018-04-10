@@ -97,6 +97,19 @@ public abstract class Requests {
 		return response.trim();
 	}
 	
+	public static String GetArchives(int userId, int salleId) throws UnsupportedEncodingException {
+		/*Prendre les data du serveur: salles...
+		 * 
+		 * */
+		String urlParameters = Utils.usagerIdParam+"=" + URLEncoder.encode(Integer.toString(userId), "UTF-8") 
+		+ "&"+Utils.salleIdParam+"=" + URLEncoder.encode(Integer.toString(salleId), "UTF-8");
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.getSallesFromServer;
+
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!		
+		return response.trim();
+	}
+	
 	
 	public static boolean athenticateUser(String username, String password) throws UnsupportedEncodingException {
 		/*Envoie une requête au serveur pour voir si un user matche avec ce qui a été donné*/
