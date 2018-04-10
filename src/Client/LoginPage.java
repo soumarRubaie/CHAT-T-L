@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import Serveur.AuthentificationUser;
+
 import Serveur.Requests;
 
 import java.awt.EventQueue;

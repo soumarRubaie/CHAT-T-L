@@ -11,7 +11,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import Serveur.Requests;
 import Serveur.SocketTCP;
-import Serveur.Requests.RequestType;
+
 import Structures.JsonHandler;
 import Structures.Message;
 import Structures.Salle;

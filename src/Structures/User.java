@@ -2,7 +2,7 @@ package Structures;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import Serveur.AuthentificationUser;
+
 import Structures.Salle;
 
 public class User implements JsonUtils {

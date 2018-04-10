@@ -17,27 +17,7 @@ import Structures.Utils;
 
 public abstract class Requests {
 	
-	RequestType type;
-	
-	public enum RequestType {
-		//Client requests
-		AUTHETIFIER_UTILISATEUR,
-		LOGOUT,
-		CREER_SALLE_DISCUSSION,
-		JOIN_ROOM,
-		ECRIRE_MESSAGE,
-		SUPPRIMER_MESSAGE,
-		CREER_USAGER,
-		
-		//Server requests
-		AUTHENTICATE_USER_RESPONSE,
-		CREER_SALLE_DISCUSSION_RESPONSE,
-		JOIN_ROOM_RESPONSE,
-		UPDATE_USER,
-		UPDATE_ROOM,
-		UPDATE_MESSAGE,
-		LOGOUT_RESPONSE
-	}
+
 	
 	//##################### LIST OF REQUESTS FOR EACH ENDPOINTS
 	//#########################
@@ -276,14 +256,6 @@ public abstract class Requests {
 	//#########################
 	//##################### END LIST OF REQUESTS FOR EACH ENDPOINTS
 
-
-	public Requests(RequestType type) {
-		this.type = type;
-	}
-	
-	public RequestType getType() {
-		return type;
-	}
 	
 	public static String executePost(String targetURL, String urlParameters) {
 		/*TODO: check that this works
