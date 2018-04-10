@@ -5,7 +5,7 @@ import java.io.UnsupportedEncodingException;
 import Client.Client;
 
 public class UpdateInterval implements Runnable{
-	private int timeInterval = 5000;
+	private int timeInterval = Utils.intervalUpdateMiliseconds;
 	Client clt;
 	public UpdateInterval(Client clt) {
 		this.clt = clt;
@@ -15,7 +15,6 @@ public class UpdateInterval implements Runnable{
 	public void run() {
 		while (true) {
 			// ------- code for task to run
-			System.out.println("Ping: Thread d'update!");
 			try {
 				clt.updateClientLists();
 			} catch (UnsupportedEncodingException e1) {

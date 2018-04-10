@@ -18,6 +18,7 @@ import Structures.Salle;
 import Structures.UpdateInterval;
 import Structures.User;
 import Structures.Utils;
+import jdk.nashorn.internal.ir.RuntimeNode.Request;
 
 public class Client extends Thread {
 	// ############## Gestion du singleton
@@ -48,9 +49,10 @@ public class Client extends Thread {
 
 	// Définit un socket,
 	DatagramSocket socket = null;
-	
+	List<User> connectedUsers = new ArrayList<User>();
 	List<User> usagers = new ArrayList<User>();
 	List<Salle> salles = new ArrayList<>();
+	
 	User currentUser;
 	Salle currentSalle;
 	Thread thread ;
@@ -92,9 +94,10 @@ public class Client extends Thread {
 
 		};
 
-
+	//############# UPDATE RELATED METHOS
 	private void initClient() throws UnsupportedEncodingException {
 		// TODO Checker que jsonData!=null (e.g. empty DB)
+		
 		usagers = getUsersFromServer();
 		salles = getSallesFromServer();
 
@@ -108,30 +111,48 @@ public class Client extends Thread {
 	
 	public void updateClientLists() throws UnsupportedEncodingException {
 		/*Quand on créer une salle, usager on veut udpate les listes*/
+		udapteConnectedUserList();
 		usagers = getUsersFromServer();
 		salles = getSallesFromServer();
 		
+		updateCurrentSalle();
+		updateCurrentUser();
+	
+	}
+	
+	public void udapteConnectedUserList() {
+		for (User user : connectedUsers) {
+			user.decreaseDisconectNumber();
+			if (user.getDisconnectNumber()<1) {
+				connectedUsers.remove(user);
+			}
+		}
+	}
+
+	public void updateCurrentSalle() throws UnsupportedEncodingException {
 		if (currentSalle!=null) {
 			setCurrentSalle(currentSalle.getId());
-			SallePage.updateSalle();
-
-			
+			SallePage.updateSalle();		
 		} 
 		if (currentUser!=null) {
 			setCurrentUser(currentUser.getUsername());
-			System.out.println("set current user");
 		} 
-		
+		/*
 		if (currentSalle!=null && currentUser!=null) {
 			String resp = Requests.GetArchives(currentUser.getId(), currentSalle.getId());
 			System.out.println("getarchives:" + resp);
 		}
-
-		//System.out.println("UPCLT: User list:" + usagers.toString());
-		//System.out.println("UPCLT: salle list:" + salles.toString());
-		//System.out.println("UPCLT: Connected User list:" + getConnectedUsersFromServer().toString());
-	
+	*/
 	}
+	public void updateCurrentUser() throws UnsupportedEncodingException {
+		if (currentUser!=null) {
+			setCurrentUser(currentUser.getUsername());
+		} 
+	}
+	
+	
+	//############# END UPDATE RELATED METHOS
+
 	
 	public String[] getSalleLabels() {
 		ArrayList<String> dum = new ArrayList<String>();
@@ -147,6 +168,17 @@ public class Client extends Thread {
 	public String[] getUserLabels() {
 		ArrayList<String> dum = new ArrayList<String>();
 		for (User s : getUsagers()) {
+			if (s!=null) {
+				dum.add(s.getId() + "_" + s.getUsername());
+			}
+		}
+		String userLabels[] = new String[dum.size()];
+		return dum.toArray(userLabels);
+	}
+	
+	public String[] getConnectedUserLabels() {
+		ArrayList<String> dum = new ArrayList<String>();
+		for (User s : currentSalle.getSuscribersList()) {
 			if (s!=null) {
 				dum.add(s.getId() + "_" + s.getUsername());
 			}
@@ -282,6 +314,10 @@ public class Client extends Thread {
 				currentSalle= u;
 			}
 		}
+	}
+	
+	public void suscribeUserToSalle(int salleIdAJoindre, int userId) throws UnsupportedEncodingException {
+		Requests.suscribeUser(salleIdAJoindre, userId);
 	}
 	
 	public User getCurrentUser() {

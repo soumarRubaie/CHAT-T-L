@@ -22,6 +22,8 @@ public class Utils {
 	// 603 : Données non existantes (Message)
 	
 	public static String jsonarrayStringSeparator = "##";
+	public static int intervalUpdateMiliseconds = 2000;
+	public static int disconectCyclesAllowed = 10;
 	
 	//Params json path
 	public static String userRessourcePath = "ressources/users/";

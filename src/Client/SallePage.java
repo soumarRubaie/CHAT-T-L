@@ -58,20 +58,24 @@ public class SallePage extends JFrame{
 	
 	}
 	
-	public SallePage(int salleIdAJoindre, String username) {
+	public SallePage(int salleIdAJoindre, String username) throws UnsupportedEncodingException {
 		frame.setSize(902, 739);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(panel, BorderLayout.WEST);
 		client = Client.getInstance();
-		userLabels = client.getUserLabels();
+		currentUsername = username;
+		client.setCurrentUser(username);
+		client.suscribeUserToSalle(salleIdAJoindre, client.getCurrentUser().getId());
+
 		client.setCurrentSalle(salleIdAJoindre);
 		currenSalleId = salleIdAJoindre;
-		currentUsername = username;
-		
+
+		userLabels = client.getConnectedUserLabels();
+
 		placeComponents(panel, frame);
 		initSalle(frame, panel);
 	}
-	
+	 
 	
 	private void initSalle(JFrame frame, JPanel panel) {
 		/*Gets the messages stored if any and prints them on the main screen*/
@@ -100,7 +104,7 @@ public class SallePage extends JFrame{
 		mainTextArea.setText("");
 		
 	}
-
+	
 	
 	
 	public static void writeToMainTextArea(String toWrite) {

@@ -41,7 +41,7 @@ public class Salle  implements JsonUtils {
 		this.suscribersList = suscribersList;
 		this.messagesList = messagesList;
 	}
-	
+	 
 	public void addSubscriber(User u) {
 		for(int i = 0; i<suscribersList.size(); i++) {
 			if (suscribersList.get(i).getId() == u.getId()) {

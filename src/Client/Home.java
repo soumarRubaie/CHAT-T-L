@@ -27,6 +27,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -198,7 +199,7 @@ public class Home extends JFrame {
 	                 l.setVisible(true);
 	                 dispose();
 	            }
-	        });
+	        }); 
 		
 		btnConsulterProfile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -221,9 +222,16 @@ public class Home extends JFrame {
 					}
 				}
 				
-				SallePage sp = new SallePage(salleId, client.getCurrentUser().getUsername());
-				sp.setVisible(true);
-                dispose();
+				SallePage sp;
+				try {
+					sp = new SallePage(salleId, client.getCurrentUser().getUsername());
+					sp.setVisible(true);
+	                dispose();
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 
 			}
 		});

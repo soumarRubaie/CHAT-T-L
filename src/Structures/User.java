@@ -11,8 +11,9 @@ public class User implements JsonUtils {
 	String username;
 	String password;
 	ArrayList<Salle> sallesSuscribed;
-	boolean isConnected;  
-	//AuthentificationUser auth;
+	boolean isConnected;
+	int updatesLeftDisconect = Utils.disconectCyclesAllowed;	//number of update cycles a user can be inactive before automatic disconect from room
+	//AuthentificationUser auth; 
 	
 	//Création d'un nouveau user
 	public User(String username, String password, int id) {
@@ -104,6 +105,17 @@ public class User implements JsonUtils {
 	
 	public String getSignatureForMessage() {
 		return username + "("+id+")";
+	}
+	
+	public void resetDisconectCycles() {
+		updatesLeftDisconect = Utils.disconectCyclesAllowed;
+	}
+	public void decreaseDisconectNumber() {
+		updatesLeftDisconect = updatesLeftDisconect -1;
+	}
+	
+	public int getDisconnectNumber() {
+		return updatesLeftDisconect;
 	}
 	
 	public String toJsonFormat() {
