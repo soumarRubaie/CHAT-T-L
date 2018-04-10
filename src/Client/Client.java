@@ -116,9 +116,9 @@ public class Client extends Thread {
 		salles = getSallesFromServer();
 		
 		updateCurrentSalle();
-		updateCurrentUser();
+		updateCurrentUser(); 
 	
-	}
+	} 
 	
 	public void udapteConnectedUserList() {
 		for (User user : connectedUsers) {

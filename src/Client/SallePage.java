@@ -119,7 +119,6 @@ public class SallePage extends JFrame{
 
 	    try {
 			doc.insertString(doc.getLength(), toWrite, plainStyle );
-			writeMessageField.setText("");
 			
 		} catch (BadLocationException e1) {
 			e1.printStackTrace();
@@ -259,6 +258,7 @@ public class SallePage extends JFrame{
 				String toWrite = Utils.lineReturn + client.getSignatureForMessage()+": "+ writeMessageField.getText();
 				writeToMainTextArea(toWrite);
 				client.sendMsg(toWrite);
+
 				try {
 					client.updateClientLists();
 				} catch (UnsupportedEncodingException e1) {
@@ -266,7 +266,8 @@ public class SallePage extends JFrame{
 					e1.printStackTrace();
 				}
 				updateSalle();
-	
+				writeMessageField.setText("");
+
 			}
 		});
 		
