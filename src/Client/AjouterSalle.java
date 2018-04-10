@@ -82,7 +82,7 @@ public class AjouterSalle extends JFrame {
 
 						// Needed only when testing this page alone
 						if (client != null)
-							client.updateClient();
+							client.updateClientLists();
 
 						// display Home
 						Home home = new Home();

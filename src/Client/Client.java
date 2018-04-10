@@ -98,24 +98,19 @@ public class Client extends Thread {
 		usagers = getUsersFromServer();
 		salles = getSallesFromServer();
 
-		UpdateInterval ui = new UpdateInterval();
-		Thread test = new Thread(new UpdateInterval());
+		UpdateInterval ui = new UpdateInterval(this);
+		Thread test = new Thread(new UpdateInterval(this));
 		test.start();
 		
 		System.out.println("INITCLT: User list:" + usagers.toString());
 		System.out.println("INITCLT: salle list:" + salles.toString());
-		System.out.println("INITCLT: Connected User list:" + getConnectedUsersFromServer().toString());
 	}
 	
-	public void updateClient() throws UnsupportedEncodingException {
+	public void updateClientLists() throws UnsupportedEncodingException {
 		/*Quand on créer une salle, usager on veut udpate les listes*/
 		usagers = getUsersFromServer();
 		salles = getSallesFromServer();
-		
-		//to "refresh" current salle otherwise new messages are missing
-		setCurrentSalle(currentSalle.getId());
-		
-		
+
 		System.out.println("UPCLT: User list:" + usagers.toString());
 		System.out.println("UPCLT: salle list:" + salles.toString());
 		System.out.println("UPCLT: Connected User list:" + getConnectedUsersFromServer().toString());

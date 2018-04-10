@@ -246,7 +246,6 @@ public abstract class Requests {
 		 * */
 		  HttpURLConnection connection = null;
 		  try {
-			 System.out.println("execPost: "+ targetURL +"?" +  urlParameters);
 		    //Create connection
 		    URL url = new URL(targetURL);
 		    connection = (HttpURLConnection) url.openConnection();
@@ -259,9 +258,6 @@ public abstract class Requests {
 		    connection.setUseCaches(false);
 		    connection.setDoOutput(true);
 
-		    //Send request
-//		    System.out.println("Sending, URL:" + targetURL);
-//		    System.out.println("Sending, params:" + urlParameters);
 
 		    DataOutputStream wr = new DataOutputStream (
 		        connection.getOutputStream());

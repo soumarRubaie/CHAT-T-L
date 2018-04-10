@@ -183,7 +183,7 @@ public class Inscription extends JFrame {
 						// display Home
 						Home home = new Home();
 						home.setVisible(true);
-						client.updateClient();
+						client.updateClientLists();
 						dispose();	
 
 					} else {

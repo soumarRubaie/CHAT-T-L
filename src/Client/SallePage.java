@@ -256,7 +256,7 @@ public class SallePage extends JFrame{
 				writeToMainTextArea(toWrite);
 				client.sendMsg(toWrite);
 				try {
-					client.updateClient();
+					client.updateClientLists();
 				} catch (UnsupportedEncodingException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

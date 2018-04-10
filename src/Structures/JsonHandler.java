@@ -245,7 +245,6 @@ public class JsonHandler {
 		
 		if (jsonSalle.length()>0) {
 		JsonReader jsonReader = Json.createReader(new StringReader(jsonSalle));
-		System.out.println("Jsonsalle:" + jsonSalle);
 	    JsonObject objectSalle = jsonReader.readObject();
 	    jsonReader.close();
 	    
