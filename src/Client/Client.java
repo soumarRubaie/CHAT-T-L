@@ -308,6 +308,7 @@ public class Client extends Thread {
 			}
 		}
 	}
+	
 	public void setCurrentSalle(int salleId) {
 		for (Salle u : salles) {
 			if (salleId==u.getId()) {

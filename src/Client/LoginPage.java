@@ -96,11 +96,14 @@ public class LoginPage extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (Requests.athenticateUser(userText.getText(), passwordText.getText())) {
+					String userName = userText.getText();
+					String password = passwordText.getPassword().toString();
+					
+					if (Requests.athenticateUser(userName, passwordText.getText())) {
 						System.out.println("AUTH: loggin success");
 						// display Home
 						//important pour qu'on puisse signer les messages dans la salle de chat...
-						client.setCurrentUser(userText.getText());
+						client.setCurrentUser(userName);
 						Home home = new Home();
 						home.setVisible(true);
 						frame.dispose();

@@ -139,11 +139,22 @@ public abstract class Requests {
 		String response = executePost(targetURL, urlParameters);
 		//REMOVE THE SPACES & LINE RETURN!!!!private
 		response = response.trim();
-		System.out.println("AUTH: server response - " + response);
-
-		return response.equals(Utils.OK);
-}
-	
+		String errorCode = response.substring(0, 3);
+		String userInfo = response.substring(3, response.length());
+		
+		System.out.println("CREATESALLE: server response - " + response);
+		
+		if (errorCode.equals(Utils.OK))
+		{
+			JsonParser parser = new JsonParser();
+			JsonObject json = parser.parse(userInfo).getAsJsonObject();
+			String userId = json.get("id").toString();
+			
+			
+			return true;
+		}
+		return false;
+	}
 
 	public static boolean createUser(String param_username, String param_password)throws UnsupportedEncodingException {
 		/*Envoie une requête au serveur pour voir si un user matche avec ce qui a été donné*/
