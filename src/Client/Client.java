@@ -116,9 +116,9 @@ public class Client extends Thread {
 		salles = getSallesFromServer();
 		
 		updateCurrentSalle();
-		updateCurrentUser();
+		updateCurrentUser(); 
 	
-	}
+	} 
 	
 	public void udapteConnectedUserList() {
 		for (User user : connectedUsers) {
@@ -315,9 +315,16 @@ public class Client extends Thread {
 			}
 		}
 	}
+	public void setNoSalle() {
+		currentSalle = null;
+	}
 	
 	public void suscribeUserToSalle(int salleIdAJoindre, int userId) throws UnsupportedEncodingException {
 		Requests.suscribeUser(salleIdAJoindre, userId);
+	}
+	
+	public void unsuscribeUserToSalle(int salleIdAJoindre, int userId) throws UnsupportedEncodingException {
+		Requests.unsuscribeUser(salleIdAJoindre, userId);
 	}
 	
 	public User getCurrentUser() {

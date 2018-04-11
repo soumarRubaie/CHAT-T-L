@@ -184,6 +184,7 @@ public class Inscription extends JFrame {
 						Home home = new Home();
 						home.setVisible(true);
 						client.updateClientLists();
+						client.setCurrentUser(param_username);
 						dispose();	
 
 					} else {
