@@ -54,8 +54,6 @@ public class ModifierUtilisateur extends JFrame {
      */
     public ModifierUtilisateur() {
         
-        String label[] = { "Zero", "One", "Two", "Three" };
-        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 831, 705);
         contentPane = new JPanel();
