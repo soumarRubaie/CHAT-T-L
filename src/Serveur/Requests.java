@@ -98,10 +98,10 @@ public abstract class Requests {
 
 		String response = executePost(targetURL, urlParameters);
 		//REMOVE THE SPACES & LINE RETURN!!!!		
-		return response.trim(); 
-	}
+		return response.trim();  
+	} 
 	public static String unsuscribeUser(int salleId, int userId) throws UnsupportedEncodingException {
-		
+		 
 		String urlParameters = Utils.salleIdParam+"=" + URLEncoder.encode(Integer.toString(salleId), "UTF-8") 
 		+ "&"+Utils.usagerIdParam+"=" + URLEncoder.encode(Integer.toString(userId), "UTF-8");
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.unsubscribeUsagerURI;

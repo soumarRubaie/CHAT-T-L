@@ -197,7 +197,7 @@ public class Home extends JFrame {
 	            public void actionPerformed(ActionEvent e) {
 	                ModifierUtilisateur l = new ModifierUtilisateur();
 	                 l.setVisible(true);
-	                 dispose();
+	                 dispose(); 
 	            }
 	        }); 
 		
