@@ -37,6 +37,7 @@ public class Home extends JFrame {
 	Client client ;
 	JList<String> userList = new JList<String>();
 	JList<String> salleList = new JList<String>();
+	JLabel lblBonjour = new JLabel();
 
 
 	private JPanel contentPane;
@@ -96,7 +97,7 @@ public class Home extends JFrame {
 		JButton btnAjouterUneSalle = new JButton("Ajouter une salle de discussion");
 		btnAjouterUneSalle.setForeground(Color.RED);
 		
-		JLabel lblBonjour = new JLabel(String.format("Bonjour %s :)", client.getCurrentUser().getUsername()));
+		lblBonjour.setText(String.format("Bonjour %s :)", client.getCurrentUser().getUsername()));
 		lblBonjour.setForeground(new Color(220, 20, 60));
 		lblBonjour.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
@@ -201,7 +202,7 @@ public class Home extends JFrame {
 		btnModifierProfil.addActionListener(new ActionListener() {    
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-	                ModifierUtilisateur l = new ModifierUtilisateur();
+	                UserPage l = new UserPage();
 	                client.goToAnotherPage(l);
 	            }
 	        }); 
@@ -253,5 +254,7 @@ public class Home extends JFrame {
 		userList.repaint();
 		salleList.repaint();
 		salleList.setSelectedIndex(currentIndex);
+		
+		lblBonjour.setText(String.format("Bonjour %s :)", client.getCurrentUser().getUsername()));
 	}
 }

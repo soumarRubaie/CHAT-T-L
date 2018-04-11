@@ -228,6 +228,9 @@ public class SallePage extends JFrame{
 		JButton btnEnvoyer = new JButton("Envoyer");
 		btnEnvoyer.setForeground(new Color(255, 0, 255));
 		
+		JButton btnEffacerMessage = new JButton("Effacer un message");
+		btnEnvoyer.setForeground(Color.RED);
+		
 		JList list_1 = new JList();
 		
 		mainTextArea.setEditable(false);
@@ -240,6 +243,7 @@ public class SallePage extends JFrame{
 					.addComponent(lblMessage)
 					.addGap(27)
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnEffacerMessage)
 						.addComponent(btnEnvoyer)
 						.addGroup(gl_panel_2.createSequentialGroup()
 							.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
@@ -265,6 +269,8 @@ public class SallePage extends JFrame{
 						.addComponent(lblMessage))
 					.addGap(18)
 					.addComponent(btnEnvoyer)
+					.addGap(18)
+					.addComponent(btnEffacerMessage)
 					.addGap(7))
 		);
 		panel_2.setLayout(gl_panel_2);
@@ -301,6 +307,13 @@ public class SallePage extends JFrame{
 				updateSalle();
 				writeMessageField.setText("");
 
+			}
+		});
+		
+		btnEffacerMessage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+            	EffacerMessagePage l = new EffacerMessagePage();
+				client.goToAnotherPage(l);
 			}
 		});
 		

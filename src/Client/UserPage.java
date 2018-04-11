@@ -29,11 +29,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class AjouterSalle extends JFrame {
+public class UserPage extends JFrame {
 
     private JPanel contentPane;
-    private JTextField textField_salleNom;
-    private JTextField textField_salleDesc;
+    private JTextField textField_UserName;
+    private JTextField textField_Password;
     
     /**
      * Launch the application.
@@ -42,7 +42,7 @@ public class AjouterSalle extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    AjouterSalle frame = new AjouterSalle();
+                    UserPage frame = new UserPage();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -54,7 +54,7 @@ public class AjouterSalle extends JFrame {
     /**
      * Create the frame.
      */
-    public AjouterSalle() {
+    public UserPage() {
     	Client client = Client.getInstance();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 745, 483);
@@ -65,35 +65,29 @@ public class AjouterSalle extends JFrame {
         
 		// ############### Buttons (ACTION) listeners
 
-        JButton btnAjouter = new JButton("Ajouter");
-        btnAjouter.addActionListener(new ActionListener() {
+        JButton btnUpdateProfile = new JButton("Mettre à jour");
+        btnUpdateProfile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	try {
-					String param_salleNom = textField_salleNom.getText();
-					String param_salleDesc = textField_salleDesc.getText();
-					System.out.println("CREATESALL: username:" + param_salleNom + " pass:" + param_salleDesc);
+					String param_username = textField_UserName.getText();
+					String param_password = textField_Password.getText();
+					System.out.println("UPDATEUSER: username:" + param_username + " pass:" + param_password);
 
-					System.out.println("CREATESALL: Appel à Requests.java pour utiliser le endpoint ");
+					System.out.println("UPDATEUSER: Appel à Requests.java pour utiliser le endpoint ");
 					
 					// Needed only when testing this page alone
 					String userId = (Client.getInstance() == null) ? "0" : Integer.toString(Client.getInstance().currentUser.getId()); 
-					int salleId = Requests.createSalle(param_salleNom, param_salleDesc, userId);
-					if (salleId != -1) {
-						System.out.println("CREATESALL: Réponse du serveur: ");
+					if ( Requests.updateUser(userId, param_username, param_password)) {
+						System.out.println("UPDATEUSER: Réponse du serveur: ");
 
 						// Needed only when testing this page alone
-						if (client != null)
-							client.updateClientLists();
+						client.currentUser.setUsername(param_username);
+						client.currentUser.setPassword(param_password);
+						client.updateClientLists();
 
-						// display SallePage
-						SallePage sp;
-						try {
-							sp = new SallePage(salleId, client.getCurrentUser().getUsername());
-							client.goToAnotherPage(sp);
-						} catch (UnsupportedEncodingException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+						// display Home
+						Home home = new Home();
+						client.goToAnotherPage(home);
 					} else {
 						System.out.println("CREATESALL: Échec de créeation salle - réessayer");
 					}
@@ -102,26 +96,37 @@ public class AjouterSalle extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-            	
+            }
+        });
+        
+        JButton btnAnnuler = new JButton("Annuler");
+        btnAnnuler.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+				// display Home
+				Home home = new Home();
+				client.goToAnotherPage(home);
             }
         });
 		// ###############FIN Buttons (ACTION) listeners
 
+        String userName = client.currentUser.getUsername();
+        String password = client.currentUser.getPassword();
         
+        JLabel lblNom = new JLabel("Modifier profil utilisateur");
+        lblNom.setForeground(Color.RED);
+        lblNom.setFont(new Font("Thorndale AMT", Font.PLAIN, 16));
         
-        JLabel lblListeDesSalles = new JLabel("Ajouter une salle");
-        lblListeDesSalles.setForeground(Color.RED);
-        lblListeDesSalles.setFont(new Font("Thorndale AMT", Font.PLAIN, 16));
+        textField_UserName = new JTextField();
+        textField_UserName.setColumns(10);
+        textField_UserName.setText(userName);
         
-        textField_salleNom = new JTextField();
-        textField_salleNom.setColumns(10);
+        textField_Password = new JTextField();
+        textField_Password.setColumns(10);
+        textField_Password.setText(password);
         
-        textField_salleDesc = new JTextField();
-        textField_salleDesc.setColumns(10);
+        JLabel lblNewLabel = new JLabel("Nom d'utilisateur");
         
-        JLabel lblNewLabel = new JLabel("Nom de la salle");
-        
-        JLabel lblNewLabel_1 = new JLabel("Description");
+        JLabel lblNewLabel_1 = new JLabel("Mot de passe");
         GroupLayout gl_contentPane = new GroupLayout(contentPane);
         gl_contentPane.setHorizontalGroup(
             gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -132,27 +137,30 @@ public class AjouterSalle extends JFrame {
                         .addComponent(lblNewLabel_1))
                     .addGap(18)
                     .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-                        .addComponent(lblListeDesSalles, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnAjouter)
-                        .addComponent(textField_salleDesc, GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
-                        .addComponent(textField_salleNom))
+                        .addComponent(lblNom, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnUpdateProfile)
+                        .addComponent(btnAnnuler)
+                        .addComponent(textField_Password)
+                        .addComponent(textField_UserName))
                     .addContainerGap(78, Short.MAX_VALUE))
         );
         gl_contentPane.setVerticalGroup(
             gl_contentPane.createParallelGroup(Alignment.LEADING)
                 .addGroup(gl_contentPane.createSequentialGroup()
                     .addGap(55)
-                    .addComponent(lblListeDesSalles, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNom, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
                     .addGap(18)
                     .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(textField_salleNom, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textField_UserName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblNewLabel))
                     .addGap(30)
                     .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(textField_salleDesc, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textField_Password, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblNewLabel_1))
                     .addGap(30)
-                    .addComponent(btnAjouter)
+                    .addComponent(btnUpdateProfile)
+                    .addGap(15)
+                    .addComponent(btnAnnuler)
                     .addGap(210))
         );
         contentPane.setLayout(gl_contentPane);

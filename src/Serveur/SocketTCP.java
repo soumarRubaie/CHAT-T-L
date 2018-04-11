@@ -56,6 +56,7 @@ public class SocketTCP extends Thread {
 
 	// Endpoint: creation usager
 	private static String creationUsagerURI = Utils.creationUsagerURI;
+	private static String updateUsagerURI = Utils.updateUsagerURI;
 	private static String usagerNomParam = Utils.usagerNomParam;
 	private static String usagerPasswordParam = Utils.usagerPasswordParam;
 
@@ -127,6 +128,7 @@ public class SocketTCP extends Thread {
 		// et écrire le handler correspondant plus bas
 		serveur.createContext(creationSalleURI, new CreationSalleHandler());
 		serveur.createContext(creationUsagerURI, new CreationUsagerHandler());
+		serveur.createContext(updateUsagerURI, new UpdateUsagerHandler());
 		serveur.createContext(suscribeUsagerURI, new SuscribeUsagerHandler());
 		serveur.createContext(deleteMessageURI, new DeleteMessageHandler());
 		serveur.createContext(getArchiveURI, new GetArchiveHandler());
@@ -199,6 +201,39 @@ public class SocketTCP extends Thread {
 			}
 
 			System.out.println("INSC: Lst users: " + usagers.toString());
+
+			// ### REPONSE ###
+
+			t.sendResponseHeaders(200, resp.length());
+			OutputStream os = t.getResponseBody();
+			os.write(resp.getBytes());
+			os.close();
+
+			// ### FIN REPONSE ###
+		}
+	}
+
+	class UpdateUsagerHandler implements HttpHandler {
+		@Override
+		// localhost:8000/creationUsager?username=User&password=Password
+		public void handle(HttpExchange t) throws IOException {
+
+			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+			BufferedReader br = new BufferedReader(isr);
+			String query = br.readLine();
+			Map<String, String> params = parseQueryString(query);
+
+			String resp = Utils.ERR_NO_DATA;
+			
+			for (User user : usagers) {
+				if (user.getId() == Integer.parseInt(params.get(Utils.usagerIdParam))) {
+					user.setUsername(params.get(Utils.usagerNomParam));
+					user.setPassword(params.get(Utils.usagerPasswordParam));
+				}
+				resp = Utils.OK;
+			}
+
+			System.out.println("UPD: Lst users: " + usagers.toString());
 
 			// ### REPONSE ###
 
@@ -284,8 +319,10 @@ public class SocketTCP extends Thread {
 		// localhost:8000/deleteMessage?userId=1&salleId=1&messageId=1
 		public void handle(HttpExchange t) throws IOException {
 			// Récupération des paramètres:
-			Map<String, String> params = parseQueryString(t.getRequestURI().getQuery());
-			int idUser = Integer.parseInt(params.get(usagerIdParam));
+			InputStreamReader isr = new InputStreamReader(t.getRequestBody(), "utf-8");
+			BufferedReader br = new BufferedReader(isr);
+			String query = br.readLine();
+			Map<String, String> params = parseQueryString(query);
 			int idSalle = Integer.parseInt(params.get(salleIdParam));
 			int idMsg = Integer.parseInt(params.get(msgIdParam));
 
@@ -294,33 +331,29 @@ public class SocketTCP extends Thread {
 			Salle s = getSalleFromId(idSalle);
 
 			if (s != null) {
-				switch (s.deleteMessage(idUser, idMsg)) {
+				switch (s.deleteMessage(idMsg)) {
 				case 0:
-					response = "Message supprime avec succes!" + lineReturn + "id user: " + idUser + lineReturn
-							+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
+					response = "Message supprime avec succes!" + lineReturn + "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
 					resp = response + serveurStateResponse();
 					t.sendResponseHeaders(200, resp.length());
 					JsonHandler.salleToJson(s);
 					break;
 
 				case 1:
-					response = "ERREUR! Message introuvable" + lineReturn + "id user: " + idUser + lineReturn
-							+ "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
+					response = "ERREUR! Message introuvable" + lineReturn + "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
 					resp = response + serveurStateResponse();
 					t.sendResponseHeaders(604, resp.length());
 					break;
 
 				case 2:
-					response = "ERREUR! Accees refuse!" + lineReturn + "id user: " + idUser + lineReturn + "id salle: "
-							+ idSalle + lineReturn + "id msg: " + idMsg;
+					response = "ERREUR! Accees refuse!" + lineReturn + "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
 					resp = response + serveurStateResponse();
 					t.sendResponseHeaders(602, resp.length());
 					break;
 				}
 
 			} else {
-				response = "ERREUR! Salle introuvable" + lineReturn + "id user: " + idUser + lineReturn + "id salle: "
-						+ idSalle + lineReturn + "id msg: " + idMsg;
+				response = "ERREUR! Salle introuvable" + lineReturn + "id salle: " + idSalle + lineReturn + "id msg: " + idMsg;
 				resp = response + serveurStateResponse();
 				t.sendResponseHeaders(600, resp.length());
 			}
