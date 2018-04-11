@@ -180,12 +180,12 @@ public class Inscription extends JFrame {
 					if (Requests.createUser(param_username, param_password)) {
 						System.out.println("INSC: Réponse du serveur: ");
 
-						// display Home
-						Home home = new Home();
-						home.setVisible(true);
 						client.updateClientLists();
 						client.setCurrentUser(param_username);
-						dispose();	
+						
+						// display Home
+						Home home = new Home();
+						client.goToAnotherPage(home);
 
 					} else {
 						System.out.println("INSC: Échec de l'inscription - réessayer");

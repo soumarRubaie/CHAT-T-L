@@ -115,9 +115,9 @@ public class ModifierUtilisateur extends JFrame {
         btnModifer.addActionListener(new ActionListener() {    
             @Override
             public void actionPerformed(ActionEvent e) {
+            	// Ajouter call POST
                 Home home = new Home();
-                 home.setVisible(true);
-                 dispose();
+                Client.getInstance().goToAnotherPage(home);
 
             }
         });

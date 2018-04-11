@@ -24,6 +24,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -76,18 +77,23 @@ public class AjouterSalle extends JFrame {
 					
 					// Needed only when testing this page alone
 					String userId = (Client.getInstance() == null) ? "0" : Integer.toString(Client.getInstance().getUserId()); 
-					
-					if (Requests.createSalle(param_salleNom, param_salleDesc, userId)) {
+					int salleId = Requests.createSalle(param_salleNom, param_salleDesc, userId);
+					if (salleId != -1) {
 						System.out.println("CREATESALL: Réponse du serveur: ");
 
 						// Needed only when testing this page alone
 						if (client != null)
 							client.updateClientLists();
 
-						// display Home
-						Home home = new Home();
-						home.setVisible(true);
-						dispose();	
+						// display SallePage
+						SallePage sp;
+						try {
+							sp = new SallePage(salleId, client.getCurrentUser().getUsername());
+							client.goToAnotherPage(sp);
+						} catch (UnsupportedEncodingException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					} else {
 						System.out.println("CREATESALL: Échec de créeation salle - réessayer");
 					}

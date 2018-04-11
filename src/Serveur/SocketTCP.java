@@ -432,6 +432,12 @@ public class SocketTCP extends Thread {
 			// Check if this user is in the DB
 			if (is_valid_loggin(params.get(Utils.usagerNomParam), params.get(Utils.usagerPasswordParam))) {
 				resp = Utils.OK;
+				for (User user : usagers) {
+					if (user.getUsername().equals(params.get(Utils.usagerNomParam))) {
+						user.setConnected(true);
+						resp += user.toJsonFormat();
+					}
+				}
 			}
 
 			// ### REPONSE ###

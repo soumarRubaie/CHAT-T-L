@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import Serveur.Requests;
 import Structures.Salle;
 import Structures.User;
 
@@ -34,6 +35,8 @@ import javax.swing.JLabel;
 
 public class Home extends JFrame {
 	Client client ;
+	JList<String> userList = new JList<String>();
+	JList<String> salleList = new JList<String>();
 
 
 	private JPanel contentPane;
@@ -58,11 +61,8 @@ public class Home extends JFrame {
 	 * Create the frame.
 	 */
 	public Home() {
+		super();
 		client = Client.getInstance();
-		
-		//Retrouver les labels à partir des lists salles, usagers
-		String salleLabels[] = client.getSalleLabels();
-		String userLabels[] = client.getUserLabels();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 831, 705);
@@ -70,9 +70,17 @@ public class Home extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JList userList = new JList(userLabels);
+		Initialize();
+	}
+	
+	private void Initialize() {
 		
-		JList salleList = new JList(salleLabels);
+		//Retrouver les labels à partir des lists salles, usagers
+		String salleLabels[] = client.getSalleLabels();
+		String userLabels[] = client.getUserLabels();
+		
+		userList.setListData(userLabels);
+		salleList.setListData(salleLabels);
 		
 		JButton btnConsulterProfile = new JButton("Consulter");
 
@@ -81,14 +89,14 @@ public class Home extends JFrame {
 		
 		JLabel lblListeDesSalles = new JLabel("Liste des salles");
 		
-		JButton btnConsulterSalle = new JButton("Consulter ");
+		JButton btnConsulterSalle = new JButton("Consulter");
 		
-		JButton btnDconenxion = new JButton("Déconenxion");
+		JButton btnDconenxion = new JButton("Déconnexion");
 		
 		JButton btnAjouterUneSalle = new JButton("Ajouter une salle de discussion");
 		btnAjouterUneSalle.setForeground(Color.RED);
 		
-		JLabel lblBonjour = new JLabel("Bonjour :)");
+		JLabel lblBonjour = new JLabel(String.format("Bonjour %s :)", client.getCurrentUser().getUsername()));
 		lblBonjour.setForeground(new Color(220, 20, 60));
 		lblBonjour.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
@@ -179,16 +187,14 @@ public class Home extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                  AjouterSalle test = new AjouterSalle();
-                 test.setVisible(true);
-                 dispose();
+ 				client.goToAnotherPage(test);
             }
         });
 		btnDconenxion.addActionListener(new ActionListener() {    
             @Override
             public void actionPerformed(ActionEvent e) {
             	LoginPage l = new LoginPage();
-                 l.setVisible(true);
-                 dispose();
+				client.goToAnotherPage(l);
             }
         });
 		
@@ -196,8 +202,7 @@ public class Home extends JFrame {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 	                ModifierUtilisateur l = new ModifierUtilisateur();
-	                 l.setVisible(true);
-	                 dispose(); 
+	                client.goToAnotherPage(l);
 	            }
 	        }); 
 		
@@ -225,8 +230,7 @@ public class Home extends JFrame {
 				SallePage sp;
 				try {
 					sp = new SallePage(salleId, client.getCurrentUser().getUsername());
-					sp.setVisible(true);
-	                dispose();
+					client.goToAnotherPage(sp);
 				} catch (UnsupportedEncodingException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -236,6 +240,18 @@ public class Home extends JFrame {
 			}
 		});
 		
+	}
+	
+	public void Update() {
+		int currentIndex = salleList.getSelectedIndex();
+		String salleLabels[] = client.getSalleLabels();
+		String userLabels[] = client.getUserLabels();
 		
+		userList.setListData(userLabels);
+		salleList.setListData(salleLabels);
+		
+		userList.repaint();
+		salleList.repaint();
+		salleList.setSelectedIndex(currentIndex);
 	}
 }

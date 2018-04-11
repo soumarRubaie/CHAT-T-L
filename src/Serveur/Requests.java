@@ -97,6 +97,8 @@ public abstract class Requests {
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.suscribeUsagerURI;
 
 		String response = executePost(targetURL, urlParameters);
+
+		System.out.println("SUB: server response - " + response);
 		//REMOVE THE SPACES & LINE RETURN!!!!		
 		return response.trim();  
 	} 
@@ -107,6 +109,8 @@ public abstract class Requests {
 		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.unsubscribeUsagerURI;
 
 		String response = executePost(targetURL, urlParameters);
+		System.out.println("UNSUB: server response - " + response);
+		
 		//REMOVE THE SPACES & LINE RETURN!!!!		
 		return response.trim(); 
 	}
@@ -139,11 +143,13 @@ public abstract class Requests {
 		String response = executePost(targetURL, urlParameters);
 		//REMOVE THE SPACES & LINE RETURN!!!!private
 		response = response.trim();
-		System.out.println("AUTH: server response - " + response);
-
-		return response.equals(Utils.OK);
-}
-	
+		String errorCode = response.substring(0, 3);
+		String userInfo = response.substring(3, response.length());
+		
+		System.out.println("CREATESALLE: server response - " + response);
+		
+		return errorCode.equals(Utils.OK);
+	}
 
 	public static boolean createUser(String param_username, String param_password)throws UnsupportedEncodingException {
 		/*Envoie une requête au serveur pour voir si un user matche avec ce qui a été donné*/
@@ -166,7 +172,7 @@ public abstract class Requests {
 		return response.equals(Utils.OK);
 	}
 	
-	public static boolean createSalle(String salleNom, String description, String userId)throws UnsupportedEncodingException {
+	public static int createSalle(String salleNom, String description, String userId)throws UnsupportedEncodingException {
 		/*Creer une salle*/
 		String urlParameters = Utils.salleNomParam+"=" + URLEncoder.encode(salleNom, "UTF-8") 
 		+ "&"+Utils.salleDescriptionParam+"=" + URLEncoder.encode(description, "UTF-8");
@@ -191,10 +197,11 @@ public abstract class Requests {
 			JsonObject json = parser.parse(salleInfo).getAsJsonObject();
 			String salleId = json.get("id").toString();
 			
-			return Requests.suscribeUsager(userId, salleId);
+			if (Requests.suscribeUsager(userId, salleId))
+				return Integer.parseInt(salleId);
 		}
 
-		return errorCode.equals(Utils.OK);
+		return -1;
 	}
 	
 	public static boolean suscribeUsager(String userId, String salleId)throws UnsupportedEncodingException {
