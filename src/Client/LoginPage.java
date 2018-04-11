@@ -25,15 +25,14 @@ public class LoginPage extends JFrame {
 
 	// so that we can start with the login page, as with Home()
 	public LoginPage() {
-		// Define frame
-		JFrame frame = new JFrame("Login IFT585  projet chat");
-		frame.setSize(426, 386);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		super("Login IFT585  projet chat");
+		this.setSize(426, 386);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel);
+		this.getContentPane().add(panel);
 
 		// Details of layout performed there
-		placeComponents(panel, frame);
+		placeComponents(panel, this);
 		client = Client.getInstance();
 	}
 
@@ -42,8 +41,8 @@ public class LoginPage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginPage frame = new LoginPage();
-					frame.setVisible(true);
+					LoginPage login = new LoginPage();
+					login.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -97,7 +96,6 @@ public class LoginPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String userName = userText.getText();
-					String password = passwordText.getPassword().toString();
 					
 					if (Requests.athenticateUser(userName, passwordText.getText())) {
 						System.out.println("AUTH: loggin success");
@@ -105,13 +103,11 @@ public class LoginPage extends JFrame {
 						//important pour qu'on puisse signer les messages dans la salle de chat...
 						client.setCurrentUser(userName);
 						Home home = new Home();
-						home.setVisible(true);
-						frame.dispose();
+						client.goToAnotherPage(home);
 					} else {
 						System.out.println("AUTH: login incorrect, essayer à nouveau");
 						LoginPage lp = new LoginPage();
-						lp.setVisible(true);
-						frame.dispose();
+						client.goToAnotherPage(lp);
 					}
 
 				} catch (UnsupportedEncodingException e1) {
@@ -125,22 +121,16 @@ public class LoginPage extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
 				// change view to inscription
 				System.out.println("test redirect inscription");
 				Inscription test = new Inscription();
-				test.setVisible(true);
-
-				// TODO: appel au socketTCP
-
+				client.goToAnotherPage(test);
 			}
 
 		});
 
 		// This should always be last
 		frame.setVisible(true);
-
 	}
 
 }

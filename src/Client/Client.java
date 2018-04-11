@@ -9,6 +9,8 @@ import javax.json.JsonArray;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.swing.JFrame;
+
 import Serveur.Requests;
 import Serveur.SocketTCP;
 
@@ -56,6 +58,10 @@ public class Client extends Thread {
 	User currentUser;
 	Salle currentSalle;
 	Thread thread ;
+	
+	// Control the UI update
+	JFrame currentPage;
+	
 
 	private Client(int portServerUDP, int portServerTCP) {
 		Utils.tcpPort = portServerTCP;
@@ -91,8 +97,8 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 		LoginPage lp = new LoginPage();
-
-		};
+		currentPage = lp; 
+	};
 
 	//############# UPDATE RELATED METHOS
 	private void initClient() throws UnsupportedEncodingException {
@@ -132,8 +138,16 @@ public class Client extends Thread {
 	public void updateCurrentSalle() throws UnsupportedEncodingException {
 		if (currentSalle!=null) {
 			setCurrentSalle(currentSalle.getId());
-			SallePage.updateSalle();		
+			SallePage.updateSalle();
 		} 
+		
+		if (currentPage!=null) {
+			if (currentPage instanceof Home) {
+				Home home = (Home) currentPage;
+				home.Update();
+			}
+		} 
+		
 		if (currentUser!=null) {
 			setCurrentUser(currentUser.getUsername());
 		} 
@@ -307,7 +321,7 @@ public class Client extends Thread {
 				currentUser = u;
 			}
 		}
-	}
+	} 
 	
 	public void setCurrentSalle(int salleId) {
 		for (Salle u : salles) {
@@ -316,6 +330,16 @@ public class Client extends Thread {
 			}
 		}
 	}
+	
+	public void goToAnotherPage(JFrame newPage) {
+		newPage.setVisible(true);
+		
+		if (currentPage != null)
+			currentPage.dispose();
+		
+		currentPage = newPage;
+	}
+	
 	public void setNoSalle() {
 		currentSalle = null;
 	}

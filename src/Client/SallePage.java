@@ -34,6 +34,7 @@ import java.awt.List;
 import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class SallePage extends JFrame{
@@ -42,26 +43,28 @@ public class SallePage extends JFrame{
 	int currenSalleId;
 	String currentUsername;
 	static JTextPane mainTextArea = new JTextPane();
-	JFrame frame = new JFrame("Salle discussion");
 	JPanel panel = new JPanel();
+	static JList<String> userList = new JList<String>();
 	static JTextField writeMessageField;
 
 
 	// so that we can start with the login page, as with Home()
 	public SallePage() {
-		frame.setSize(902, 739);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().add(panel, BorderLayout.WEST);
+		super("Salle discussion");
+		this.setSize(902, 739);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().add(panel, BorderLayout.WEST);
 		client = Client.getInstance();
 		userLabels = client.getUserLabels();
-		placeComponents(panel, frame);
+		placeComponents(panel, this);
 	
 	}
 	
 	public SallePage(int salleIdAJoindre, String username) throws UnsupportedEncodingException {
-		frame.setSize(902, 739);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().add(panel, BorderLayout.WEST);
+		super("Salle discussion");
+		this.setSize(902, 739);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().add(panel, BorderLayout.WEST);
 		client = Client.getInstance();
 		currentUsername = username;
 		client.setCurrentUser(username);
@@ -72,8 +75,8 @@ public class SallePage extends JFrame{
 
 		userLabels = client.getConnectedUserLabels();
 
-		placeComponents(panel, frame);
-		initSalle(frame, panel);
+		placeComponents(panel, this);
+		initSalle(this, panel);
 	}
 	 
 	
@@ -99,10 +102,21 @@ public class SallePage extends JFrame{
 			toScreen =  msg.getContenuMessage();
 			writeToMainTextArea(Utils.lineReturn + toScreen);
 		}
+
+		ArrayList<String> dum = new ArrayList<String>();
+		for (User user : s.getSuscribersList()) {
+			if (user !=null) {
+				dum.add(s.getId() + "_" + user.getUsername());
+			}
+		}
+		String userLabels[] = new String[dum.size()];
+		dum.toArray(userLabels);
+		
+		userList.setListData(userLabels);
+		userList.repaint();
 	}
 	public static void resetToMainTextArea() {
 		mainTextArea.setText("");
-		
 	}
 	
 	
@@ -142,17 +156,29 @@ public class SallePage extends JFrame{
 	private void placeComponents(JPanel panel, JFrame frame) {
 		//############# Generic stuff
 
+		Salle s = client.getCurrentSalle();
+
+		ArrayList<String> dum = new ArrayList<String>();
+		for (User user : s.getSuscribersList()) {
+			if (user !=null) {
+				dum.add(s.getId() + "_" + user.getUsername());
+			}
+		}
+		String userLabels[] = new String[dum.size()];
+		dum.toArray(userLabels);
+		
+		userList.setListData(userLabels);
+		
 		JScrollPane scrollPane = new JScrollPane();
-		JList list = new JList(userLabels);
-		scrollPane.setViewportView(list);
+		scrollPane.setViewportView(userList);
 		// ######### Labels
 		
 		
 		// ######## Text fields
 		// ########### Buttons
-		JButton btnDeconexion = new JButton("DECONNEXION");
-		btnDeconexion.setForeground(Color.RED);
-		btnDeconexion.setBounds(36, 224, 169, 25);
+		JButton btnBackToHome = new JButton("Retourner au lobby");
+		btnBackToHome.setForeground(Color.RED);
+		btnBackToHome.setBounds(36, 224, 169, 25);
 
 		JLabel lblListeDesUtilisateurs = new JLabel("Liste des utilisateurs : ");
 		GroupLayout gl_panel = new GroupLayout(panel);
@@ -167,7 +193,7 @@ public class SallePage extends JFrame{
 							.addGap(32)
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblListeDesUtilisateurs)
-								.addComponent(btnDeconexion))))
+								.addComponent(btnBackToHome))))
 					.addContainerGap(47, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
@@ -178,7 +204,7 @@ public class SallePage extends JFrame{
 					.addGap(18)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(btnDeconexion)
+					.addComponent(btnBackToHome)
 					.addContainerGap(270, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
@@ -245,7 +271,7 @@ public class SallePage extends JFrame{
 		
 		
 		// ###############Button listeners
-		btnDeconexion.addActionListener(new ActionListener() {
+		btnBackToHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { 
                 try {
 					client.unsuscribeUserToSalle(client.getSalleId(), client.getCurrentUser().getId());
@@ -255,9 +281,7 @@ public class SallePage extends JFrame{
 				}
                client.setNoSalle();
             	Home l = new Home();
-                l.setVisible(true);
-                dispose(); 
-				
+				client.goToAnotherPage(l);
 			}
 		});
 		
