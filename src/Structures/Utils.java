@@ -44,6 +44,7 @@ public class Utils {
 
 		// Endpoint: creation usager
 		public static String creationUsagerURI = "/creationUsager";
+		public static String updateUsagerURI = "/updateUsager";
 		public static String usagerNomParam = "username";
 		public static String usagerPasswordParam = "password";
 

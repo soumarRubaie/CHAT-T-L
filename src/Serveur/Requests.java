@@ -171,6 +171,28 @@ public abstract class Requests {
 
 		return response.equals(Utils.OK);
 	}
+
+	public static boolean updateUser(String userID, String param_username, String param_password)throws UnsupportedEncodingException {
+		/*Envoie une requête au serveur pour voir si un user matche avec ce qui a été donné*/
+		//Encoder tous les params de la requête
+		String urlParameters = Utils.usagerIdParam+"=" + URLEncoder.encode(userID, "UTF-8") 
+		+ "&"+ Utils.usagerNomParam+"=" + URLEncoder.encode(param_username, "UTF-8") 
+		+ "&"+ Utils.usagerPasswordParam+"=" + URLEncoder.encode(param_password, "UTF-8");
+		
+		System.out.println("CREATEUSER: urlParam - " + urlParameters);
+		//Encoder l'URL - doit inclure le port & le context de la requête 
+		String targetURL = Utils.serverURLNoPort + Utils.tcpPort + Utils.updateUsagerURI;
+
+		
+		//TODO: science de la comparaison des string en java... ma sinon ça marche.
+		//Found it: there was a /r (line return) in the response...
+		String response = executePost(targetURL, urlParameters);
+		//REMOVE THE SPACES & LINE RETURN!!!!
+		response = response.trim();
+		System.out.println("CREATEUSER: server response - " + response);
+
+		return response.equals(Utils.OK);
+	}
 	
 	public static int createSalle(String salleNom, String description, String userId)throws UnsupportedEncodingException {
 		/*Creer une salle*/
@@ -241,10 +263,10 @@ public abstract class Requests {
 		return response.equals(Utils.OK);
 	}
 	
-	public static boolean deleteMessage(String messageId)throws UnsupportedEncodingException {
+	public static boolean deleteMessage(String messageId, String salleId)throws UnsupportedEncodingException {
 		/*UnsSuscribe user to salle*/
-		String urlParameters = Utils.msgIdParam+"=" + URLEncoder.encode(messageId, "UTF-8") ;
-		//+ "&"+Utils.salleDescriptionParam+"=" + URLEncoder.encode(salleId, "UTF-8");
+		String urlParameters = Utils.msgIdParam +"=" + URLEncoder.encode(messageId, "UTF-8") 
+				+ "&" + Utils.salleIdParam + "=" + URLEncoder.encode(salleId, "UTF-8");
 		
 		System.out.println("DELMSG: urlParam - " + urlParameters);
 		//Encoder l'URL - doit inclure le port & le context de la requête 
